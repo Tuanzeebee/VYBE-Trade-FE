@@ -37,8 +37,10 @@ import {
   FileCheck,
   Scale
 } from 'lucide-react';
+import { useLanguage } from "../context/LanguageContext";
 
 export interface SupplierData {
+  industry?: 'agriculture' | 'seafood' | 'food';
   id: string;
   name: string;
   tradeName: string;
@@ -314,6 +316,7 @@ export const DEFAULT_SELLER_DETAIL: SupplierData = {
 };
 
 interface BuyerSellerDetailProps {
+  openRfq?: boolean;
   supplier?: SupplierData;
   onBackToDirectory: () => void;
   onNavigateHome: () => void;
@@ -321,14 +324,16 @@ interface BuyerSellerDetailProps {
 }
 
 export default function BuyerSellerDetail({
+  openRfq = false,
   supplier = DEFAULT_SELLER_DETAIL,
   onBackToDirectory,
   onNavigateHome,
   onNavigateWorkspace
 }: BuyerSellerDetailProps) {
+  const { tr } = useLanguage();
   const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'factory' | 'certificates' | 'reviews'>('overview');
   const [isSaved, setIsSaved] = useState(false);
-  const [activeModal, setActiveModal] = useState<'rfq' | 'chat' | 'doc-preview' | 'success' | null>(null);
+  const [activeModal, setActiveModal] = useState<'rfq' | 'chat' | 'doc-preview' | 'success' | null>(openRfq ? 'rfq' : null);
   const [selectedProductForRfq, setSelectedProductForRfq] = useState<string>(supplier.products[0]?.name || '');
   const [selectedDoc, setSelectedDoc] = useState<any | null>(null);
 
@@ -389,8 +394,8 @@ export default function BuyerSellerDetail({
       {/* =========================================================================
           1. TOP NAVIGATION / BREADCRUMB BAR
          ========================================================================= */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-2xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4">
+      <div className="bg-white border-b border-slate-200 shadow-2xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-14 py-3 flex flex-wrap items-center justify-between gap-3">
           
           {/* Breadcrumb Left */}
           <div className="flex items-center gap-2 text-xs sm:text-[13px] text-slate-500 overflow-x-auto whitespace-nowrap py-1">
@@ -398,18 +403,16 @@ export default function BuyerSellerDetail({
               onClick={onNavigateHome}
               className="text-slate-600 hover:text-slate-900 font-medium cursor-pointer"
             >
-              Trang chủ
-            </button>
+              {tr("Trang chủ")}</button>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <button 
               onClick={onBackToDirectory}
               className="text-slate-600 hover:text-slate-900 font-medium cursor-pointer"
             >
-              Tìm nhà cung cấp
-            </button>
+              {tr("Tìm nhà cung cấp")}</button>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span className="text-teal-900 font-bold truncate max-w-[200px] sm:max-w-xs">
-              {supplier.name}
+              {tr(supplier.name)}
             </span>
           </div>
 
@@ -420,7 +423,7 @@ export default function BuyerSellerDetail({
               className="px-3.5 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
-              <span className="hidden sm:inline">Quay lại danh sách</span>
+              <span className="hidden sm:inline">{tr("Quay lại danh sách")}</span>
             </button>
 
             <button
@@ -430,7 +433,7 @@ export default function BuyerSellerDetail({
                   ? 'bg-rose-50 border-rose-200 text-rose-600' 
                   : 'border-slate-200 hover:bg-slate-50 text-slate-600'
               }`}
-              title={isSaved ? 'Đã lưu vào danh sách yêu thích' : 'Lưu nhà cung cấp'}
+              title={tr(isSaved ? 'Đã lưu vào danh sách yêu thích' : 'Lưu nhà cung cấp')}
             >
               <Heart className={`w-4 h-4 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
             </button>
@@ -443,7 +446,7 @@ export default function BuyerSellerDetail({
               className="px-4 py-2 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
             >
               <Mail className="w-3.5 h-3.5 text-teal-300" />
-              <span>Gửi RFQ</span>
+              <span>{tr("Gửi RFQ")}</span>
             </button>
           </div>
 
@@ -455,14 +458,11 @@ export default function BuyerSellerDetail({
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap">
           <span className="inline-flex items-center gap-1 bg-[#0b5e52] text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
             <ShieldCheck className="w-3 h-3" />
-            L3 VYBE Certified
-          </span>
+            {tr(supplier.badgeTitle)}</span>
           <span>
-            Hồ sơ doanh nghiệp đã được VYBE Trade thẩm định độc quyền: Kiểm tra thực địa nhà máy, pháp lý ERC và chứng nhận ATTP quốc tế.
-          </span>
+            {tr("Hồ sơ doanh nghiệp đã được VYBE Trade thẩm định độc quyền: Kiểm tra thực địa nhà máy, pháp lý ERC và chứng nhận ATTP quốc tế.")}</span>
           <span className="text-teal-800 underline font-semibold cursor-pointer ml-1" onClick={() => setActiveTab('certificates')}>
-            Xem Evidence Record →
-          </span>
+            {tr("Xem Evidence Record →")}</span>
         </div>
       </div>
 
@@ -478,33 +478,33 @@ export default function BuyerSellerDetail({
           <div className="relative h-48 sm:h-64 lg:h-72 w-full bg-slate-900 overflow-hidden">
             <img 
               src={supplier.coverImage} 
-              alt={supplier.name} 
+              alt={tr(supplier.name)} 
               className="w-full h-full object-cover opacity-85 brightness-95"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
             
             {/* Top Right Badges on Cover */}
-            <div className="absolute top-4 right-4 flex items-center gap-2">
+            <div className="absolute top-4 left-4 right-4 flex flex-wrap justify-end items-center gap-2">
               <span className="px-3 py-1 rounded-xl bg-black/50 backdrop-blur-md text-white text-xs font-semibold border border-white/20 flex items-center gap-1.5">
                 <Globe className="w-3.5 h-3.5 text-teal-300" />
-                <span>Xuất khẩu toàn cầu</span>
+                <span>{tr("Xuất khẩu toàn cầu")}</span>
               </span>
               <span className="px-3 py-1 rounded-xl bg-emerald-600/90 backdrop-blur-md text-white text-xs font-bold flex items-center gap-1 shadow-md">
                 <Lock className="w-3.5 h-3.5" />
-                <span>Bảo lãnh Escrow {supplier.escrowLimit}</span>
+                <span>{tr("Bảo lãnh Escrow ")}{tr(supplier.escrowLimit)}</span>
               </span>
             </div>
           </div>
 
           {/* Profile Header Bar */}
-          <div className="px-6 sm:px-8 pb-6 sm:pb-8 pt-0 relative">
-            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 -mt-16 sm:-mt-20">
+          <div className="px-5 sm:px-8 pb-6 sm:pb-8 pt-6 relative">
+            <div className="flex flex-col 2xl:flex-row items-start justify-between gap-6">
               
               {/* Left: Avatar + Title + Badges */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-end gap-5 z-10 min-w-0">
+              <div className="flex flex-col sm:flex-row items-start gap-5 z-10 min-w-0 flex-1">
                 
                 {/* Sprout Logo Avatar */}
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white border-4 border-white shadow-xl flex items-center justify-center p-2 shrink-0 overflow-hidden">
+                <div className="relative -mt-16 sm:-mt-20 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white border-4 border-white shadow-xl flex items-center justify-center p-2 shrink-0 overflow-hidden">
                   <div className="w-full h-full rounded-xl bg-gradient-to-br from-teal-50 to-emerald-100 flex items-center justify-center text-[#0b5e52]">
                     <svg viewBox="0 0 32 32" className="w-12 h-12" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M 16 26 C 14 18 8 13 4 10 C 3 9 4 7 5 7 C 11 8 15 13 16 26 Z" fill="#0b5e52" />
@@ -516,31 +516,29 @@ export default function BuyerSellerDetail({
                 {/* Company Name & Metadata */}
                 <div className="space-y-1.5 min-w-0">
                   <div className="flex items-center gap-2.5 flex-wrap">
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">
-                      {supplier.name}
+                    <h1 className="break-words text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">
+                      {tr(supplier.name)}
                     </h1>
-                    <span className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs" title="Doanh nghiệp đã xác minh">
-                      ✓
-                    </span>
+                    <span className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs" title={tr("Doanh nghiệp đã xác minh")}>
+                      {tr("✓")}</span>
                   </div>
 
-                  <p className="text-xs sm:text-sm font-semibold text-slate-500 tracking-wide">
-                    {supplier.tradeName} • MST: {supplier.taxCode}
+                  <p className="break-words text-xs sm:text-sm font-semibold text-slate-500 tracking-wide">
+                    {tr(supplier.tradeName)} {tr(" • MST: ")}{tr(supplier.taxCode)}
                   </p>
 
                   <div className="flex items-center gap-3 text-xs text-slate-600 flex-wrap pt-1">
                     <span className="flex items-center gap-1 font-medium">
                       <MapPin className="w-3.5 h-3.5 text-rose-500" />
-                      {supplier.location}
+                      {tr(supplier.location)}
                     </span>
-                    <span className="text-slate-300">•</span>
+                    <span className="text-slate-300">{tr("•")}</span>
                     <span className="flex items-center gap-1 text-amber-600 font-bold">
                       <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                      {supplier.rating} ({supplier.reviewCount} đánh giá Buyer quốc tế)
-                    </span>
-                    <span className="text-slate-300">•</span>
+                      {tr(supplier.rating)} {tr(" (")}{tr(supplier.reviewCount)} {tr(" đánh giá Buyer quốc tế)")}</span>
+                    <span className="text-slate-300">{tr("•")}</span>
                     <span className="text-slate-500">
-                      Thành lập: <strong>{supplier.foundedYear}</strong>
+                      {tr("Thành lập: ")}<strong>{tr(supplier.foundedYear)}</strong>
                     </span>
                   </div>
                 </div>
@@ -548,13 +546,13 @@ export default function BuyerSellerDetail({
               </div>
 
               {/* Right: Key Action CTAs */}
-              <div className="flex items-center gap-2.5 w-full lg:w-auto shrink-0 z-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full 2xl:w-auto shrink-0 z-10">
                 <button
                   onClick={() => setActiveModal('chat')}
                   className="flex-1 lg:flex-none px-4 py-2.5 rounded-xl border border-slate-200 hover:border-teal-700 bg-white hover:bg-teal-50 text-slate-800 text-xs sm:text-[13px] font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
                 >
                   <MessageSquare className="w-4 h-4 text-teal-700" />
-                  <span>Chat với Seller</span>
+                  <span>{tr("Chat với Seller")}</span>
                 </button>
 
                 <button
@@ -565,7 +563,7 @@ export default function BuyerSellerDetail({
                   className="flex-1 lg:flex-none px-6 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs sm:text-[13px] font-bold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer active:scale-95"
                 >
                   <Send className="w-4 h-4 text-teal-300" />
-                  <span>Gửi RFQ / Yêu cầu báo giá</span>
+                  <span>{tr("Gửi RFQ / Yêu cầu báo giá")}</span>
                 </button>
               </div>
 
@@ -574,27 +572,27 @@ export default function BuyerSellerDetail({
             {/* Quick Metrics Bar */}
             <div className="mt-6 pt-6 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-[11px] text-slate-500 font-medium">Năng lực cung ứng</span>
-                <p className="text-sm sm:text-base font-bold text-slate-900 mt-0.5">{supplier.monthlyCapacity}</p>
-                <span className="text-[10px] text-slate-400">~{supplier.capacity}</span>
+                <span className="text-[11px] text-slate-500 font-medium">{tr("Năng lực cung ứng")}</span>
+                <p className="text-sm sm:text-base font-bold text-slate-900 mt-0.5">{tr(supplier.monthlyCapacity)}</p>
+                <span className="text-[10px] text-slate-400">{tr("~")}{tr(supplier.capacity)}</span>
               </div>
 
               <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-[11px] text-slate-500 font-medium">Thời gian phản hồi</span>
-                <p className="text-sm sm:text-base font-bold text-teal-900 mt-0.5">{supplier.responseTime}</p>
-                <span className="text-[10px] text-emerald-700 font-semibold">Tỷ lệ {supplier.responseRate}</span>
+                <span className="text-[11px] text-slate-500 font-medium">{tr("Thời gian phản hồi")}</span>
+                <p className="text-sm sm:text-base font-bold text-teal-900 mt-0.5">{tr(supplier.responseTime)}</p>
+                <span className="text-[10px] text-emerald-700 font-semibold">{tr("Tỷ lệ ")}{tr(supplier.responseRate)}</span>
               </div>
 
               <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-[11px] text-slate-500 font-medium">Thị trường xuất khẩu</span>
-                <p className="text-sm sm:text-base font-bold text-slate-900 mt-0.5">EU, US, Nhật, Hàn</p>
-                <span className="text-[10px] text-slate-400">Có mã PUC & PHC</span>
+                <span className="text-[11px] text-slate-500 font-medium">{tr("Thị trường xuất khẩu")}</span>
+                <p className="text-sm sm:text-base font-bold text-slate-900 mt-0.5">{tr("EU, US, Nhật, Hàn")}</p>
+                <span className="text-[10px] text-slate-400">{tr("Có mã PUC & PHC")}</span>
               </div>
 
               <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-[11px] text-slate-500 font-medium">Hạn mức Escrow bảo lãnh</span>
-                <p className="text-sm sm:text-base font-bold text-emerald-700 mt-0.5">{supplier.escrowLimit}</p>
-                <span className="text-[10px] text-slate-400">An toàn giao dịch quốc tế</span>
+                <span className="text-[11px] text-slate-500 font-medium">{tr("Hạn mức Escrow bảo lãnh")}</span>
+                <p className="text-sm sm:text-base font-bold text-emerald-700 mt-0.5">{tr(supplier.escrowLimit)}</p>
+                <span className="text-[10px] text-slate-400">{tr("An toàn giao dịch quốc tế")}</span>
               </div>
             </div>
 
@@ -629,7 +627,7 @@ export default function BuyerSellerDetail({
                 }`}
               >
                 <Icon className={`w-4 h-4 ${isActive ? 'text-[#083832]' : 'text-slate-400'}`} />
-                <span>{tab.label}</span>
+                <span>{tr(tab.label)}</span>
               </button>
             );
           })}
@@ -646,17 +644,17 @@ export default function BuyerSellerDetail({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Left 8 Cols: About, Commitments & Facility Details */}
-            <div className="lg:col-span-8 space-y-6">
+            <div className="lg:col-span-8 min-w-0 space-y-6">
               
               {/* Giới thiệu doanh nghiệp */}
               <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 shadow-xs space-y-4">
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
                   <Building2 className="w-5 h-5 text-teal-800" />
-                  <span>Giới thiệu năng lực doanh nghiệp</span>
+                  <span>{tr("Giới thiệu năng lực doanh nghiệp")}</span>
                 </h3>
 
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                  {supplier.description}
+                  {tr(supplier.description)}
                 </p>
 
                 {/* Key Commitments Box */}
@@ -664,16 +662,16 @@ export default function BuyerSellerDetail({
                   <div className="p-3.5 rounded-2xl bg-teal-50/50 border border-teal-100 flex items-start gap-3">
                     <CheckCircle2 className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-xs font-bold text-teal-950">Bảo lãnh chất lượng & Giám định</h4>
-                      <p className="text-[11px] text-teal-800 mt-0.5">Sẵn sàng nghiệm thu SGS / Vinacontrol tại cảng Cát Lái trước khi xếp cont.</p>
+                      <h4 className="text-xs font-bold text-teal-950">{tr("Bảo lãnh chất lượng & Giám định")}</h4>
+                      <p className="text-[11px] text-teal-800 mt-0.5">{tr("Sẵn sàng nghiệm thu SGS / Vinacontrol tại cảng Cát Lái trước khi xếp cont.")}</p>
                     </div>
                   </div>
 
                   <div className="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-100 flex items-start gap-3">
                     <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-xs font-bold text-emerald-950">Bảo lãnh thanh toán Escrow</h4>
-                      <p className="text-[11px] text-emerald-800 mt-0.5">Tiền gửi vào tài khoản ký quỹ trung gian, chỉ giải ngân khi đủ B/L và CO hợp lệ.</p>
+                      <h4 className="text-xs font-bold text-emerald-950">{tr("Bảo lãnh thanh toán Escrow")}</h4>
+                      <p className="text-[11px] text-emerald-800 mt-0.5">{tr("Tiền gửi vào tài khoản ký quỹ trung gian, chỉ giải ngân khi đủ B/L và CO hợp lệ.")}</p>
                     </div>
                   </div>
                 </div>
@@ -683,28 +681,28 @@ export default function BuyerSellerDetail({
               <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/80 shadow-xs space-y-4">
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
                   <Factory className="w-5 h-5 text-teal-800" />
-                  <span>Cơ sở hạ tầng & Pháp lý xuất khẩu</span>
+                  <span>{tr("Cơ sở hạ tầng & Pháp lý xuất khẩu")}</span>
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                    <span className="text-slate-500 font-medium">Trụ sở giao dịch:</span>
-                    <p className="font-bold text-slate-900 leading-snug">{supplier.address}</p>
+                    <span className="text-slate-500 font-medium">{tr("Trụ sở giao dịch:")}</span>
+                    <p className="font-bold text-slate-900 leading-snug">{tr(supplier.address)}</p>
                   </div>
 
                   <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                    <span className="text-slate-500 font-medium">Nhà máy & Kho bảo quản:</span>
-                    <p className="font-bold text-slate-900 leading-snug">{supplier.factoryAddress}</p>
+                    <span className="text-slate-500 font-medium">{tr("Nhà máy & Kho bảo quản:")}</span>
+                    <p className="font-bold text-slate-900 leading-snug">{tr(supplier.factoryAddress)}</p>
                   </div>
 
                   <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                    <span className="text-slate-500 font-medium">Mã vùng trồng xuất khẩu (PUC):</span>
-                    <p className="font-mono font-bold text-teal-800">{supplier.pucCode}</p>
+                    <span className="text-slate-500 font-medium">{tr("Mã vùng trồng xuất khẩu (PUC):")}</span>
+                    <p className="font-mono font-bold text-teal-800">{tr(supplier.pucCode)}</p>
                   </div>
 
                   <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                    <span className="text-slate-500 font-medium">Mã cơ sở đóng gói (PHC):</span>
-                    <p className="font-mono font-bold text-teal-800">{supplier.phcCode}</p>
+                    <span className="text-slate-500 font-medium">{tr("Mã cơ sở đóng gói (PHC):")}</span>
+                    <p className="font-mono font-bold text-teal-800">{tr(supplier.phcCode)}</p>
                   </div>
                 </div>
               </div>
@@ -714,14 +712,13 @@ export default function BuyerSellerDetail({
                 <div className="flex items-center justify-between">
                   <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
                     <Package className="w-5 h-5 text-teal-800" />
-                    <span>Sản phẩm xuất khẩu chủ lực</span>
+                    <span>{tr("Sản phẩm xuất khẩu chủ lực")}</span>
                   </h3>
                   <button 
                     onClick={() => setActiveTab('products')}
                     className="text-xs font-semibold text-teal-700 hover:text-teal-900 cursor-pointer"
                   >
-                    Xem tất cả ({supplier.products.length}) →
-                  </button>
+                    {tr("Xem tất cả (")}{tr(supplier.products.length)}{tr(") →")}</button>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -732,19 +729,19 @@ export default function BuyerSellerDetail({
                     >
                       <img 
                         src={product.image} 
-                        alt={product.name} 
+                        alt={tr(product.name)} 
                         className="w-20 h-20 rounded-xl object-cover shrink-0"
                       />
                       <div className="min-w-0 flex-1 flex flex-col justify-between">
                         <div>
                           <h4 className="text-xs font-bold text-slate-900 line-clamp-1 group-hover:text-teal-900">
-                            {product.name}
+                            {tr(product.name)}
                           </h4>
                           <p className="text-[11px] text-teal-800 font-semibold mt-0.5">
-                            {product.priceRange}
+                            {tr(product.priceRange)}
                           </p>
                           <p className="text-[10px] text-slate-500 mt-1">
-                            MOQ: {product.moq}
+                            {tr("MOQ: ")}{tr(product.moq)}
                           </p>
                         </div>
 
@@ -755,8 +752,7 @@ export default function BuyerSellerDetail({
                           }}
                           className="mt-2 text-[11px] font-bold text-[#083832] hover:underline text-left cursor-pointer"
                         >
-                          Gửi RFQ sản phẩm này →
-                        </button>
+                          {tr("Gửi RFQ sản phẩm này →")}</button>
                       </div>
                     </div>
                   ))}
@@ -766,7 +762,7 @@ export default function BuyerSellerDetail({
             </div>
 
             {/* Right 4 Cols: Trust & Contact Card */}
-            <div className="lg:col-span-4 space-y-6">
+            <div className="lg:col-span-4 min-w-0 space-y-6">
               
               {/* Trust Card */}
               <div className="p-6 rounded-3xl bg-gradient-to-br from-[#083832] to-[#0d594f] text-white shadow-lg space-y-4">
@@ -775,27 +771,26 @@ export default function BuyerSellerDetail({
                     <ShieldCheck className="w-7 h-7" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-teal-200">Xác thực uy tín</span>
-                    <h4 className="text-lg font-extrabold">{supplier.badgeTitle}</h4>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-teal-200">{tr("Xác thực uy tín")}</span>
+                    <h4 className="text-lg font-extrabold">{tr(supplier.badgeTitle)}</h4>
                   </div>
                 </div>
 
                 <p className="text-xs text-teal-100 leading-relaxed">
-                  Doanh nghiệp đạt cấp độ đối tác chiến lược cao nhất của VYBE Trade với bảo lãnh Escrow an toàn tuyệt đối.
-                </p>
+                  {tr("Doanh nghiệp đạt cấp độ đối tác chiến lược cao nhất của VYBE Trade với bảo lãnh Escrow an toàn tuyệt đối.")}</p>
 
                 <div className="space-y-2 pt-2 border-t border-white/10 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-teal-200">Đăng ký kinh doanh:</span>
-                    <span className="font-semibold">Đã xác thực</span>
+                    <span className="text-teal-200">{tr("Đăng ký kinh doanh:")}</span>
+                    <span className="font-semibold">{tr("Đã xác thực")}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-teal-200">Thẩm định thực địa:</span>
-                    <span className="font-semibold">Đạt chuẩn L3</span>
+                    <span className="text-teal-200">{tr("Thẩm định thực địa:")}</span>
+                    <span className="font-semibold">{tr(supplier.badgeTitle)}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-teal-200">Chứng nhận ATTP:</span>
-                    <span className="font-semibold">HACCP, ISO 22000</span>
+                    <span className="text-teal-200">{tr("Chứng nhận ATTP:")}</span>
+                    <span className="font-semibold">{tr("HACCP, ISO 22000")}</span>
                   </div>
                 </div>
 
@@ -806,8 +801,7 @@ export default function BuyerSellerDetail({
                   }}
                   className="w-full py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition-colors cursor-pointer shadow-md text-center block mt-3"
                 >
-                  Yêu cầu báo giá trực tiếp
-                </button>
+                  {tr("Yêu cầu báo giá trực tiếp")}</button>
               </div>
 
               {/* Verified Certificates Quick List */}
@@ -815,11 +809,10 @@ export default function BuyerSellerDetail({
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-teal-700" />
-                    <span>Chứng nhận xuất khẩu</span>
+                    <span>{tr("Chứng nhận xuất khẩu")}</span>
                   </h4>
                   <span className="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded">
-                    Evidence Record
-                  </span>
+                    {tr("Evidence Record")}</span>
                 </div>
 
                 <div className="space-y-2 text-xs">
@@ -833,8 +826,8 @@ export default function BuyerSellerDetail({
                       }}
                     >
                       <div className="min-w-0 pr-2">
-                        <p className="font-bold text-slate-800 truncate">{c.title}</p>
-                        <p className="text-[10px] text-slate-500">{c.issuer}</p>
+                        <p className="font-bold text-slate-800 truncate">{tr(c.title)}</p>
+                        <p className="text-[10px] text-slate-500">{tr(c.issuer)}</p>
                       </div>
                       <Eye className="w-3.5 h-3.5 text-teal-700 shrink-0" />
                     </div>
@@ -844,19 +837,18 @@ export default function BuyerSellerDetail({
 
               {/* Direct Seller Contact Card */}
               <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs space-y-3 text-xs">
-                <h4 className="text-sm font-bold text-slate-900">Liên hệ đại diện xuất khẩu</h4>
+                <h4 className="text-sm font-bold text-slate-900">{tr("Liên hệ đại diện xuất khẩu")}</h4>
                 <div className="space-y-2 text-slate-600">
-                  <p><strong>Người liên hệ:</strong> Nguyễn Văn Trí (Giám đốc)</p>
-                  <p><strong>Ngôn ngữ hỗ trợ:</strong> Tiếng Anh, Tiếng Việt, Tiếng Trung</p>
-                  <p><strong>Email đối soát:</strong> export@vietagri.com</p>
-                  <p><strong>Phản hồi trung bình:</strong> Dưới 2 giờ làm việc</p>
+                  <p><strong>{tr("Người liên hệ:")}</strong> {tr(" Nguyễn Văn Trí (Giám đốc)")}</p>
+                  <p><strong>{tr("Ngôn ngữ hỗ trợ:")}</strong> {tr(" Tiếng Anh, Tiếng Việt, Tiếng Trung")}</p>
+                  <p><strong>{tr("Email đối soát:")}</strong> {tr(" export@vietagri.com")}</p>
+                  <p><strong>{tr("Phản hồi trung bình:")}</strong> {tr(" Dưới 2 giờ làm việc")}</p>
                 </div>
                 <button
                   onClick={() => setActiveModal('chat')}
                   className="w-full py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 font-semibold transition-colors cursor-pointer text-center block mt-2"
                 >
-                  Nhắn tin với Mr. Trí
-                </button>
+                  {tr("Nhắn tin với Mr. Trí")}</button>
               </div>
 
             </div>
@@ -869,8 +861,8 @@ export default function BuyerSellerDetail({
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Danh mục sản phẩm xuất khẩu ({supplier.products.length})</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Sản phẩm sản xuất trực tiếp tại nhà máy, có sẵn năng lực cung ứng theo hợp đồng cont</p>
+                <h3 className="text-lg font-bold text-slate-900">{tr("Danh mục sản phẩm xuất khẩu (")}{tr(supplier.products.length)}{tr(")")}</h3>
+                <p className="text-xs text-slate-500 mt-0.5">{tr("Sản phẩm sản xuất trực tiếp tại nhà máy, có sẵn năng lực cung ứng theo hợp đồng cont")}</p>
               </div>
 
               <button
@@ -880,8 +872,7 @@ export default function BuyerSellerDetail({
                 }}
                 className="px-5 py-2.5 rounded-xl bg-[#083832] text-white text-xs font-bold hover:bg-[#062924] transition-colors cursor-pointer shrink-0 shadow-xs"
               >
-                Gửi yêu cầu chào giá chung (Bulk RFQ)
-              </button>
+                {tr("Gửi yêu cầu chào giá chung (Bulk RFQ)")}</button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -895,51 +886,51 @@ export default function BuyerSellerDetail({
                     <div className="relative h-56 w-full bg-slate-100 overflow-hidden">
                       <img 
                         src={product.image} 
-                        alt={product.name} 
+                        alt={tr(product.name)} 
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
                       <span className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold">
-                        {product.category}
+                        {tr(product.category)}
                       </span>
                     </div>
 
                     {/* Product Details */}
                     <div className="p-5 sm:p-6 space-y-3">
                       <h4 className="text-base font-bold text-slate-900 leading-snug">
-                        {product.name}
+                        {tr(product.name)}
                       </h4>
 
                       <div className="p-3 rounded-xl bg-teal-50/60 border border-teal-100">
-                        <span className="text-[10px] text-teal-800 font-bold uppercase tracking-wider block">Báo giá ước tính:</span>
+                        <span className="text-[10px] text-teal-800 font-bold uppercase tracking-wider block">{tr("Báo giá ước tính:")}</span>
                         <p className="text-base font-extrabold text-[#083832] mt-0.5">
-                          {product.priceRange}
+                          {tr(product.priceRange)}
                         </p>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 text-xs text-slate-600 pt-1">
                         <div>
-                          <span className="text-slate-400">MOQ tối thiểu:</span>
-                          <p className="font-semibold text-slate-800">{product.moq}</p>
+                          <span className="text-slate-400">{tr("MOQ tối thiểu:")}</span>
+                          <p className="font-semibold text-slate-800">{tr(product.moq)}</p>
                         </div>
                         <div>
-                          <span className="text-slate-400">Năng lực cung ứng:</span>
-                          <p className="font-semibold text-slate-800">{product.capacity}</p>
+                          <span className="text-slate-400">{tr("Năng lực cung ứng:")}</span>
+                          <p className="font-semibold text-slate-800">{tr(product.capacity)}</p>
                         </div>
                       </div>
 
                       <div className="text-xs text-slate-600">
-                        <span className="text-slate-400">Quy cách đóng gói:</span>
-                        <p className="font-semibold text-slate-800 mt-0.5">{product.packaging}</p>
+                        <span className="text-slate-400">{tr("Quy cách đóng gói:")}</span>
+                        <p className="font-semibold text-slate-800 mt-0.5">{tr(product.packaging)}</p>
                       </div>
 
                       {/* Specs */}
                       <div className="pt-2 border-t border-slate-100">
-                        <span className="text-[11px] font-bold text-slate-700 block mb-1.5">Thông số kỹ thuật (Spec Sheet):</span>
+                        <span className="text-[11px] font-bold text-slate-700 block mb-1.5">{tr("Thông số kỹ thuật (Spec Sheet):")}</span>
                         <ul className="space-y-1 text-xs text-slate-600">
                           {product.specs.map((spec, idx) => (
                             <li key={idx} className="flex items-center gap-1.5">
                               <span className="w-1.5 h-1.5 rounded-full bg-teal-600" />
-                              <span>{spec}</span>
+                              <span>{tr(spec)}</span>
                             </li>
                           ))}
                         </ul>
@@ -956,18 +947,16 @@ export default function BuyerSellerDetail({
                       }}
                       className="flex-1 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-bold transition-colors cursor-pointer text-center"
                     >
-                      Báo giá sản phẩm này
-                    </button>
+                      {tr("Báo giá sản phẩm này")}</button>
                     <button
                       onClick={() => {
                         setNewChatMessage(`Chào Nông Sản Việt, chúng tôi muốn xin gửi mẫu thử nghiệm (Sample) cho sản phẩm ${product.name}.`);
                         setActiveModal('chat');
                       }}
                       className="px-3.5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold cursor-pointer"
-                      title="Yêu cầu gửi mẫu thử nghiệm"
+                      title={tr("Yêu cầu gửi mẫu thử nghiệm")}
                     >
-                      Yêu cầu mẫu (Sample)
-                    </button>
+                      {tr("Yêu cầu mẫu (Sample)")}</button>
                   </div>
                 </div>
               ))}
@@ -979,8 +968,8 @@ export default function BuyerSellerDetail({
         {activeTab === 'factory' && (
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-bold text-slate-900">Hình ảnh thực tế nhà máy & Quy trình sản xuất</h3>
-              <p className="text-xs text-slate-500 mt-0.5">Hình ảnh thực tế đã được chuyên viên kiểm định VYBE Trade xác minh tại hiện trường</p>
+              <h3 className="text-lg font-bold text-slate-900">{tr("Hình ảnh thực tế nhà máy & Quy trình sản xuất")}</h3>
+              <p className="text-xs text-slate-500 mt-0.5">{tr("Hình ảnh thực tế đã được chuyên viên kiểm định VYBE Trade xác minh tại hiện trường")}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -989,13 +978,13 @@ export default function BuyerSellerDetail({
                   <div className="h-60 w-full bg-slate-900 overflow-hidden">
                     <img 
                       src={photo.image} 
-                      alt={photo.title} 
+                      alt={tr(photo.title)} 
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                   <div className="p-5 space-y-1.5">
-                    <h4 className="text-sm font-bold text-slate-900">{photo.title}</h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">{photo.description}</p>
+                    <h4 className="text-sm font-bold text-slate-900">{tr(photo.title)}</h4>
+                    <p className="text-xs text-slate-600 leading-relaxed">{tr(photo.description)}</p>
                   </div>
                 </div>
               ))}
@@ -1012,14 +1001,13 @@ export default function BuyerSellerDetail({
                   <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-teal-950">Lưu trữ bằng chứng đối soát bất biến (Evidence Record)</h4>
-                  <p className="text-xs text-teal-800 mt-0.5">Tất cả tài liệu dưới đây đã được đối soát OCR trực tiếp với tổ chức cấp chứng nhận và cơ quan quản lý nhà nước.</p>
+                  <h4 className="text-base font-bold text-teal-950">{tr("Lưu trữ bằng chứng đối soát bất biến (Evidence Record)")}</h4>
+                  <p className="text-xs text-teal-800 mt-0.5">{tr("Tất cả tài liệu dưới đây đã được đối soát OCR trực tiếp với tổ chức cấp chứng nhận và cơ quan quản lý nhà nước.")}</p>
                 </div>
               </div>
 
               <span className="px-3.5 py-1.5 rounded-xl bg-teal-800 text-white text-xs font-bold whitespace-nowrap shadow-xs">
-                100% Khớp dữ liệu
-              </span>
+                {tr("100% Khớp dữ liệu")}</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1034,23 +1022,22 @@ export default function BuyerSellerDetail({
                     </div>
                     <div className="min-w-0 flex-1 space-y-1">
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold text-slate-900">{cert.title}</h4>
+                        <h4 className="text-sm font-bold text-slate-900">{tr(cert.title)}</h4>
                         {cert.isMandatory && (
                           <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">
-                            Bắt buộc
-                          </span>
+                            {tr("Bắt buộc")}</span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-600">Cơ quan cấp: <strong>{cert.issuer}</strong></p>
-                      <p className="text-xs text-slate-500">Mã tra cứu: <strong className="font-mono text-slate-800">{cert.certNumber}</strong></p>
-                      <p className="text-xs text-slate-500">Thời hạn: {cert.date}</p>
+                      <p className="text-xs text-slate-600">{tr("Cơ quan cấp: ")}<strong>{tr(cert.issuer)}</strong></p>
+                      <p className="text-xs text-slate-500">{tr("Mã tra cứu: ")}<strong className="font-mono text-slate-800">{tr(cert.certNumber)}</strong></p>
+                      <p className="text-xs text-slate-500">{tr("Thời hạn: ")}{tr(cert.date)}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
                     <span className="text-emerald-700 font-semibold flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      {cert.status}
+                      {tr(cert.status)}
                     </span>
 
                     <button
@@ -1061,7 +1048,7 @@ export default function BuyerSellerDetail({
                       className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-900 text-slate-700 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <Eye className="w-3.5 h-3.5 text-teal-700" />
-                      <span>Xem bản scan</span>
+                      <span>{tr("Xem bản scan")}</span>
                     </button>
                   </div>
                 </div>
@@ -1076,21 +1063,21 @@ export default function BuyerSellerDetail({
             <div className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-5">
                 <div className="text-center">
-                  <span className="text-4xl font-black text-slate-900 leading-none">{supplier.rating}</span>
+                  <span className="text-4xl font-black text-slate-900 leading-none">{tr(supplier.rating)}</span>
                   <div className="flex items-center justify-center gap-0.5 mt-1 text-amber-400">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <Star key={s} className="w-4 h-4 fill-amber-400" />
                     ))}
                   </div>
-                  <span className="text-[11px] text-slate-500 mt-1 block">48 đánh giá</span>
+                  <span className="text-[11px] text-slate-500 mt-1 block">{tr("48 đánh giá")}</span>
                 </div>
 
                 <div className="h-12 w-px bg-slate-200" />
 
                 <div className="space-y-1 text-xs text-slate-600">
-                  <p>✓ <strong>100%</strong> giao hàng đúng hạn hợp đồng</p>
-                  <p>✓ <strong>100%</strong> hàng hóa đúng thông số kiểm nghiệm</p>
-                  <p>✓ <strong>100%</strong> giao dịch hoàn tất bảo lãnh Escrow an toàn</p>
+                  <p>{tr("✓ ")}<strong>{tr("100%")}</strong> {tr(" giao hàng đúng hạn hợp đồng")}</p>
+                  <p>{tr("✓ ")}<strong>{tr("100%")}</strong> {tr(" hàng hóa đúng thông số kiểm nghiệm")}</p>
+                  <p>{tr("✓ ")}<strong>{tr("100%")}</strong> {tr(" giao dịch hoàn tất bảo lãnh Escrow an toàn")}</p>
                 </div>
               </div>
 
@@ -1101,8 +1088,7 @@ export default function BuyerSellerDetail({
                 }}
                 className="px-5 py-2.5 rounded-xl bg-[#083832] text-white text-xs font-bold hover:bg-[#062924] transition-colors cursor-pointer shrink-0"
               >
-                Gửi yêu cầu kết nối ngay
-              </button>
+                {tr("Gửi yêu cầu kết nối ngay")}</button>
             </div>
 
             <div className="space-y-4">
@@ -1111,15 +1097,15 @@ export default function BuyerSellerDetail({
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold text-slate-900">{rev.buyerName}</h4>
+                        <h4 className="text-sm font-bold text-slate-900">{tr(rev.buyerName)}</h4>
                         <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
-                          {rev.buyerCountry}
+                          {tr(rev.buyerCountry)}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-0.5">{rev.buyerRole}</p>
+                      <p className="text-xs text-slate-500 mt-0.5">{tr(rev.buyerRole)}</p>
                     </div>
 
-                    <span className="text-xs text-slate-400">{rev.date}</span>
+                    <span className="text-xs text-slate-400">{tr(rev.date)}</span>
                   </div>
 
                   <div className="flex items-center gap-1 text-amber-400">
@@ -1129,12 +1115,11 @@ export default function BuyerSellerDetail({
                   </div>
 
                   <p className="text-xs text-slate-700 leading-relaxed font-normal">
-                    "{rev.comment}"
-                  </p>
+                    {tr("\"")}{tr(rev.comment)}{tr("\"")}</p>
 
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                    <span>Sản phẩm giao thương: <strong>{rev.productPurchased}</strong></span>
-                    <span>Quy mô: <strong>{rev.volume}</strong></span>
+                    <span>{tr("Sản phẩm giao thương: ")}<strong>{tr(rev.productPurchased)}</strong></span>
+                    <span>{tr("Quy mô: ")}<strong>{tr(rev.volume)}</strong></span>
                   </div>
                 </div>
               ))}
@@ -1165,15 +1150,15 @@ export default function BuyerSellerDetail({
                     <Mail className="w-5 h-5 stroke-[2]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">Gửi yêu cầu báo giá B2B (RFQ)</h3>
-                    <p className="text-xs text-slate-500">Gửi trực tiếp đến bộ phận xuất khẩu của {supplier.name}</p>
+                    <h3 className="text-base font-bold text-slate-900">{tr("Gửi yêu cầu báo giá B2B (RFQ)")}</h3>
+                    <p className="text-xs text-slate-500">{tr("Gửi trực tiếp đến bộ phận xuất khẩu của ")}{tr(supplier.name)}</p>
                   </div>
                 </div>
 
                 <div className="space-y-3.5 text-xs">
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                      Sản phẩm quan tâm <span className="text-rose-500">*</span>
+                      {tr("Sản phẩm quan tâm ")}<span className="text-rose-500">{tr("*")}</span>
                     </label>
                     <select
                       value={selectedProductForRfq}
@@ -1182,17 +1167,16 @@ export default function BuyerSellerDetail({
                     >
                       {supplier.products.map((p) => (
                         <option key={p.id} value={p.name}>
-                          {p.name} ({p.priceRange})
-                        </option>
+                          {tr(p.name)} {tr(" (")}{tr(p.priceRange)}{tr(")")}</option>
                       ))}
-                      <option value="Tất cả sản phẩm">Yêu cầu chào giá tổng hợp nhiều sản phẩm</option>
+                      <option value="Tất cả sản phẩm">{tr("Yêu cầu chào giá tổng hợp nhiều sản phẩm")}</option>
                     </select>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Khối lượng dự kiến <span className="text-rose-500">*</span>
+                        {tr("Khối lượng dự kiến ")}<span className="text-rose-500">{tr("*")}</span>
                       </label>
                       <div className="flex">
                         <input 
@@ -1207,28 +1191,28 @@ export default function BuyerSellerDetail({
                           onChange={(e) => setRfqForm({ ...rfqForm, unit: e.target.value })}
                           className="px-3 py-2 rounded-r-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700 focus:outline-none"
                         >
-                          <option value="Tấn">Tấn</option>
-                          <option value="Container 20ft">Cont 20ft</option>
-                          <option value="Container 40ft">Cont 40ft</option>
+                          <option value="Tấn">{tr("Tấn")}</option>
+                          <option value="Container 20ft">{tr("Cont 20ft")}</option>
+                          <option value="Container 40ft">{tr("Cont 40ft")}</option>
                         </select>
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Điều kiện giao hàng (Incoterms) <span className="text-rose-500">*</span>
+                        {tr("Điều kiện giao hàng (Incoterms) ")}<span className="text-rose-500">{tr("*")}</span>
                       </label>
                       <select 
                         value={rfqForm.incoterm}
                         onChange={(e) => setRfqForm({ ...rfqForm, incoterm: e.target.value })}
                         className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-teal-700 bg-white"
                       >
-                        <option value="FOB Cát Lái (TP.HCM)">FOB Cát Lái (TP.HCM)</option>
-                        <option value="CIF Hamburg (Germany)">CIF Hamburg (Germany)</option>
-                        <option value="CIF Rotterdam (Netherlands)">CIF Rotterdam (Netherlands)</option>
-                        <option value="CIF Los Angeles (USA)">CIF Los Angeles (USA)</option>
-                        <option value="CFR Tokyo (Japan)">CFR Tokyo (Japan)</option>
-                        <option value="EXW Tại nhà máy">EXW Tại nhà máy (Tây Ninh/Đắk Lắk)</option>
+                        <option value="FOB Cát Lái (TP.HCM)">{tr("FOB Cát Lái (TP.HCM)")}</option>
+                        <option value="CIF Hamburg (Germany)">{tr("CIF Hamburg (Germany)")}</option>
+                        <option value="CIF Rotterdam (Netherlands)">{tr("CIF Rotterdam (Netherlands)")}</option>
+                        <option value="CIF Los Angeles (USA)">{tr("CIF Los Angeles (USA)")}</option>
+                        <option value="CFR Tokyo (Japan)">{tr("CFR Tokyo (Japan)")}</option>
+                        <option value="EXW Tại nhà máy">{tr("EXW Tại nhà máy (Tây Ninh/Đắk Lắk)")}</option>
                       </select>
                     </div>
                   </div>
@@ -1236,21 +1220,19 @@ export default function BuyerSellerDetail({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Cảng dỡ hàng / Điểm đến
-                      </label>
+                        {tr("Cảng dỡ hàng / Điểm đến")}</label>
                       <input 
                         type="text"
                         value={rfqForm.destinationPort}
                         onChange={(e) => setRfqForm({ ...rfqForm, destinationPort: e.target.value })}
-                        placeholder="Ví dụ: Hamburg Port, Germany..."
+                        placeholder={tr("Ví dụ: Hamburg Port, Germany...")}
                         className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-teal-700"
                       />
                     </div>
 
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Ngày dự kiến nhận hàng
-                      </label>
+                        {tr("Ngày dự kiến nhận hàng")}</label>
                       <input 
                         type="date"
                         value={rfqForm.targetDate}
@@ -1262,8 +1244,7 @@ export default function BuyerSellerDetail({
 
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                      Yêu cầu kỹ thuật & Ghi chú đơn hàng
-                    </label>
+                      {tr("Yêu cầu kỹ thuật & Ghi chú đơn hàng")}</label>
                     <textarea 
                       rows={3}
                       value={rfqForm.notes}
@@ -1279,14 +1260,13 @@ export default function BuyerSellerDetail({
                     onClick={() => setActiveModal(null)}
                     className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
                   >
-                    Hủy
-                  </button>
+                    {tr("Hủy")}</button>
                   <button 
                     type="submit"
                     className="px-6 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-bold transition-colors cursor-pointer shadow-md flex items-center gap-1.5"
                   >
                     <Send className="w-3.5 h-3.5 text-teal-300" />
-                    <span>Gửi yêu cầu báo giá</span>
+                    <span>{tr("Gửi yêu cầu báo giá")}</span>
                   </button>
                 </div>
               </form>
@@ -1297,14 +1277,13 @@ export default function BuyerSellerDetail({
               <div className="space-y-4">
                 <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
                   <div className="w-10 h-10 rounded-2xl bg-teal-800 text-white flex items-center justify-center font-bold text-xs">
-                    TRÍ
-                  </div>
+                    {tr("TRÍ")}</div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-base font-bold text-slate-900">Mr. Nguyễn Văn Trí</h3>
+                      <h3 className="text-base font-bold text-slate-900">{tr("Mr. Nguyễn Văn Trí")}</h3>
                       <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     </div>
-                    <p className="text-xs text-slate-500">Giám đốc Xuất khẩu • {supplier.name} (Đang trực tuyến)</p>
+                    <p className="text-xs text-slate-500">{tr("Giám đốc Xuất khẩu • ")}{tr(supplier.name)} {tr(" (Đang trực tuyến)")}</p>
                   </div>
                 </div>
 
@@ -1320,9 +1299,9 @@ export default function BuyerSellerDetail({
                           ? 'bg-[#083832] text-white rounded-tr-xs' 
                           : 'bg-white text-slate-800 border border-slate-200 rounded-tl-xs shadow-2xs'
                       }`}>
-                        {msg.text}
+                        {tr(msg.text)}
                       </div>
-                      <span className="text-[10px] text-slate-400 mt-1 px-1">{msg.time}</span>
+                      <span className="text-[10px] text-slate-400 mt-1 px-1">{tr(msg.time)}</span>
                     </div>
                   ))}
                 </div>
@@ -1333,15 +1312,14 @@ export default function BuyerSellerDetail({
                     type="text"
                     value={newChatMessage}
                     onChange={(e) => setNewChatMessage(e.target.value)}
-                    placeholder="Nhập nội dung trao đổi..."
+                    placeholder={tr("Nhập nội dung trao đổi...")}
                     className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-teal-700"
                   />
                   <button 
                     type="submit"
                     className="px-4 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-bold cursor-pointer"
                   >
-                    Gửi
-                  </button>
+                    {tr("Gửi")}</button>
                 </form>
               </div>
             )}
@@ -1354,43 +1332,41 @@ export default function BuyerSellerDetail({
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">{selectedDoc.title}</h3>
-                    <p className="text-xs text-slate-500">Cơ quan cấp: {selectedDoc.issuer} • Số hiệu: {selectedDoc.certNumber}</p>
+                    <h3 className="text-base font-bold text-slate-900">{tr(selectedDoc.title)}</h3>
+                    <p className="text-xs text-slate-500">{tr("Cơ quan cấp: ")}{tr(selectedDoc.issuer)} {tr(" • Số hiệu: ")}{tr(selectedDoc.certNumber)}</p>
                   </div>
                 </div>
 
                 <div className="p-6 rounded-2xl bg-slate-100/70 border border-slate-200/80 mb-5 text-center font-sans space-y-3">
                   <div className="bg-white p-6 sm:p-8 rounded-xl shadow-xs border border-slate-200/60 text-center font-sans space-y-3">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
-                      CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-                    </p>
+                      {tr("CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM")}</p>
                     <p className="text-[9px] font-semibold text-slate-500">
-                      Độc lập - Tự do - Hạnh phúc
-                    </p>
+                      {tr("Độc lập - Tự do - Hạnh phúc")}</p>
                     <div className="w-20 h-0.5 bg-slate-300 mx-auto" />
                     
                     <h4 className="text-sm sm:text-base font-bold text-slate-900 uppercase mt-4">
-                      {selectedDoc.title}
+                      {tr(selectedDoc.title)}
                     </h4>
-                    <p className="text-xs text-slate-500 font-mono">Mã tra cứu: {selectedDoc.certNumber}</p>
+                    <p className="text-xs text-slate-500 font-mono">{tr("Mã tra cứu: ")}{tr(selectedDoc.certNumber)}</p>
 
                     <div className="pt-4 text-left text-xs space-y-2 text-slate-700 border-t border-slate-100">
-                      <p><strong>Doanh nghiệp thụ hưởng:</strong> {supplier.name}</p>
-                      <p><strong>Mã số doanh nghiệp:</strong> {supplier.taxCode}</p>
-                      <p><strong>Tổ chức chứng nhận:</strong> {selectedDoc.issuer}</p>
-                      <p><strong>Thời hạn hiệu lực:</strong> {selectedDoc.date}</p>
-                      <p><strong>Phạm vi chứng nhận:</strong> Sản xuất, chế biến và đóng gói nông sản xuất khẩu</p>
+                      <p><strong>{tr("Doanh nghiệp thụ hưởng:")}</strong> {tr(supplier.name)}</p>
+                      <p><strong>{tr("Mã số doanh nghiệp:")}</strong> {tr(supplier.taxCode)}</p>
+                      <p><strong>{tr("Tổ chức chứng nhận:")}</strong> {tr(selectedDoc.issuer)}</p>
+                      <p><strong>{tr("Thời hạn hiệu lực:")}</strong> {tr(selectedDoc.date)}</p>
+                      <p><strong>{tr("Phạm vi chứng nhận:")}</strong> {tr(" Sản xuất, chế biến và đóng gói nông sản xuất khẩu")}</p>
                     </div>
 
                     <div className="pt-6 flex justify-between items-center text-[10px] text-slate-400">
                       <div>
-                        <span>Chứng thư đối soát điện tử bởi:</span>
-                        <div className="font-bold text-teal-800">VYBE VERIFICATION ENGINE</div>
+                        <span>{tr("Chứng thư đối soát điện tử bởi:")}</span>
+                        <div className="font-bold text-teal-800">{tr("VYBE VERIFICATION ENGINE")}</div>
                       </div>
                       <div className="w-16 h-16 rounded-full border-2 border-rose-600 text-rose-600 flex flex-col items-center justify-center -rotate-12 select-none">
-                        <span className="text-[6px] font-bold">ACCREDITED</span>
-                        <span className="text-[10px]">★</span>
-                        <span className="text-[6px] font-bold">ĐÃ ĐỐI SOÁT</span>
+                        <span className="text-[6px] font-bold">{tr("ACCREDITED")}</span>
+                        <span className="text-[10px]">{tr("★")}</span>
+                        <span className="text-[6px] font-bold">{tr("ĐÃ ĐỐI SOÁT")}</span>
                       </div>
                     </div>
                   </div>
@@ -1401,8 +1377,7 @@ export default function BuyerSellerDetail({
                     onClick={() => setActiveModal(null)}
                     className="px-5 py-2.5 rounded-xl bg-[#083832] text-white font-semibold text-xs transition-colors cursor-pointer"
                   >
-                    Đóng bản xem
-                  </button>
+                    {tr("Đóng bản xem")}</button>
                 </div>
               </div>
             )}
@@ -1413,20 +1388,18 @@ export default function BuyerSellerDetail({
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
                   <Check className="w-8 h-8 stroke-[3]" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900">Gửi RFQ thành công!</h3>
+                <h3 className="text-lg font-bold text-slate-900">{tr("Gửi RFQ thành công!")}</h3>
                 <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Yêu cầu chào giá cho đơn hàng <strong>{selectedProductForRfq}</strong> ({rfqForm.volume} {rfqForm.unit}) đã được chuyển giao an toàn đến ban giám đốc <strong>{supplier.name}</strong>.
-                </p>
+                  {tr("Yêu cầu chào giá cho đơn hàng ")}<strong>{tr(selectedProductForRfq)}</strong> {tr(" (")}{tr(rfqForm.volume)} {tr(rfqForm.unit)}{tr(") đã được chuyển giao an toàn đến ban giám đốc ")}<strong>{tr(supplier.name)}</strong>{tr(".")}</p>
                 <div className="p-3 rounded-2xl bg-teal-50 border border-teal-200 text-xs text-teal-900 text-left space-y-1">
-                  <p>✓ Nhân viên phụ trách sẽ gửi báo giá FOB/CIF trong vòng <strong>2 giờ</strong>.</p>
-                  <p>✓ Hợp đồng có thể ký điện tử và kích hoạt bảo lãnh Escrow $500,000 trên sàn VYBE.</p>
+                  <p>{tr("✓ Nhân viên phụ trách sẽ gửi báo giá FOB/CIF trong vòng ")}<strong>{tr("2 giờ")}</strong>{tr(".")}</p>
+                  <p>{tr("✓ Hợp đồng có thể ký điện tử và kích hoạt bảo lãnh Escrow $500,000 trên sàn VYBE.")}</p>
                 </div>
                 <button
                   onClick={() => setActiveModal(null)}
                   className="px-6 py-2.5 rounded-xl bg-[#083832] text-white text-xs font-bold transition-colors cursor-pointer"
                 >
-                  Xác nhận và đóng
-                </button>
+                  {tr("Xác nhận và đóng")}</button>
               </div>
             )}
 

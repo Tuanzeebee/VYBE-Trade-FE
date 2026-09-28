@@ -28,6 +28,7 @@ import {
   ExternalLink,
   Sprout
 } from 'lucide-react';
+import { useLanguage } from "../context/LanguageContext";
 
 interface AboutUsPageProps {
   onNavigateHome: () => void;
@@ -44,6 +45,7 @@ export default function AboutUsPage({
   onNavigatePricing,
   onNavigateOnboarding
 }: AboutUsPageProps) {
+  const { tr } = useLanguage();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [activeAudienceDetail, setActiveAudienceDetail] = useState<string | null>(null);
@@ -102,19 +104,16 @@ export default function AboutUsPage({
               <div className="inline-flex items-center gap-2 mb-4 select-none">
                 <span className="w-1 h-4 rounded-full bg-blue-600 inline-block"></span>
                 <span className="text-xs font-bold text-blue-700 uppercase tracking-widest">
-                  VỀ VYBE TRADE
-                </span>
+                  {tr("VỀ VYBE TRADE")}</span>
               </div>
 
               {/* Main Headline */}
               <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-slate-900 tracking-tight leading-[1.2] mb-4">
-                Kiến tạo niềm tin cho<br className="hidden sm:inline" /> thương mại nông sản Việt Nam
-              </h1>
+                {tr("Kiến tạo niềm tin cho")}<br className="hidden sm:inline" /> {tr(" thương mại nông sản Việt Nam")}</h1>
 
               {/* Subheadline Text */}
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal mb-6">
-                VYBE TRADE là nền tảng tin cậy kết nối doanh nghiệp xuất khẩu Việt Nam với người mua quốc tế, đặc biệt trong lĩnh vực thực phẩm và nông sản, hướng tới một nền thương mại minh bạch, bền vững và thịnh vượng hơn.
-              </p>
+                {tr("VYBE TRADE là nền tảng tin cậy kết nối doanh nghiệp xuất khẩu Việt Nam với người mua quốc tế, đặc biệt trong lĩnh vực thực phẩm và nông sản, hướng tới một nền thương mại minh bạch, bền vững và thịnh vượng hơn.")}</p>
 
               {/* Quick Action Buttons */}
               <div className="flex flex-wrap items-center gap-3">
@@ -123,14 +122,14 @@ export default function AboutUsPage({
                   className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-all shadow-sm flex items-center gap-2 cursor-pointer active:scale-98"
                 >
                   <Mail className="w-3.5 h-3.5" />
-                  <span>Liên hệ hợp tác</span>
+                  <span>{tr("Liên hệ hợp tác")}</span>
                 </button>
 
                 <button
                   onClick={onNavigateSolutions}
                   className="px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 font-semibold text-xs transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer active:scale-98"
                 >
-                  <span>Khám phá bộ giải pháp</span>
+                  <span>{tr("Khám phá bộ giải pháp")}</span>
                   <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
                 </button>
               </div>
@@ -145,17 +144,15 @@ export default function AboutUsPage({
                 <div className="flex items-start justify-between relative z-10">
                   <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/80 backdrop-blur-xs text-[10px] font-bold text-emerald-800 border border-emerald-200/60">
                     <Sprout className="w-3 h-3 text-emerald-600" />
-                    <span>Nông sản Xanh & Sạch</span>
+                    <span>{tr("Nông sản Xanh & Sạch")}</span>
                   </div>
 
                   {/* Artistic Handwritten Slogan matching image */}
                   <div className="text-right">
                     <span className="font-serif italic font-semibold text-emerald-900 text-base sm:text-lg block tracking-wide drop-shadow-2xs">
-                      "Nông sản Việt
-                    </span>
+                      {tr("\"Nông sản Việt")}</span>
                     <span className="font-serif italic font-bold text-emerald-700 text-xs sm:text-sm block">
-                      Vươn xa thế giới"
-                    </span>
+                      {tr("Vươn xa thế giới\"")}</span>
                   </div>
                 </div>
 
@@ -254,12 +251,10 @@ export default function AboutUsPage({
                   <Target className="w-6 h-6 stroke-[2]" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900">
-                  Sứ mệnh
-                </h3>
+                  {tr("Sứ mệnh")}</h3>
               </div>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                Nâng cao uy tín và năng lực cạnh tranh của doanh nghiệp xuất khẩu Việt Nam thông qua xác minh minh bạch, kết nối hiệu quả và dữ liệu thị trường đáng tin cậy.
-              </p>
+                {tr("Nâng cao uy tín và năng lực cạnh tranh của doanh nghiệp xuất khẩu Việt Nam thông qua xác minh minh bạch, kết nối hiệu quả và dữ liệu thị trường đáng tin cậy.")}</p>
             </div>
           </div>
 
@@ -271,12 +266,10 @@ export default function AboutUsPage({
                   <Eye className="w-6 h-6 stroke-[2]" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900">
-                  Tầm nhìn
-                </h3>
+                  {tr("Tầm nhìn")}</h3>
               </div>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                Trở thành nền tảng hàng đầu Đông Nam Á về xác minh và kết nối thương mại nông sản, đưa sản phẩm Việt Nam vươn xa trên thị trường toàn cầu.
-              </p>
+                {tr("Trở thành nền tảng hàng đầu Đông Nam Á về xác minh và kết nối thương mại nông sản, đưa sản phẩm Việt Nam vươn xa trên thị trường toàn cầu.")}</p>
             </div>
           </div>
 
@@ -288,8 +281,7 @@ export default function AboutUsPage({
                   <Gem className="w-6 h-6 stroke-[2]" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900">
-                  Giá trị cốt lõi
-                </h3>
+                  {tr("Giá trị cốt lõi")}</h3>
               </div>
 
               {/* 6 Pills arranged in 2 rows of 3 */}
@@ -307,7 +299,7 @@ export default function AboutUsPage({
                     className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50/70 border border-emerald-200/70 text-emerald-800 text-[11px] font-semibold"
                   >
                     <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 stroke-[2.5]" />
-                    <span className="truncate">{val}</span>
+                    <span className="truncate">{tr(val)}</span>
                   </div>
                 ))}
               </div>
@@ -322,8 +314,7 @@ export default function AboutUsPage({
          ========================================================================= */}
       <section className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 mb-10 sm:mb-12">
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-5">
-          Chúng tôi phục vụ ai?
-        </h2>
+          {tr("Chúng tôi phục vụ ai?")}</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
@@ -334,11 +325,9 @@ export default function AboutUsPage({
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900 mb-2">
-                Doanh nghiệp xuất khẩu Việt Nam
-              </h3>
+                {tr("Doanh nghiệp xuất khẩu Việt Nam")}</h3>
               <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal">
-                Nhà sản xuất, hợp tác xã, doanh nghiệp nông sản và thực phẩm muốn mở rộng thị trường quốc tế.
-              </p>
+                {tr("Nhà sản xuất, hợp tác xã, doanh nghiệp nông sản và thực phẩm muốn mở rộng thị trường quốc tế.")}</p>
             </div>
           </div>
 
@@ -349,11 +338,9 @@ export default function AboutUsPage({
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900 mb-2">
-                Người mua quốc tế
-              </h3>
+                {tr("Người mua quốc tế")}</h3>
               <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal">
-                Nhà nhập khẩu, nhà phân phối, chuỗi bán lẻ, nhà sản xuất thực phẩm tìm nguồn cung uy tín từ Việt Nam.
-              </p>
+                {tr("Nhà nhập khẩu, nhà phân phối, chuỗi bán lẻ, nhà sản xuất thực phẩm tìm nguồn cung uy tín từ Việt Nam.")}</p>
             </div>
           </div>
 
@@ -364,11 +351,9 @@ export default function AboutUsPage({
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900 mb-2">
-                Đối tác & tổ chức
-              </h3>
+                {tr("Đối tác & tổ chức")}</h3>
               <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal">
-                Hiệp hội ngành hàng, tổ chức chứng nhận, đối tác logistics, tài chính... cùng thúc đẩy thương mại bền vững.
-              </p>
+                {tr("Hiệp hội ngành hàng, tổ chức chứng nhận, đối tác logistics, tài chính... cùng thúc đẩy thương mại bền vững.")}</p>
             </div>
           </div>
 
@@ -380,8 +365,7 @@ export default function AboutUsPage({
          ========================================================================= */}
       <section className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 mb-12 sm:mb-16">
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6">
-          Hành trình phát triển
-        </h2>
+          {tr("Hành trình phát triển")}</h2>
 
         <div className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-slate-200/80 shadow-xs overflow-x-auto">
           <div className="min-w-[760px] flex items-center justify-between gap-3 relative py-4">
@@ -415,16 +399,16 @@ export default function AboutUsPage({
                   {/* Circle with Year */}
                   <div className="flex items-center gap-2 mb-2.5">
                     <div className="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
-                      {idx + 1}
+                      {tr(idx + 1)}
                     </div>
                     <span className="font-extrabold text-sm sm:text-base text-slate-900">
-                      {milestone.year}
+                      {tr(milestone.year)}
                     </span>
                   </div>
 
                   {/* Description */}
                   <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-normal">
-                    {milestone.desc}
+                    {tr(milestone.desc)}
                   </p>
 
                 </div>
@@ -455,13 +439,13 @@ export default function AboutUsPage({
           ].map((stat, i) => (
             <div key={i} className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs text-center">
               <span className="text-2xl sm:text-3xl font-extrabold text-emerald-700 block mb-1">
-                {stat.value}
+                {tr(stat.value)}
               </span>
               <span className="text-xs sm:text-sm font-bold text-slate-800 block mb-1">
-                {stat.label}
+                {tr(stat.label)}
               </span>
               <span className="text-[11px] text-slate-500">
-                {stat.sub}
+                {tr(stat.sub)}
               </span>
             </div>
           ))}
@@ -475,14 +459,11 @@ export default function AboutUsPage({
         <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 rounded-3xl p-8 sm:p-10 lg:p-12 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-lg">
           <div className="max-w-xl">
             <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">
-              ĐỒNG HÀNH CÙNG VYBE TRADE
-            </span>
+              {tr("ĐỒNG HÀNH CÙNG VYBE TRADE")}</span>
             <h2 className="text-2xl sm:text-3xl font-extrabold mb-3">
-              Cùng kiến tạo tương lai xuất khẩu nông sản bền vững
-            </h2>
+              {tr("Cùng kiến tạo tương lai xuất khẩu nông sản bền vững")}</h2>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Dù bạn là doanh nghiệp xuất khẩu, nhà nhập khẩu quốc tế hay tổ chức xúc tiến thương mại, VYBE Trade luôn sẵn sàng lắng nghe và đồng hành.
-            </p>
+              {tr("Dù bạn là doanh nghiệp xuất khẩu, nhà nhập khẩu quốc tế hay tổ chức xúc tiến thương mại, VYBE Trade luôn sẵn sàng lắng nghe và đồng hành.")}</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
@@ -490,14 +471,12 @@ export default function AboutUsPage({
               onClick={() => setIsContactModalOpen(true)}
               className="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm transition-all shadow-md cursor-pointer active:scale-98"
             >
-              Gửi yêu cầu hợp tác
-            </button>
+              {tr("Gửi yêu cầu hợp tác")}</button>
             <button
               onClick={onNavigateDirectory}
               className="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/20 font-semibold text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
             >
-              Xem danh mục nhà cung cấp
-            </button>
+              {tr("Xem danh mục nhà cung cấp")}</button>
           </div>
         </div>
       </section>
@@ -525,11 +504,9 @@ export default function AboutUsPage({
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">
-                  Gửi thông tin thành công!
-                </h3>
+                  {tr("Gửi thông tin thành công!")}</h3>
                 <p className="text-xs text-slate-600 leading-relaxed mb-6 max-w-sm mx-auto">
-                  Cảm ơn bạn đã quan tâm đến VYBE Trade. Đội ngũ phụ trách phát triển đối tác sẽ phản hồi thư của bạn trong vòng 24 giờ làm việc.
-                </p>
+                  {tr("Cảm ơn bạn đã quan tâm đến VYBE Trade. Đội ngũ phụ trách phát triển đối tác sẽ phản hồi thư của bạn trong vòng 24 giờ làm việc.")}</p>
                 <button
                   onClick={() => {
                     setIsContactModalOpen(false);
@@ -537,26 +514,22 @@ export default function AboutUsPage({
                   }}
                   className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors cursor-pointer"
                 >
-                  Đóng cửa sổ
-                </button>
+                  {tr("Đóng cửa sổ")}</button>
               </div>
             ) : (
               <div>
                 <div className="mb-5">
                   <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wide">
-                    KẾT NỐI VỚI CHÚNG TÔI
-                  </span>
+                    {tr("KẾT NỐI VỚI CHÚNG TÔI")}</span>
                   <h3 className="text-xl font-bold text-slate-900">
-                    Liên hệ & Hợp tác doanh nghiệp
-                  </h3>
+                    {tr("Liên hệ & Hợp tác doanh nghiệp")}</h3>
                   <p className="text-xs text-slate-500 mt-1">
-                    Hãy cho chúng tôi biết nhu cầu hợp tác của bạn
-                  </p>
+                    {tr("Hãy cho chúng tôi biết nhu cầu hợp tác của bạn")}</p>
                 </div>
 
                 <form onSubmit={handleContactSubmit} className="space-y-3.5 text-xs">
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Họ tên đại diện</label>
+                    <label className="block font-semibold text-slate-700 mb-1">{tr("Họ tên đại diện")}</label>
                     <input
                       type="text"
                       required
@@ -567,7 +540,7 @@ export default function AboutUsPage({
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Tên tổ chức / Doanh nghiệp</label>
+                    <label className="block font-semibold text-slate-700 mb-1">{tr("Tên tổ chức / Doanh nghiệp")}</label>
                     <input
                       type="text"
                       required
@@ -579,7 +552,7 @@ export default function AboutUsPage({
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">Số điện thoại</label>
+                      <label className="block font-semibold text-slate-700 mb-1">{tr("Số điện thoại")}</label>
                       <input
                         type="text"
                         required
@@ -589,7 +562,7 @@ export default function AboutUsPage({
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">Email liên hệ</label>
+                      <label className="block font-semibold text-slate-700 mb-1">{tr("Email liên hệ")}</label>
                       <input
                         type="email"
                         required
@@ -601,21 +574,21 @@ export default function AboutUsPage({
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Hình thức hợp tác</label>
+                    <label className="block font-semibold text-slate-700 mb-1">{tr("Hình thức hợp tác")}</label>
                     <select
                       value={contactForm.topic}
                       onChange={(e) => setContactForm({ ...contactForm, topic: e.target.value })}
                       className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-500 text-slate-900 bg-white"
                     >
-                      <option value="partnership">Hợp tác xúc tiến thương mại nông sản</option>
-                      <option value="seller">Doanh nghiệp xuất khẩu đăng ký xác minh</option>
-                      <option value="buyer">Buyer quốc tế tìm kiếm nhà cung cấp</option>
-                      <option value="media">Báo chí, truyền thông & sự kiện</option>
+                      <option value="partnership">{tr("Hợp tác xúc tiến thương mại nông sản")}</option>
+                      <option value="seller">{tr("Doanh nghiệp xuất khẩu đăng ký xác minh")}</option>
+                      <option value="buyer">{tr("Buyer quốc tế tìm kiếm nhà cung cấp")}</option>
+                      <option value="media">{tr("Báo chí, truyền thông & sự kiện")}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Nội dung trao đổi</label>
+                    <label className="block font-semibold text-slate-700 mb-1">{tr("Nội dung trao đổi")}</label>
                     <textarea
                       rows={3}
                       value={contactForm.message}
@@ -628,8 +601,7 @@ export default function AboutUsPage({
                     type="submit"
                     className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors cursor-pointer mt-2"
                   >
-                    Gửi thông điệp hợp tác
-                  </button>
+                    {tr("Gửi thông điệp hợp tác")}</button>
                 </form>
               </div>
             )}

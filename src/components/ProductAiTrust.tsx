@@ -19,6 +19,7 @@ import {
   ExternalLink,
   ChevronRight
 } from 'lucide-react';
+import { useLanguage } from "../context/LanguageContext";
 
 interface ProductAiTrustProps {
   onNavigateHome: () => void;
@@ -31,6 +32,7 @@ export default function ProductAiTrust({
   onNavigateNav,
   onSwitchToVerification 
 }: ProductAiTrustProps) {
+  const { tr } = useLanguage();
   const [activeModal, setActiveModal] = useState<'demo' | 'learn-more' | 'process-detail' | 'step-detail' | null>(null);
   const [activeStepModal, setActiveStepModal] = useState<number | null>(null);
   const [demoAnalyzing, setDemoAnalyzing] = useState(false);
@@ -62,14 +64,14 @@ export default function ProductAiTrust({
             onClick={onSwitchToVerification}
             className="px-4 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer flex items-center gap-1.5"
           >
-            <span>Dịch vụ 1: Xác minh doanh nghiệp</span>
+            <span>{tr("Dịch vụ 1: Xác minh doanh nghiệp")}</span>
           </button>
-          <span className="text-slate-300">/</span>
+          <span className="text-slate-300">{tr("/")}</span>
           <button
             className="px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white shadow-xs cursor-default flex items-center gap-1.5"
           >
             <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-            <span>Dịch vụ 2: AI Trust Co-pilot</span>
+            <span>{tr("Dịch vụ 2: AI Trust Co-pilot")}</span>
           </button>
         </div>
 
@@ -84,24 +86,20 @@ export default function ProductAiTrust({
                 <span className="w-2 h-0.5 rounded-full bg-[#0d9488]" />
               </span>
               <span className="text-[11px] sm:text-xs font-bold text-[#0d9488] tracking-widest uppercase">
-                SẢN PHẨM / DỊCH VỤ
-              </span>
+                {tr("SẢN PHẨM / DỊCH VỤ")}</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-slate-900 tracking-tight leading-[1.18] mb-4">
-              AI Trust Co-pilot
-            </h1>
+              {tr("AI Trust Co-pilot")}</h1>
 
             {/* Subheadline */}
             <h2 className="text-slate-800 text-lg sm:text-[20px] font-semibold leading-snug mb-3">
-              Phân tích tài liệu, phát hiện rủi ro, hỗ trợ quyết định.
-            </h2>
+              {tr("Phân tích tài liệu, phát hiện rủi ro, hỗ trợ quyết định.")}</h2>
 
             {/* Description Body */}
             <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed max-w-xl mb-8 font-normal">
-              Sử dụng OCR và LLM để đọc, đối chiếu và phân tích hồ sơ doanh nghiệp, so sánh với các nguồn dữ liệu uy tín, đưa ra <strong className="font-semibold text-slate-900">Risk Score</strong> và cảnh báo bất thường cho đội ngũ thẩm định.
-            </p>
+              {tr("Sử dụng OCR và LLM để đọc, đối chiếu và phân tích hồ sơ doanh nghiệp, so sánh với các nguồn dữ liệu uy tín, đưa ra ")}<strong className="font-semibold text-slate-900">{tr("Risk Score")}</strong> {tr(" và cảnh báo bất thường cho đội ngũ thẩm định.")}</p>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-4">
@@ -110,7 +108,7 @@ export default function ProductAiTrust({
                 onClick={triggerLiveDemo}
                 className="bg-[#0f172a] hover:bg-slate-800 text-white font-medium text-sm sm:text-base px-6 py-3 rounded-full flex items-center gap-2 transition-all shadow-xs hover:shadow-md active:scale-95 cursor-pointer"
               >
-                <span>Xem demo</span>
+                <span>{tr("Xem demo")}</span>
                 <ArrowRight className="w-4 h-4 stroke-[2.2]" />
               </button>
 
@@ -119,8 +117,7 @@ export default function ProductAiTrust({
                 onClick={() => setActiveModal('learn-more')}
                 className="bg-white hover:bg-slate-50 text-slate-800 font-medium text-sm sm:text-base px-6 py-3 rounded-full border border-slate-200 transition-all shadow-xs hover:border-slate-300 active:scale-95 cursor-pointer"
               >
-                Tìm hiểu thêm
-              </button>
+                {tr("Tìm hiểu thêm")}</button>
             </div>
 
           </div>
@@ -153,8 +150,7 @@ export default function ProductAiTrust({
                     </svg>
                   </div>
                   <span className="text-[10px] font-bold text-red-700 tracking-wider uppercase">
-                    GIẤY CHỨNG NHẬN
-                  </span>
+                    {tr("GIẤY CHỨNG NHẬN")}</span>
                 </div>
 
                 {/* Simulated Text Lines */}
@@ -171,7 +167,7 @@ export default function ProductAiTrust({
                 <div className="self-end mr-2 mb-1">
                   <div className="w-9 h-9 rounded-full border-2 border-red-500/80 border-dashed flex items-center justify-center text-red-500">
                     <div className="w-6 h-6 rounded-full border border-red-500 flex items-center justify-center">
-                      <span className="text-[7px] font-bold">VN</span>
+                      <span className="text-[7px] font-bold">{tr("VN")}</span>
                     </div>
                   </div>
                 </div>
@@ -181,8 +177,7 @@ export default function ProductAiTrust({
               <div className="relative -ml-8 sm:-ml-10 z-20 w-[190px] sm:w-[210px] rounded-2xl bg-white border border-slate-100 shadow-[0_12px_36px_rgba(0,0,0,0.08)] p-4 sm:p-5 flex flex-col justify-between shrink-0">
                 <div className="flex items-center gap-2 mb-3">
                   <h3 className="text-xs sm:text-[13px] font-bold text-slate-900">
-                    Đang phân tích...
-                  </h3>
+                    {tr("Đang phân tích...")}</h3>
                 </div>
 
                 {/* 4 Checklist Items */}
@@ -198,7 +193,7 @@ export default function ProductAiTrust({
                         <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.5]" />
                       </div>
                       <span className="text-[11px] font-medium text-slate-700 leading-tight">
-                        {item}
+                        {tr(item)}
                       </span>
                     </div>
                   ))}
@@ -210,8 +205,7 @@ export default function ProductAiTrust({
                 
                 {/* Title */}
                 <h3 className="text-xs sm:text-[13px] font-bold text-slate-900 mb-2">
-                  Risk Score (dự kiến)
-                </h3>
+                  {tr("Risk Score (dự kiến)")}</h3>
 
                 {/* Semicircular Gauge SVG */}
                 <div className="flex flex-col items-center justify-center my-1">
@@ -238,15 +232,13 @@ export default function ProductAiTrust({
                     {/* Score Number in Center */}
                     <div className="absolute bottom-0 inset-x-0 flex flex-col items-center">
                       <span className="text-xl sm:text-2xl font-bold text-slate-900 leading-none">
-                        12/100
-                      </span>
+                        {tr("12/100")}</span>
                     </div>
                   </div>
 
                   {/* Rating Label: Rủi ro thấp */}
                   <span className="text-xs sm:text-sm font-bold text-emerald-600 mt-2">
-                    Rủi ro thấp
-                  </span>
+                    {tr("Rủi ro thấp")}</span>
                 </div>
 
                 {/* Verified Checklist below score */}
@@ -254,20 +246,17 @@ export default function ProductAiTrust({
                   <div className="flex items-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                     <span className="text-[10px] sm:text-[11px] font-medium text-slate-600">
-                      Thông tin hợp lệ
-                    </span>
+                      {tr("Thông tin hợp lệ")}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                     <span className="text-[10px] sm:text-[11px] font-medium text-slate-600">
-                      Khớp với VN Business Registry
-                    </span>
+                      {tr("Khớp với VN Business Registry")}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                     <span className="text-[10px] sm:text-[11px] font-medium text-slate-600">
-                      Không phát hiện bất thường
-                    </span>
+                      {tr("Không phát hiện bất thường")}</span>
                   </div>
                 </div>
 
@@ -289,14 +278,13 @@ export default function ProductAiTrust({
         {/* Section Header */}
         <div className="flex items-center justify-between gap-4 mb-6">
           <h3 className="text-xl sm:text-[22px] font-bold text-slate-900 tracking-tight">
-            Quy trình hoạt động
-          </h3>
+            {tr("Quy trình hoạt động")}</h3>
 
           <button 
             onClick={() => setActiveModal('process-detail')}
             className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors cursor-pointer"
           >
-            <span>Tìm hiểu chi tiết</span>
+            <span>{tr("Tìm hiểu chi tiết")}</span>
             <ArrowRight className="w-4 h-4 stroke-[2.2]" />
           </button>
         </div>
@@ -321,13 +309,12 @@ export default function ProductAiTrust({
               {/* Text */}
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-base font-bold text-slate-900">01</span>
-                  <h4 className="text-sm font-bold text-slate-900">Upload tài liệu</h4>
+                  <span className="text-base font-bold text-slate-900">{tr("01")}</span>
+                  <h4 className="text-sm font-bold text-slate-900">{tr("Upload tài liệu")}</h4>
                 </div>
                 <p className="text-xs text-slate-500 mt-1 leading-snug font-normal">
-                  Giấy phép, chứng nhận,<br />
-                  hồ sơ doanh nghiệp
-                </p>
+                  {tr("Giấy phép, chứng nhận,")}<br />
+                  {tr("hồ sơ doanh nghiệp")}</p>
               </div>
             </div>
 
@@ -354,12 +341,11 @@ export default function ProductAiTrust({
               {/* Text */}
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-base font-bold text-slate-900">02</span>
-                  <h4 className="text-sm font-bold text-slate-900">Trích xuất & phân tích</h4>
+                  <span className="text-base font-bold text-slate-900">{tr("02")}</span>
+                  <h4 className="text-sm font-bold text-slate-900">{tr("Trích xuất & phân tích")}</h4>
                 </div>
                 <p className="text-xs text-slate-500 mt-1 leading-snug font-normal">
-                  OCR/LLM đọc và hiểu nội dung
-                </p>
+                  {tr("OCR/LLM đọc và hiểu nội dung")}</p>
               </div>
             </div>
 
@@ -386,13 +372,12 @@ export default function ProductAiTrust({
               {/* Text */}
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-base font-bold text-slate-900">03</span>
-                  <h4 className="text-sm font-bold text-slate-900">Đối chiếu đa nguồn</h4>
+                  <span className="text-base font-bold text-slate-900">{tr("03")}</span>
+                  <h4 className="text-sm font-bold text-slate-900">{tr("Đối chiếu đa nguồn")}</h4>
                 </div>
                 <p className="text-xs text-slate-500 mt-1 leading-snug font-normal">
-                  VN Business Registry,<br />
-                  EU VIES, tiêu chuẩn quốc tế...
-                </p>
+                  {tr("VN Business Registry,")}<br />
+                  {tr("EU VIES, tiêu chuẩn quốc tế...")}</p>
               </div>
             </div>
 
@@ -419,13 +404,12 @@ export default function ProductAiTrust({
               {/* Text */}
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-base font-bold text-slate-900">04</span>
-                  <h4 className="text-sm font-bold text-slate-900">Risk Score & báo cáo</h4>
+                  <span className="text-base font-bold text-slate-900">{tr("04")}</span>
+                  <h4 className="text-sm font-bold text-slate-900">{tr("Risk Score & báo cáo")}</h4>
                 </div>
                 <p className="text-xs text-slate-500 mt-1 leading-snug font-normal">
-                  Đánh giá rủi ro,<br />
-                  đề xuất cho Admin
-                </p>
+                  {tr("Đánh giá rủi ro,")}<br />
+                  {tr("đề xuất cho Admin")}</p>
               </div>
             </div>
           </div>
@@ -454,16 +438,16 @@ export default function ProductAiTrust({
                 <Sparkles className="w-5 h-5 stroke-[2.2]" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-slate-900">Mô phỏng Phân tích AI Trust Co-pilot</h3>
-                <p className="text-xs text-slate-500">Tài liệu mẫu: Giấy chứng nhận ĐKKD & ISO 22000 (VietFarm Co., Ltd.)</p>
+                <h3 className="text-base font-bold text-slate-900">{tr("Mô phỏng Phân tích AI Trust Co-pilot")}</h3>
+                <p className="text-xs text-slate-500">{tr("Tài liệu mẫu: Giấy chứng nhận ĐKKD & ISO 22000 (VietFarm Co., Ltd.)")}</p>
               </div>
             </div>
 
             {/* Interactive Progress Bar */}
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 mb-5">
               <div className="flex items-center justify-between text-xs font-semibold text-slate-700 mb-2">
-                <span>Tiến trình xử lý mô hình AI</span>
-                <span className="text-blue-600">{demoStep * 25}%</span>
+                <span>{tr("Tiến trình xử lý mô hình AI")}</span>
+                <span className="text-blue-600">{tr(demoStep * 25)}{tr("%")}</span>
               </div>
               <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                 <div 
@@ -475,19 +459,19 @@ export default function ProductAiTrust({
               <div className="mt-4 space-y-2 text-xs">
                 <div className={`flex items-center gap-2 ${demoStep >= 1 ? 'text-slate-800' : 'text-slate-400'}`}>
                   <CheckCircle2 className={`w-4 h-4 ${demoStep >= 1 ? 'text-emerald-600' : 'text-slate-300'}`} />
-                  <span>Bước 1: OCR đa ngôn ngữ trích xuất 42 trường thông tin pháp lý</span>
+                  <span>{tr("Bước 1: OCR đa ngôn ngữ trích xuất 42 trường thông tin pháp lý")}</span>
                 </div>
                 <div className={`flex items-center gap-2 ${demoStep >= 2 ? 'text-slate-800' : 'text-slate-400'}`}>
                   <CheckCircle2 className={`w-4 h-4 ${demoStep >= 2 ? 'text-emerald-600' : 'text-slate-300'}`} />
-                  <span>Bước 2: LLM đối soát chéo MST 0314892345 qua VN Business Registry</span>
+                  <span>{tr("Bước 2: LLM đối soát chéo MST 0314892345 qua VN Business Registry")}</span>
                 </div>
                 <div className={`flex items-center gap-2 ${demoStep >= 3 ? 'text-slate-800' : 'text-slate-400'}`}>
                   <CheckCircle2 className={`w-4 h-4 ${demoStep >= 3 ? 'text-emerald-600' : 'text-slate-300'}`} />
-                  <span>Bước 3: Xác thực hiệu lực chứng chỉ ISO và dữ liệu xuất nhập khẩu</span>
+                  <span>{tr("Bước 3: Xác thực hiệu lực chứng chỉ ISO và dữ liệu xuất nhập khẩu")}</span>
                 </div>
                 <div className={`flex items-center gap-2 ${demoStep >= 4 ? 'text-slate-800' : 'text-slate-400'}`}>
                   <CheckCircle2 className={`w-4 h-4 ${demoStep >= 4 ? 'text-emerald-600' : 'text-slate-300'}`} />
-                  <span>Bước 4: Tính toán Risk Score tổng hợp (12/100 - Mức rủi ro thấp)</span>
+                  <span>{tr("Bước 4: Tính toán Risk Score tổng hợp (12/100 - Mức rủi ro thấp)")}</span>
                 </div>
               </div>
             </div>
@@ -495,12 +479,12 @@ export default function ProductAiTrust({
             {/* Result Box */}
             <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 flex items-center justify-between mb-5">
               <div>
-                <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wide">Kết quả đánh giá AI</span>
-                <p className="text-xs text-emerald-900 font-semibold mt-0.5">Khuyến nghị: Phê duyệt cấp chứng nhận L2 Enhanced Verified</p>
+                <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wide">{tr("Kết quả đánh giá AI")}</span>
+                <p className="text-xs text-emerald-900 font-semibold mt-0.5">{tr("Khuyến nghị: Phê duyệt cấp chứng nhận L2 Enhanced Verified")}</p>
               </div>
               <div className="text-right">
-                <span className="text-lg font-bold text-emerald-700">12/100</span>
-                <p className="text-[10px] text-emerald-600">Rủi ro thấp</p>
+                <span className="text-lg font-bold text-emerald-700">{tr("12/100")}</span>
+                <p className="text-[10px] text-emerald-600">{tr("Rủi ro thấp")}</p>
               </div>
             </div>
 
@@ -510,14 +494,13 @@ export default function ProductAiTrust({
                 className="flex-1 py-2.5 rounded-full bg-[#0f172a] hover:bg-slate-800 text-white font-medium text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                <span>Chạy lại mô phỏng</span>
+                <span>{tr("Chạy lại mô phỏng")}</span>
               </button>
               <button
                 onClick={() => setActiveModal(null)}
                 className="px-5 py-2.5 rounded-full border border-slate-200 text-slate-700 font-medium text-xs hover:bg-slate-50 transition-colors cursor-pointer"
               >
-                Đóng
-              </button>
+                {tr("Đóng")}</button>
             </div>
           </div>
         </div>
@@ -534,25 +517,24 @@ export default function ProductAiTrust({
               <X className="w-4 h-4" />
             </button>
 
-            <h3 className="text-base font-bold text-slate-900 mb-1">Giới thiệu AI Trust Co-pilot</h3>
-            <p className="text-xs text-slate-500 mb-4">Trợ lý trí tuệ nhân tạo chuyên biệt cho thẩm định chuỗi cung ứng B2B</p>
+            <h3 className="text-base font-bold text-slate-900 mb-1">{tr("Giới thiệu AI Trust Co-pilot")}</h3>
+            <p className="text-xs text-slate-500 mb-4">{tr("Trợ lý trí tuệ nhân tạo chuyên biệt cho thẩm định chuỗi cung ứng B2B")}</p>
 
             <div className="space-y-3 text-xs text-slate-600 leading-relaxed mb-5">
               <p>
-                <strong>AI Trust Co-pilot</strong> được huấn luyện trên hàng triệu bộ hồ sơ doanh nghiệp xuất nhập khẩu quốc tế, giúp tự động hóa khâu tiền kiểm tra và giảm 85% thời gian thẩm định thủ công.
-              </p>
+                <strong>{tr("AI Trust Co-pilot")}</strong> {tr(" được huấn luyện trên hàng triệu bộ hồ sơ doanh nghiệp xuất nhập khẩu quốc tế, giúp tự động hóa khâu tiền kiểm tra và giảm 85% thời gian thẩm định thủ công.")}</p>
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-1.5">
                 <div className="flex items-center gap-1.5 text-slate-800 font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Phát hiện chỉnh sửa hình ảnh, con dấu giả mạo</span>
+                  <span>{tr("Phát hiện chỉnh sửa hình ảnh, con dấu giả mạo")}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-800 font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Kiểm tra ngày hết hạn chứng nhận ISO, HACCP, GlobalGAP</span>
+                  <span>{tr("Kiểm tra ngày hết hạn chứng nhận ISO, HACCP, GlobalGAP")}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-800 font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Cảnh báo trùng lặp thông tin người đại diện trên mạng lưới</span>
+                  <span>{tr("Cảnh báo trùng lặp thông tin người đại diện trên mạng lưới")}</span>
                 </div>
               </div>
             </div>
@@ -561,8 +543,7 @@ export default function ProductAiTrust({
               onClick={() => setActiveModal(null)}
               className="w-full py-2.5 rounded-full bg-[#0f172a] hover:bg-slate-800 text-white font-medium text-xs transition-colors cursor-pointer"
             >
-              Đã hiểu, quay lại
-            </button>
+              {tr("Đã hiểu, quay lại")}</button>
           </div>
         </div>
       )}
@@ -579,9 +560,9 @@ export default function ProductAiTrust({
             </button>
 
             <h3 className="text-base font-bold text-slate-900 mb-1">
-              {activeStepModal ? `Chi tiết Bước ${activeStepModal}` : 'Chi tiết 4 bước của AI Trust Co-pilot'}
+              {tr(activeStepModal ? `Chi tiết Bước ${activeStepModal}` : 'Chi tiết 4 bước của AI Trust Co-pilot')}
             </h3>
-            <p className="text-xs text-slate-500 mb-5">Hệ thống xử lý phân tán và bảo mật cấp doanh nghiệp</p>
+            <p className="text-xs text-slate-500 mb-5">{tr("Hệ thống xử lý phân tán và bảo mật cấp doanh nghiệp")}</p>
 
             <div className="space-y-3">
               {[
@@ -599,11 +580,11 @@ export default function ProductAiTrust({
                   }`}
                 >
                   <span className="w-7 h-7 rounded-lg bg-[#0f172a] text-white text-xs font-bold flex items-center justify-center shrink-0">
-                    {item.step}
+                    {tr(item.step)}
                   </span>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">{item.title}</h4>
-                    <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">{item.desc}</p>
+                    <h4 className="text-xs font-bold text-slate-900">{tr(item.title)}</h4>
+                    <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">{tr(item.desc)}</p>
                   </div>
                 </div>
               ))}
@@ -614,8 +595,7 @@ export default function ProductAiTrust({
                 onClick={() => setActiveModal(null)}
                 className="px-5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-xs transition-colors cursor-pointer"
               >
-                Đóng
-              </button>
+                {tr("Đóng")}</button>
             </div>
           </div>
         </div>

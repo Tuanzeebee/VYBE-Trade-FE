@@ -4,6 +4,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { translateText } from '../i18n/translate';
 
 export type LanguageCode = 'vi' | 'en' | 'fr' | 'ja';
 
@@ -406,6 +407,7 @@ export const TRANSLATIONS = {
 };
 
 interface LanguageContextType {
+  tr: <T>(value: T) => T;
   language: LanguageCode;
   setLanguage: (lang: LanguageCode) => void;
   currentLanguageOption: LanguageOption;
@@ -415,14 +417,12 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<LanguageCode>('vi');
-
-  useEffect(() => {
-    const savedLang = localStorage.getItem('vybe_language') as LanguageCode;
-    if (savedLang && (savedLang === 'vi' || savedLang === 'en' || savedLang === 'fr' || savedLang === 'ja')) {
-      setLanguageState(savedLang);
-    }
-  }, []);
+  const [language, setLanguageState] = useState<LanguageCode>(() => {
+    try {
+      const saved = localStorage.getItem('vybe_language') as LanguageCode;
+      return LANGUAGES.some((option) => option.code === saved) ? saved : 'vi';
+    } catch { return 'vi'; }
+  });
 
   const setLanguage = (lang: LanguageCode) => {
     setLanguageState(lang);
@@ -431,9 +431,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   const currentLanguageOption = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
   const t = TRANSLATIONS[language] || TRANSLATIONS.vi;
+  const tr = <T,>(value: T): T => translateText(value, language);
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = { vi: 'VYBE TRADE - Kết nối doanh nghiệp Việt Nam với thế giới', en: 'VYBE TRADE - Connecting Vietnamese businesses with the world', fr: 'VYBE TRADE - Connecter les entreprises vietnamiennes au monde', ja: 'VYBE TRADE - ベトナム企業と世界をつなぐ' }[language];
+  }, [language]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, currentLanguageOption, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, currentLanguageOption, t, tr }}>
       {children}
     </LanguageContext.Provider>
   );

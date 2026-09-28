@@ -4,6 +4,8 @@
  */
 
 import React, { useState } from 'react';
+import { getPlanPrice } from '../lib/pricing';
+import { LOCALES } from '../i18n/translate';
 import { 
   Package, 
   Crown, 
@@ -27,6 +29,7 @@ import {
   Zap,
   Globe
 } from 'lucide-react';
+import { useLanguage } from "../context/LanguageContext";
 
 interface PricingPlansProps {
   onNavigateHome: () => void;
@@ -39,10 +42,13 @@ export default function PricingPlans({
   onNavigateOnboarding,
   onNavigateWorkspace
 }: PricingPlansProps) {
+  const { tr, language } = useLanguage();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
   const [selectedPlanModal, setSelectedPlanModal] = useState<'Free' | 'Member' | 'Premium' | null>(null);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const price = (plan: 'Free' | 'Member' | 'Premium') => getPlanPrice(plan, billingCycle).toLocaleString(LOCALES[language]);
+  const period = billingCycle === 'annual' ? 'VNĐ/năm' : 'VNĐ/tháng';
 
   // Registration Form State
   const [regForm, setRegForm] = useState({
@@ -95,48 +101,45 @@ export default function PricingPlans({
             <div className="flex items-center gap-2">
               <span className="w-1 h-4 sm:h-5 bg-blue-600 rounded-full inline-block" />
               <span className="text-blue-600 font-bold text-xs sm:text-[13px] uppercase tracking-wider">
-                BẢNG GIÁ & GÓI THÀNH VIÊN
-              </span>
+                {tr("BẢNG GIÁ & GÓI THÀNH VIÊN")}</span>
             </div>
 
             {/* Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-slate-950 tracking-tight leading-[1.18]">
-              Chọn gói phù hợp,<br />
-              mở rộng cơ hội toàn cầu
-            </h1>
+              {tr("Chọn gói phù hợp,")}<br />
+              {tr("mở rộng cơ hội toàn cầu")}</h1>
 
             {/* Subtitle */}
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl font-normal">
-              Các gói thành viên được thiết kế dành riêng cho doanh nghiệp xuất khẩu Việt Nam, giúp tăng độ tin cậy, tiếp cận người mua chất lượng và phát triển doanh nghiệp bền vững.
-            </p>
+              {tr("Các gói thành viên được thiết kế dành riêng cho doanh nghiệp xuất khẩu Việt Nam, giúp tăng độ tin cậy, tiếp cận người mua chất lượng và phát triển doanh nghiệp bền vững.")}</p>
 
             {/* Billing Toggle (Optional convenient control) */}
             <div className="pt-2 flex items-center gap-3">
-              <div className="inline-flex items-center p-1 rounded-2xl bg-slate-200/70 border border-slate-300/60 text-xs">
+              <div className="inline-flex flex-wrap gap-1 items-center p-1 rounded-2xl bg-slate-200/70 border border-slate-300/60 text-xs">
                 <button
                   type="button"
                   onClick={() => setBillingCycle('monthly')}
+                  aria-pressed={billingCycle === 'monthly'}
                   className={`px-4 py-1.5 rounded-xl font-semibold transition-all cursor-pointer ${
                     billingCycle === 'monthly'
                       ? 'bg-white text-slate-900 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  Thanh toán hàng tháng
-                </button>
+                  {tr("Thanh toán hàng tháng")}</button>
                 <button
                   type="button"
                   onClick={() => setBillingCycle('annual')}
+                  aria-pressed={billingCycle === 'annual'}
                   className={`px-4 py-1.5 rounded-xl font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     billingCycle === 'annual'
                       ? 'bg-blue-600 text-white shadow-xs'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  <span>Thanh toán theo năm</span>
+                  <span>{tr("Thanh toán theo năm")}</span>
                   <span className="bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
-                    -17%
-                  </span>
+                    {tr("-17%")}</span>
                 </button>
               </div>
             </div>
@@ -158,14 +161,13 @@ export default function PricingPlans({
                     <BarChart3 className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">CHỈ SỐ TĂNG TRƯỞNG B2B</span>
-                    <span className="text-xs font-bold text-slate-900">+320% Tiếp cận Buyer</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{tr("CHỈ SỐ TĂNG TRƯỞNG B2B")}</span>
+                    <span className="text-xs font-bold text-slate-900">{tr("+320% Tiếp cận Buyer")}</span>
                   </div>
                 </div>
 
                 <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
-                  🌱
-                </div>
+                  {tr("🌱")}</div>
               </div>
 
               {/* 3 Pills from Image: Tăng độ tin cậy, Tiếp cận người mua chất lượng, Mở rộng thị trường quốc tế */}
@@ -175,8 +177,7 @@ export default function PricingPlans({
                     <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                   </div>
                   <span className="text-xs sm:text-[13px] font-semibold text-slate-800">
-                    Tăng độ tin cậy
-                  </span>
+                    {tr("Tăng độ tin cậy")}</span>
                 </div>
 
                 <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-white/90 backdrop-blur-xs border border-blue-100/80 shadow-2xs">
@@ -184,8 +185,7 @@ export default function PricingPlans({
                     <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                   </div>
                   <span className="text-xs sm:text-[13px] font-semibold text-slate-800">
-                    Tiếp cận người mua chất lượng
-                  </span>
+                    {tr("Tiếp cận người mua chất lượng")}</span>
                 </div>
 
                 <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-white/90 backdrop-blur-xs border border-blue-100/80 shadow-2xs">
@@ -193,8 +193,7 @@ export default function PricingPlans({
                     <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                   </div>
                   <span className="text-xs sm:text-[13px] font-semibold text-slate-800">
-                    Mở rộng thị trường quốc tế
-                  </span>
+                    {tr("Mở rộng thị trường quốc tế")}</span>
                 </div>
               </div>
 
@@ -222,20 +221,16 @@ export default function PricingPlans({
 
               {/* Title & Subtitle */}
               <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                Free
-              </h3>
+                {tr("Free")}</h3>
               <p className="text-xs text-slate-500 mt-1 leading-snug min-h-[32px]">
-                Bắt đầu hiện diện<br />trên VYBE TRADE
-              </p>
+                {tr("Bắt đầu hiện diện")}<br />{tr("trên VYBE TRADE")}</p>
 
               {/* Price */}
-              <div className="mt-5 pb-5 border-b border-slate-100 flex items-baseline gap-1">
+              <div className="mt-5 pb-5 border-b border-slate-100 flex flex-wrap items-baseline gap-1">
                 <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                  0
-                </span>
+                  {tr("0")}</span>
                 <span className="text-xs sm:text-[13px] text-slate-600 font-semibold">
-                  VNĐ/tháng
-                </span>
+                  {tr(period)}</span>
               </div>
 
               {/* Action Button: Đăng ký miễn phí */}
@@ -244,8 +239,7 @@ export default function PricingPlans({
                 onClick={() => setSelectedPlanModal('Free')}
                 className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm border border-slate-200 transition-colors cursor-pointer shadow-2xs text-center mt-5 mb-6"
               >
-                Đăng ký miễn phí
-              </button>
+                {tr("Đăng ký miễn phí")}</button>
 
               {/* Features List */}
               <ul className="space-y-3 text-xs sm:text-[13px]">
@@ -253,28 +247,28 @@ export default function PricingPlans({
                   <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Tạo hồ sơ doanh nghiệp cơ bản</span>
+                  <span>{tr("Tạo hồ sơ doanh nghiệp cơ bản")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-700">
                   <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Hiển thị danh mục sản phẩm</span>
+                  <span>{tr("Hiển thị danh mục sản phẩm")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-700">
                   <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Tiếp cận cơ hội mua hàng cơ bản</span>
+                  <span>{tr("Tiếp cận cơ hội mua hàng cơ bản")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-700">
                   <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Tham gia sự kiện và tin tức</span>
+                  <span>{tr("Tham gia sự kiện và tin tức")}</span>
                 </li>
 
                 {/* Grayed out / not included items */}
@@ -282,21 +276,21 @@ export default function PricingPlans({
                   <div className="w-4 h-4 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[2]" />
                   </div>
-                  <span className="line-through decoration-slate-300">Xác minh doanh nghiệp</span>
+                  <span className="line-through decoration-slate-300">{tr("Xác minh doanh nghiệp")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-400">
                   <div className="w-4 h-4 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[2]" />
                   </div>
-                  <span className="line-through decoration-slate-300">Ưu tiên hiển thị</span>
+                  <span className="line-through decoration-slate-300">{tr("Ưu tiên hiển thị")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-400">
                   <div className="w-4 h-4 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[2]" />
                   </div>
-                  <span className="line-through decoration-slate-300">Trợ lý AI & phân tích thị trường</span>
+                  <span className="line-through decoration-slate-300">{tr("Trợ lý AI & phân tích thị trường")}</span>
                 </li>
               </ul>
             </div>
@@ -309,8 +303,7 @@ export default function PricingPlans({
             
             {/* Pill: Phổ biến nhất (Floating on top border) */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-blue-600 text-white font-bold text-[11px] sm:text-xs shadow-md tracking-wide whitespace-nowrap">
-              Phổ biến nhất
-            </div>
+              {tr("Phổ biến nhất")}</div>
 
             <div>
               {/* Icon: Gold Crown in amber circular background */}
@@ -320,24 +313,22 @@ export default function PricingPlans({
 
               {/* Title & Subtitle */}
               <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                Member
-              </h3>
+                {tr("Member")}</h3>
               <p className="text-xs text-slate-500 mt-1 leading-snug min-h-[32px]">
-                Tăng độ tin cậy,<br />kết nối nhiều hơn
-              </p>
+                {tr("Tăng độ tin cậy,")}<br />{tr("kết nối nhiều hơn")}</p>
 
               {/* Price & Annual Note */}
               <div className="mt-5 pb-5 border-b border-slate-100">
-                <div className="flex items-baseline gap-1">
+                <div className="flex flex-wrap items-baseline gap-1">
                   <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                    990.000
+                    {tr(price('Member'))}
                   </span>
                   <span className="text-xs sm:text-[13px] text-slate-600 font-semibold">
-                    VNĐ/tháng
+                    {tr(period)}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1 font-medium">
-                  hoặc 9.900.000 VNĐ/năm <span className="text-teal-700 font-bold">(tiết kiệm 17%)</span>
+                  {billingCycle === 'monthly' && tr("hoặc 9.900.000 VNĐ/năm ")}<span className="text-teal-700 font-bold">{tr("(tiết kiệm 17%)")}</span>
                 </p>
               </div>
 
@@ -347,8 +338,7 @@ export default function PricingPlans({
                 onClick={() => setSelectedPlanModal('Member')}
                 className="w-full py-3 px-4 rounded-2xl bg-[#0b1e33] hover:bg-[#132d4b] text-white font-bold text-xs sm:text-sm transition-all cursor-pointer shadow-md text-center mt-4 mb-6 active:scale-[0.98]"
               >
-                Đăng ký gói Member
-              </button>
+                {tr("Đăng ký gói Member")}</button>
 
               {/* Features List */}
               <ul className="space-y-3 text-xs sm:text-[13px]">
@@ -356,42 +346,42 @@ export default function PricingPlans({
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Tất cả quyền lợi gói Free</span>
+                  <span>{tr("Tất cả quyền lợi gói Free")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Xác minh doanh nghiệp (cấp tiêu chuẩn)</span>
+                  <span>{tr("Xác minh doanh nghiệp (cấp tiêu chuẩn)")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Hiển thị nổi bật trong kết quả tìm kiếm</span>
+                  <span>{tr("Hiển thị nổi bật trong kết quả tìm kiếm")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Tiếp cận nhiều cơ hội RFQ hơn</span>
+                  <span>{tr("Tiếp cận nhiều cơ hội RFQ hơn")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Nhận gợi ý người mua phù hợp (AI)</span>
+                  <span>{tr("Nhận gợi ý người mua phù hợp (AI)")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Tham gia sự kiện kết nối B2B</span>
+                  <span>{tr("Tham gia sự kiện kết nối B2B")}</span>
                 </li>
 
                 {/* Grayed out / not included items */}
@@ -399,7 +389,7 @@ export default function PricingPlans({
                   <div className="w-4 h-4 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[2]" />
                   </div>
-                  <span className="line-through decoration-slate-300">Xác minh nâng cao & VYBE Certified</span>
+                  <span className="line-through decoration-slate-300">{tr("Xác minh nâng cao & VYBE Certified")}</span>
                 </li>
               </ul>
             </div>
@@ -417,24 +407,22 @@ export default function PricingPlans({
 
               {/* Title & Subtitle */}
               <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                Premium
-              </h3>
+                {tr("Premium")}</h3>
               <p className="text-xs text-slate-500 mt-1 leading-snug min-h-[32px]">
-                Tối ưu cơ hội,<br />dẫn đầu thị trường
-              </p>
+                {tr("Tối ưu cơ hội,")}<br />{tr("dẫn đầu thị trường")}</p>
 
               {/* Price & Annual Note */}
               <div className="mt-5 pb-5 border-b border-slate-100">
-                <div className="flex items-baseline gap-1">
+                <div className="flex flex-wrap items-baseline gap-1">
                   <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                    2.990.000
+                    {tr(price('Premium'))}
                   </span>
                   <span className="text-xs sm:text-[13px] text-slate-600 font-semibold">
-                    VNĐ/tháng
+                    {tr(period)}
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1 font-medium">
-                  hoặc 29.900.000 VNĐ/năm <span className="text-teal-700 font-bold">(tiết kiệm 17%)</span>
+                  {billingCycle === 'monthly' && tr("hoặc 29.900.000 VNĐ/năm ")}<span className="text-teal-700 font-bold">{tr("(tiết kiệm 17%)")}</span>
                 </p>
               </div>
 
@@ -444,8 +432,7 @@ export default function PricingPlans({
                 onClick={() => setSelectedPlanModal('Premium')}
                 className="w-full py-3 px-4 rounded-2xl bg-[#0b1e33] hover:bg-[#132d4b] text-white font-bold text-xs sm:text-sm transition-all cursor-pointer shadow-md text-center mt-4 mb-6 active:scale-[0.98]"
               >
-                Đăng ký gói Premium
-              </button>
+                {tr("Đăng ký gói Premium")}</button>
 
               {/* Features List (All Checked) */}
               <ul className="space-y-3 text-xs sm:text-[13px]">
@@ -453,49 +440,49 @@ export default function PricingPlans({
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Tất cả quyền lợi gói Member</span>
+                  <span>{tr("Tất cả quyền lợi gói Member")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Xác minh nâng cao (VYBE Certified)</span>
+                  <span>{tr("Xác minh nâng cao (VYBE Certified)")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Hiển thị ưu tiên cao nhất</span>
+                  <span>{tr("Hiển thị ưu tiên cao nhất")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Kết nối trực tiếp với người mua chiến lược</span>
+                  <span>{tr("Kết nối trực tiếp với người mua chiến lược")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Trợ lý AI chuyên sâu & phân tích thị trường</span>
+                  <span>{tr("Trợ lý AI chuyên sâu & phân tích thị trường")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Hỗ trợ truyền thông thương hiệu</span>
+                  <span>{tr("Hỗ trợ truyền thông thương hiệu")}</span>
                 </li>
 
                 <li className="flex items-center gap-2.5 text-slate-800 font-medium">
                   <div className="w-4 h-4 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
-                  <span>Tư vấn 1:1 với chuyên gia VYBE TRADE</span>
+                  <span>{tr("Tư vấn 1:1 với chuyên gia VYBE TRADE")}</span>
                 </li>
               </ul>
             </div>
@@ -515,11 +502,9 @@ export default function PricingPlans({
             {/* Left text */}
             <div className="lg:col-span-4 space-y-2 text-left">
               <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950 tracking-tight">
-                Vì sao nên nâng cấp?
-              </h2>
+                {tr("Vì sao nên nâng cấp?")}</h2>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                Tăng lợi thế cạnh tranh và mở rộng cơ hội xuất khẩu với các đặc quyền dành riêng cho thành viên.
-              </p>
+                {tr("Tăng lợi thế cạnh tranh và mở rộng cơ hội xuất khẩu với các đặc quyền dành riêng cho thành viên.")}</p>
             </div>
 
             {/* Right: 5 Value Cards */}
@@ -532,11 +517,9 @@ export default function PricingPlans({
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 leading-snug">
-                    Tăng độ tin cậy
-                  </h4>
+                    {tr("Tăng độ tin cậy")}</h4>
                   <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    với người mua quốc tế
-                  </p>
+                    {tr("với người mua quốc tế")}</p>
                 </div>
               </div>
 
@@ -547,11 +530,9 @@ export default function PricingPlans({
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 leading-snug">
-                    Hiển thị nổi bật
-                  </h4>
+                    {tr("Hiển thị nổi bật")}</h4>
                   <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    trong tìm kiếm
-                  </p>
+                    {tr("trong tìm kiếm")}</p>
                 </div>
               </div>
 
@@ -562,11 +543,9 @@ export default function PricingPlans({
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 leading-snug">
-                    Tiếp cận nhiều
-                  </h4>
+                    {tr("Tiếp cận nhiều")}</h4>
                   <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    cơ hội RFQ chất lượng
-                  </p>
+                    {tr("cơ hội RFQ chất lượng")}</p>
                 </div>
               </div>
 
@@ -577,11 +556,9 @@ export default function PricingPlans({
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 leading-snug">
-                    Phân tích thị trường
-                  </h4>
+                    {tr("Phân tích thị trường")}</h4>
                   <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    bằng AI
-                  </p>
+                    {tr("bằng AI")}</p>
                 </div>
               </div>
 
@@ -592,11 +569,9 @@ export default function PricingPlans({
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 leading-snug">
-                    Đồng hành bởi
-                  </h4>
+                    {tr("Đồng hành bởi")}</h4>
                   <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                    đội ngũ chuyên gia
-                  </p>
+                    {tr("đội ngũ chuyên gia")}</p>
                 </div>
               </div>
 
@@ -613,11 +588,9 @@ export default function PricingPlans({
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-left">
         <div className="text-center mb-8 space-y-2">
           <h3 className="text-2xl font-extrabold text-slate-900">
-            Câu hỏi thường gặp về gói thành viên
-          </h3>
+            {tr("Câu hỏi thường gặp về gói thành viên")}</h3>
           <p className="text-xs sm:text-sm text-slate-500">
-            Giải đáp thắc mắc về phương thức thanh toán, xuất hóa đơn và quy trình xác minh cấp độ
-          </p>
+            {tr("Giải đáp thắc mắc về phương thức thanh toán, xuất hóa đơn và quy trình xác minh cấp độ")}</p>
         </div>
 
         <div className="space-y-3">
@@ -631,12 +604,12 @@ export default function PricingPlans({
                 onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
                 className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-slate-800 hover:text-blue-600 cursor-pointer"
               >
-                <span>{faq.q}</span>
+                <span>{tr(faq.q)}</span>
                 <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${activeFaq === idx ? 'rotate-180 text-blue-600' : ''}`} />
               </button>
               {activeFaq === idx && (
                 <div className="px-5 pb-5 pt-0 text-xs sm:text-[13px] text-slate-600 leading-relaxed border-t border-slate-50">
-                  {faq.a}
+                  {tr(faq.a)}
                 </div>
               )}
             </div>
@@ -677,12 +650,12 @@ export default function PricingPlans({
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-slate-900">
-                      Đăng ký gói {selectedPlanModal}
+                      {tr("Đăng ký gói ")}{tr(selectedPlanModal)}
                     </h3>
                     <p className="text-xs text-slate-500">
-                      {selectedPlanModal === 'Premium' && '2.990.000 VNĐ/tháng • Dẫn đầu thị trường & Thẩm định L3'}
-                      {selectedPlanModal === 'Member' && '990.000 VNĐ/tháng • Tăng độ tin cậy & Nhận RFQ quốc tế'}
-                      {selectedPlanModal === 'Free' && 'Miễn phí trải nghiệm khởi tạo hồ sơ doanh nghiệp'}
+                      {tr(selectedPlanModal === 'Premium' && `${price('Premium')} ${period} • Dẫn đầu thị trường & Thẩm định L3`)}
+                      {tr(selectedPlanModal === 'Member' && `${price('Member')} ${period} • Tăng độ tin cậy & Nhận RFQ quốc tế`)}
+                      {tr(selectedPlanModal === 'Free' && 'Miễn phí trải nghiệm khởi tạo hồ sơ doanh nghiệp')}
                     </p>
                   </div>
                 </div>
@@ -690,7 +663,7 @@ export default function PricingPlans({
                 <div className="space-y-3 text-xs">
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                      Tên doanh nghiệp xuất khẩu <span className="text-rose-500">*</span>
+                      {tr("Tên doanh nghiệp xuất khẩu ")}<span className="text-rose-500">{tr("*")}</span>
                     </label>
                     <input 
                       type="text"
@@ -704,7 +677,7 @@ export default function PricingPlans({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Mã số thuế / MST <span className="text-rose-500">*</span>
+                        {tr("Mã số thuế / MST ")}<span className="text-rose-500">{tr("*")}</span>
                       </label>
                       <input 
                         type="text"
@@ -716,7 +689,7 @@ export default function PricingPlans({
                     </div>
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Người đại diện liên hệ <span className="text-rose-500">*</span>
+                        {tr("Người đại diện liên hệ ")}<span className="text-rose-500">{tr("*")}</span>
                       </label>
                       <input 
                         type="text"
@@ -731,7 +704,7 @@ export default function PricingPlans({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Số điện thoại Hotline <span className="text-rose-500">*</span>
+                        {tr("Số điện thoại Hotline ")}<span className="text-rose-500">{tr("*")}</span>
                       </label>
                       <input 
                         type="text"
@@ -743,7 +716,7 @@ export default function PricingPlans({
                     </div>
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Email nhận thông báo & VAT <span className="text-rose-500">*</span>
+                        {tr("Email nhận thông báo & VAT ")}<span className="text-rose-500">{tr("*")}</span>
                       </label>
                       <input 
                         type="email"
@@ -758,8 +731,7 @@ export default function PricingPlans({
                   {selectedPlanModal !== 'Free' && (
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Hình thức thanh toán
-                      </label>
+                        {tr("Hình thức thanh toán")}</label>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer ${
                           regForm.paymentMethod === 'bank_transfer' ? 'border-blue-600 bg-blue-50/50 text-blue-900 font-semibold' : 'border-slate-200 text-slate-700'
@@ -770,7 +742,7 @@ export default function PricingPlans({
                             checked={regForm.paymentMethod === 'bank_transfer'} 
                             onChange={() => setRegForm({ ...regForm, paymentMethod: 'bank_transfer' })} 
                           />
-                          <span>Chuyển khoản cty (VAT)</span>
+                          <span>{tr("Chuyển khoản cty (VAT)")}</span>
                         </label>
 
                         <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer ${
@@ -782,7 +754,7 @@ export default function PricingPlans({
                             checked={regForm.paymentMethod === 'card'} 
                             onChange={() => setRegForm({ ...regForm, paymentMethod: 'card' })} 
                           />
-                          <span>Thẻ Visa / Master</span>
+                          <span>{tr("Thẻ Visa / Master")}</span>
                         </label>
                       </div>
                     </div>
@@ -790,8 +762,7 @@ export default function PricingPlans({
 
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                      Ghi chú / Yêu cầu xuất hóa đơn
-                    </label>
+                      {tr("Ghi chú / Yêu cầu xuất hóa đơn")}</label>
                     <textarea 
                       rows={2}
                       value={regForm.notes}
@@ -807,13 +778,12 @@ export default function PricingPlans({
                     onClick={() => setSelectedPlanModal(null)}
                     className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
                   >
-                    Hủy bỏ
-                  </button>
+                    {tr("Hủy bỏ")}</button>
                   <button 
                     type="submit"
                     className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all cursor-pointer shadow-md"
                   >
-                    Xác nhận kích hoạt gói {selectedPlanModal}
+                    {tr("Xác nhận kích hoạt gói ")}{tr(selectedPlanModal)}
                   </button>
                 </div>
               </form>
@@ -823,11 +793,9 @@ export default function PricingPlans({
                   <CheckCircle2 className="w-9 h-9" />
                 </div>
                 <h3 className="text-xl font-extrabold text-slate-900">
-                  Đăng ký thành công gói {selectedPlanModal}!
-                </h3>
+                  {tr("Đăng ký thành công gói ")}{tr(selectedPlanModal)}{tr("!")}</h3>
                 <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
-                  Hệ thống VYBE TRADE đã ghi nhận yêu cầu của <strong>{regForm.companyName}</strong>. Chuyên viên quản lý tài khoản xuất khẩu sẽ liên hệ trong 15 phút để kích hoạt đặc quyền và gửi hợp đồng.
-                </p>
+                  {tr("Hệ thống VYBE TRADE đã ghi nhận yêu cầu của ")}<strong>{regForm.companyName}</strong>{tr(". Chuyên viên quản lý tài khoản xuất khẩu sẽ liên hệ trong 15 phút để kích hoạt đặc quyền và gửi hợp đồng.")}</p>
 
                 <div className="pt-4 flex flex-col sm:flex-row gap-2 justify-center">
                   <button
@@ -840,8 +808,7 @@ export default function PricingPlans({
                     }}
                     className="px-5 py-2.5 rounded-xl bg-[#083832] text-white text-xs font-bold hover:bg-[#062924] transition-colors cursor-pointer"
                   >
-                    Vào Workspace Seller
-                  </button>
+                    {tr("Vào Workspace Seller")}</button>
                   <button
                     onClick={() => {
                       setSelectedPlanModal(null);
@@ -849,8 +816,7 @@ export default function PricingPlans({
                     }}
                     className="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-colors cursor-pointer"
                   >
-                    Đóng
-                  </button>
+                    {tr("Đóng")}</button>
                 </div>
               </div>
             )}

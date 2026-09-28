@@ -4,6 +4,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import BuyerOnboarding from '../src/components/BuyerOnboarding';
 import SellerOnboarding from '../src/components/SellerOnboarding';
+import { LanguageProvider } from '../src/context/LanguageContext';
 import { completeOnboarding, DEMO_PASSWORD, DEMO_USERS, getSession, getUserPage, getUsers, login, logout, register } from '../src/lib/demoAuth';
 
 const storage = new Map<string, string>();
@@ -92,9 +93,10 @@ completeOnboarding(previousUser.id, profileFor('buyer'));
 assert.equal(getUserPage(getSession()!), 'buyer-directory');
 storage.set('vybe_demo_users_v1', validData);
 
-const buyerHtml = renderToStaticMarkup(createElement(BuyerOnboarding, { user: DEMO_USERS[0], onComplete() {}, onLogout() {} }));
+const buyerHtml = renderToStaticMarkup(createElement(LanguageProvider, { children: createElement(BuyerOnboarding, { user: DEMO_USERS[0], onComplete() {}, onLogout() {} }) }));
 assert.ok(buyerHtml.includes('Thông tin công ty') && buyerHtml.includes('Quy mô công ty') && buyerHtml.includes('Khu vực'));
 assert.ok(buyerHtml.includes('Nhu cầu tìm nguồn hàng') && buyerHtml.includes('Tiêu chí xác minh') && buyerHtml.includes('Xem lại &amp; hoàn tất'));
-const sellerHtml = renderToStaticMarkup(createElement(SellerOnboarding, { account: DEMO_USERS[1], initialStep: 1, onComplete() {}, onLogout() {}, onNavigateHome() {} }));
-assert.ok(sellerHtml.includes('Bước 1 / 4') && sellerHtml.includes('Company Onboarding'));
+const sellerHtml = renderToStaticMarkup(createElement(LanguageProvider, { children: createElement(SellerOnboarding, { account: DEMO_USERS[1], initialStep: 1, onComplete() {}, onLogout() {}, onNavigateHome() {} }) }));
+assert.ok(sellerHtml.replace(/\s+/g, ' ').includes('Bước 1 / 4') && sellerHtml.includes('Company Onboarding'));
 console.log('Demo auth: PASS — buyer/seller company wizards, admin bypass, validation, registration, sessions, once-only onboarding, migration');
+await import('./frontend.test');

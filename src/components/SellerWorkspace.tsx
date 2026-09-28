@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import type { DemoUser } from '../lib/demoAuth';
+import LanguageSelect from './LanguageSelect';
 import { 
   Home, 
   Building2, 
@@ -49,6 +50,7 @@ import {
   UploadCloud,
   Filter
 } from 'lucide-react';
+import { useLanguage } from "../context/LanguageContext";
 
 export interface WorkspaceCertificateItem {
   id: string;
@@ -84,6 +86,7 @@ export default function SellerWorkspace({
   onNavigateBuyerDetail,
   initialTab = 'profile'
 }: SellerWorkspaceProps) {
+  const { tr } = useLanguage();
   const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'verification' | 'products' | 'rfq' | 'notifications' | 'licenses'>(initialTab);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<
@@ -335,7 +338,7 @@ export default function SellerWorkspace({
           <div 
             onClick={onNavigateHome}
             className="flex items-center gap-2.5 cursor-pointer group mb-8"
-            title="Về trang chủ Sàn giao thương"
+            title={tr("Về trang chủ Sàn giao thương")}
           >
             <div className="w-8 h-8 flex items-center justify-center text-[#0b5e52]">
               <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -345,11 +348,9 @@ export default function SellerWorkspace({
             </div>
             <div>
               <span className="text-[#0f172a] font-bold text-lg sm:text-[19px] tracking-wide uppercase block leading-none">
-                VYBE TRADE
-              </span>
+                {tr("VYBE TRADE")}</span>
               <span className="text-[10px] text-teal-800 font-semibold tracking-wider uppercase block mt-1">
-                SELLER WORKSPACE
-              </span>
+                {tr("SELLER WORKSPACE")}</span>
             </div>
           </div>
 
@@ -378,7 +379,7 @@ export default function SellerWorkspace({
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={`w-4 h-4 stroke-[2] ${isActive ? 'text-[#0d766e]' : 'text-slate-500'}`} />
-                    <span>{item.label}</span>
+                    <span>{tr(item.label)}</span>
                   </div>
                   {item.badge && (
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
@@ -386,7 +387,7 @@ export default function SellerWorkspace({
                         ? 'bg-[#0d766e] text-white' 
                         : 'bg-slate-100 text-slate-500'
                     }`}>
-                      {item.badge}
+                      {tr(item.badge)}
                     </span>
                   )}
                 </button>
@@ -404,18 +405,16 @@ export default function SellerWorkspace({
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-[#083832] text-white text-xs font-bold flex items-center justify-center shrink-0 shadow-xs border border-teal-700/50">
-                VN
-              </div>
+                {tr("VN")}</div>
               <div className="min-w-0">
                 <h4 className="text-xs font-bold text-slate-900 truncate">
                   {companyProfile.name}
                 </h4>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-1.5 py-0.2 rounded-sm">
-                    L2 Verified
-                  </span>
+                    {tr("L2 Verified")}</span>
                   <span className="text-[10px] text-slate-400">
-                    MST: {companyProfile.taxCode}
+                    {tr("MST: ")}{companyProfile.taxCode}
                   </span>
                 </div>
               </div>
@@ -433,7 +432,7 @@ export default function SellerWorkspace({
         
         {/* Top Header Bar */}
         <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100 sticky top-0 z-30">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 h-16 sm:h-[68px] flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 min-h-16 py-3 flex flex-wrap gap-3 items-center justify-between">
             
             {/* Mobile Menu Logo */}
             <div 
@@ -446,35 +445,36 @@ export default function SellerWorkspace({
                   <path d="M 16 26 C 18 18 24 13 28 10 C 29 9 28 7 27 7 C 21 8 17 13 16 26 Z" fill="#0b5e52" />
                 </svg>
               </div>
-              <span className="font-bold text-base uppercase text-slate-900">VYBE WORKSPACE</span>
+              <span className="font-bold text-base uppercase text-slate-900">{tr("VYBE WORKSPACE")}</span>
             </div>
 
             {/* Breadcrumb / Section indicator */}
             <div className="hidden md:flex items-center gap-2 text-xs text-slate-500">
-              <span className="font-medium text-slate-400">Workspace</span>
-              <span>/</span>
+              <span className="font-medium text-slate-400">{tr("Workspace")}</span>
+              <span>{tr("/")}</span>
               <span className="font-bold text-slate-800">
-                {activeTab === 'profile' && 'Hồ sơ doanh nghiệp (Company Profile)'}
-                {activeTab === 'licenses' && 'Tải lên & Quản lý Giấy phép & Chứng nhận'}
-                {activeTab === 'verification' && 'Tiến trình xác minh cấp độ (L0 → L3)'}
-                {activeTab === 'overview' && 'Tổng quan & Chỉ số tăng trưởng'}
-                {activeTab === 'products' && 'Quản lý Sản phẩm xuất khẩu'}
-                {activeTab === 'rfq' && 'Cơ hội kết nối & Báo giá B2B'}
-                {activeTab === 'notifications' && 'Thông báo hệ thống'}
+                {tr(activeTab === 'profile' && 'Hồ sơ doanh nghiệp (Company Profile)')}
+                {tr(activeTab === 'licenses' && 'Tải lên & Quản lý Giấy phép & Chứng nhận')}
+                {tr(activeTab === 'verification' && 'Tiến trình xác minh cấp độ (L0 → L3)')}
+                {tr(activeTab === 'overview' && 'Tổng quan & Chỉ số tăng trưởng')}
+                {tr(activeTab === 'products' && 'Quản lý Sản phẩm xuất khẩu')}
+                {tr(activeTab === 'rfq' && 'Cơ hội kết nối & Báo giá B2B')}
+                {tr(activeTab === 'notifications' && 'Thông báo hệ thống')}
               </span>
             </div>
 
             {/* Right Side Icons & Quick Action Buttons */}
-            <div className="flex items-center gap-3 sm:gap-4 ml-auto">
+            <div className="flex flex-wrap items-center gap-3 ml-auto">
+              <LanguageSelect />
               
               {/* Back to Onboarding */}
               <button
                 onClick={onNavigateOnboarding}
                 className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
-                title="Cập nhật hồ sơ xuất khẩu"
+                title={tr("Cập nhật hồ sơ xuất khẩu")}
               >
                 <Edit3 className="w-3.5 h-3.5 text-slate-500" />
-                <span>Cập nhật hồ sơ</span>
+                <span>{tr("Cập nhật hồ sơ")}</span>
               </button>
 
               {/* View Public Showcase */}
@@ -487,17 +487,17 @@ export default function SellerWorkspace({
                   }
                 }}
                 className="hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-[#083832] text-xs font-semibold border border-teal-200 transition-colors cursor-pointer shadow-2xs"
-                title="Xem giao diện hồ sơ hiển thị với Buyer quốc tế"
+                title={tr("Xem giao diện hồ sơ hiển thị với Buyer quốc tế")}
               >
                 <Eye className="w-3.5 h-3.5 text-teal-700" />
-                <span>Xem trang Buyer (Showcase)</span>
+                <span>{tr("Xem trang Buyer (Showcase)")}</span>
               </button>
 
               {/* Notification Bell */}
               <button 
                 onClick={() => setActiveTab('notifications')}
                 className="p-1.5 text-slate-600 hover:text-slate-900 transition-colors rounded-full hover:bg-slate-100 cursor-pointer relative"
-                title="Thông báo"
+                title={tr("Thông báo")}
               >
                 <Bell className="w-5 h-5 stroke-[1.6]" />
                 <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500" />
@@ -510,8 +510,7 @@ export default function SellerWorkspace({
                   className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   <div className="w-8 h-8 rounded-full bg-[#083832] text-white text-xs font-bold flex items-center justify-center shrink-0">
-                    VN
-                  </div>
+                    {tr("VN")}</div>
                   <span className="hidden sm:inline text-xs sm:text-[13px] font-semibold text-slate-800 max-w-[170px] truncate">
                     {companyProfile.name}
                   </span>
@@ -522,10 +521,9 @@ export default function SellerWorkspace({
                   <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 text-xs text-left animate-in fade-in zoom-in-95 duration-150">
                     <div className="px-4 py-2.5 border-b border-slate-100">
                       <p className="font-bold text-slate-900 truncate">{companyProfile.name}</p>
-                      <p className="text-slate-500 text-[11px] mt-0.5">MST: {companyProfile.taxCode}</p>
+                      <p className="text-slate-500 text-[11px] mt-0.5">{tr("MST: ")}{companyProfile.taxCode}</p>
                       <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                        🛡️ L2 Enhanced Verified
-                      </span>
+                        {tr("🛡️ L2 Enhanced Verified")}</span>
                     </div>
                     <button 
                       onClick={() => {
@@ -535,7 +533,7 @@ export default function SellerWorkspace({
                       className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
                     >
                       <Building2 className="w-3.5 h-3.5 text-teal-700" />
-                      <span>Xem hồ sơ công ty</span>
+                      <span>{tr("Xem hồ sơ công ty")}</span>
                     </button>
                     <button 
                       onClick={() => {
@@ -545,7 +543,7 @@ export default function SellerWorkspace({
                       className="w-full px-4 py-2 text-left hover:bg-teal-50 text-teal-900 font-semibold cursor-pointer flex items-center gap-2"
                     >
                       <Award className="w-3.5 h-3.5 text-teal-700" />
-                      <span>Quản lý Giấy phép & Chứng nhận</span>
+                      <span>{tr("Quản lý Giấy phép & Chứng nhận")}</span>
                     </button>
                     <button 
                       onClick={() => {
@@ -555,7 +553,7 @@ export default function SellerWorkspace({
                       className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
                     >
                       <ShieldCheck className="w-3.5 h-3.5 text-teal-700" />
-                      <span>Tiến trình xác minh (L0 → L3)</span>
+                      <span>{tr("Tiến trình xác minh (L0 → L3)")}</span>
                     </button>
                     <button 
                       onClick={() => {
@@ -565,7 +563,7 @@ export default function SellerWorkspace({
                       className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
                     >
                       <Eye className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Xem trang công khai B2B</span>
+                      <span>{tr("Xem trang công khai B2B")}</span>
                     </button>
                     <button 
                       onClick={() => {
@@ -575,7 +573,7 @@ export default function SellerWorkspace({
                       className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
                     >
                       <Edit3 className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Cập nhật hồ sơ xuất khẩu</span>
+                      <span>{tr("Cập nhật hồ sơ xuất khẩu")}</span>
                     </button>
                     <button 
                       onClick={() => {
@@ -585,7 +583,7 @@ export default function SellerWorkspace({
                       className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
                     >
                       <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
-                      <span>Xem Sàn giao thương B2B</span>
+                      <span>{tr("Xem Sàn giao thương B2B")}</span>
                     </button>
                     <button 
                       onClick={() => {
@@ -594,8 +592,7 @@ export default function SellerWorkspace({
                       }}
                       className="w-full px-4 py-2 text-left hover:bg-rose-50 text-rose-600 font-medium border-t border-slate-100 cursor-pointer"
                     >
-                      Đăng xuất tài khoản
-                    </button>
+                      {tr("Đăng xuất tài khoản")}</button>
                   </div>
                 )}
               </div>
@@ -627,8 +624,7 @@ export default function SellerWorkspace({
                   {/* Left: Avatar + Company Details */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
                     <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white text-[#083832] font-black text-2xl sm:text-3xl flex items-center justify-center shrink-0 shadow-lg border-2 border-teal-300/40">
-                      VN
-                    </div>
+                      {tr("VN")}</div>
 
                     <div>
                       <div className="flex items-center gap-2.5 flex-wrap">
@@ -637,7 +633,7 @@ export default function SellerWorkspace({
                         </h1>
                         <span className="px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1">
                           <ShieldCheck className="w-3.5 h-3.5" />
-                          <span>L2 Enhanced Verified</span>
+                          <span>{tr("L2 Enhanced Verified")}</span>
                         </span>
                       </div>
 
@@ -648,17 +644,17 @@ export default function SellerWorkspace({
                       <div className="flex items-center gap-4 text-xs text-teal-100/80 mt-3 flex-wrap">
                         <span className="flex items-center gap-1.5">
                           <Building2 className="w-3.5 h-3.5 text-teal-300" />
-                          <span>MST: <strong>{companyProfile.taxCode}</strong></span>
+                          <span>{tr("MST: ")}<strong>{companyProfile.taxCode}</strong></span>
                         </span>
-                        <span>•</span>
+                        <span>{tr("•")}</span>
                         <span className="flex items-center gap-1.5">
                           <Calendar className="w-3.5 h-3.5 text-teal-300" />
-                          <span>Thành lập: <strong>{companyProfile.establishedYear}</strong></span>
+                          <span>{tr("Thành lập: ")}<strong>{tr(companyProfile.establishedYear)}</strong></span>
                         </span>
-                        <span>•</span>
+                        <span>{tr("•")}</span>
                         <span className="flex items-center gap-1.5">
                           <User className="w-3.5 h-3.5 text-teal-300" />
-                          <span>Đại diện: <strong>{companyProfile.representative}</strong></span>
+                          <span>{tr("Đại diện: ")}<strong>{companyProfile.representative}</strong></span>
                         </span>
                       </div>
                     </div>
@@ -671,7 +667,7 @@ export default function SellerWorkspace({
                       className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors border border-white/15 cursor-pointer backdrop-blur-xs"
                     >
                       <Edit3 className="w-4 h-4 text-teal-200" />
-                      <span>Chỉnh sửa hồ sơ</span>
+                      <span>{tr("Chỉnh sửa hồ sơ")}</span>
                     </button>
                     
                     <button 
@@ -679,7 +675,7 @@ export default function SellerWorkspace({
                       className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-teal-400 hover:bg-teal-300 text-slate-950 text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer active:scale-95"
                     >
                       <Eye className="w-4 h-4" />
-                      <span>Xem trang Buyer</span>
+                      <span>{tr("Xem trang Buyer")}</span>
                     </button>
                   </div>
 
@@ -688,15 +684,14 @@ export default function SellerWorkspace({
                 {/* Sub-bar: Verification Highlights */}
                 <div className="relative z-10 mt-6 pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs">
                   <div className="flex items-center gap-3">
-                    <span className="text-teal-200">Trạng thái hồ sơ:</span>
+                    <span className="text-teal-200">{tr("Trạng thái hồ sơ:")}</span>
                     <span className="font-bold text-white flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      Đang hoạt động trên Sàn B2B Quốc tế
-                    </span>
+                      {tr("Đang hoạt động trên Sàn B2B Quốc tế")}</span>
                   </div>
                   <div className="flex items-center gap-2 text-teal-200">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>Chứng từ được bảo vệ bởi Temporal Tables & OCR Engine</span>
+                    <span>{tr("Chứng từ được bảo vệ bởi Temporal Tables & OCR Engine")}</span>
                   </div>
                 </div>
 
@@ -706,40 +701,40 @@ export default function SellerWorkspace({
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
                   <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                    <span>Mức độ hoàn thiện</span>
-                    <span className="font-bold text-emerald-700">95%</span>
+                    <span>{tr("Mức độ hoàn thiện")}</span>
+                    <span className="font-bold text-emerald-700">{tr("95%")}</span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden mb-2">
                     <div className="h-full bg-emerald-500 rounded-full" style={{ width: '95%' }} />
                   </div>
-                  <p className="text-[11px] text-slate-500">Đầy đủ ĐKKD, chứng nhận & 3 sản phẩm</p>
+                  <p className="text-[11px] text-slate-500">{tr("Đầy đủ ĐKKD, chứng nhận & 3 sản phẩm")}</p>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
-                  <span className="text-xs text-slate-500 font-medium">Điểm tín nhiệm (Trust Score)</span>
+                  <span className="text-xs text-slate-500 font-medium">{tr("Điểm tín nhiệm (Trust Score)")}</span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-2xl font-black text-teal-800">96/100</span>
-                    <span className="text-xs font-bold text-teal-600">Hạng A+</span>
+                    <span className="text-2xl font-black text-teal-800">{tr("96/100")}</span>
+                    <span className="text-xs font-bold text-teal-600">{tr("Hạng A+")}</span>
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-1">Đủ điều kiện bảo lãnh hợp đồng B2B</p>
+                  <p className="text-[11px] text-slate-500 mt-1">{tr("Đủ điều kiện bảo lãnh hợp đồng B2B")}</p>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
-                  <span className="text-xs text-slate-500 font-medium">Cấp độ xác minh</span>
+                  <span className="text-xs text-slate-500 font-medium">{tr("Cấp độ xác minh")}</span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-2xl font-bold text-slate-900">Level 2</span>
-                    <span className="text-xs font-semibold text-emerald-700">Enhanced</span>
+                    <span className="text-2xl font-bold text-slate-900">{tr("Level 2")}</span>
+                    <span className="text-xs font-semibold text-emerald-700">{tr("Enhanced")}</span>
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-1">Đối chiếu Sở KH&ĐT + SGS + TÜV</p>
+                  <p className="text-[11px] text-slate-500 mt-1">{tr("Đối chiếu Sở KH&ĐT + SGS + TÜV")}</p>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
-                  <span className="text-xs text-slate-500 font-medium">Năng lực cung ứng</span>
+                  <span className="text-xs text-slate-500 font-medium">{tr("Năng lực cung ứng")}</span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-2xl font-bold text-slate-900">15,000</span>
-                    <span className="text-xs font-semibold text-slate-600">tấn/năm</span>
+                    <span className="text-2xl font-bold text-slate-900">{tr("15,000")}</span>
+                    <span className="text-xs font-semibold text-slate-600">{tr("tấn/năm")}</span>
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-1">Đáp ứng đơn hàng container lớn</p>
+                  <p className="text-[11px] text-slate-500 mt-1">{tr("Đáp ứng đơn hàng container lớn")}</p>
                 </div>
               </div>
 
@@ -757,51 +752,50 @@ export default function SellerWorkspace({
                           <Building2 className="w-4 h-4" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-bold text-slate-900">1. Thông tin pháp lý & Liên hệ</h3>
-                          <p className="text-[11px] text-slate-500">Đối chiếu với Cổng thông tin Quốc gia về ĐKDN</p>
+                          <h3 className="text-sm font-bold text-slate-900">{tr("1. Thông tin pháp lý & Liên hệ")}</h3>
+                          <p className="text-[11px] text-slate-500">{tr("Đối chiếu với Cổng thông tin Quốc gia về ĐKDN")}</p>
                         </div>
                       </div>
                       <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3" />
-                        Khớp dữ liệu
-                      </span>
+                        {tr("Khớp dữ liệu")}</span>
                     </div>
 
                     <div className="space-y-3 text-xs leading-relaxed">
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Tên đăng ký kinh doanh:</span>
+                        <span className="text-slate-500 font-medium">{tr("Tên đăng ký kinh doanh:")}</span>
                         <span className="sm:col-span-2 font-bold text-slate-900">{companyProfile.name}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Tên giao dịch quốc tế:</span>
+                        <span className="text-slate-500 font-medium">{tr("Tên giao dịch quốc tế:")}</span>
                         <span className="sm:col-span-2 font-semibold text-slate-800">{companyProfile.tradeName}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Mã số thuế / MST:</span>
+                        <span className="text-slate-500 font-medium">{tr("Mã số thuế / MST:")}</span>
                         <span className="sm:col-span-2 font-bold text-teal-800 font-mono text-sm">{companyProfile.taxCode}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Loại hình doanh nghiệp:</span>
-                        <span className="sm:col-span-2 text-slate-800">{companyProfile.businessType}</span>
+                        <span className="text-slate-500 font-medium">{tr("Loại hình doanh nghiệp:")}</span>
+                        <span className="sm:col-span-2 text-slate-800">{tr(companyProfile.businessType)}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Người đại diện pháp luật:</span>
-                        <span className="sm:col-span-2 font-semibold text-slate-900">{companyProfile.representative} ({companyProfile.representativeRole})</span>
+                        <span className="text-slate-500 font-medium">{tr("Người đại diện pháp luật:")}</span>
+                        <span className="sm:col-span-2 font-semibold text-slate-900">{companyProfile.representative} {tr(" (")}{tr(companyProfile.representativeRole)}{tr(")")}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Địa chỉ trụ sở đăng ký:</span>
-                        <span className="sm:col-span-2 text-slate-800">{companyProfile.address}</span>
+                        <span className="text-slate-500 font-medium">{tr("Địa chỉ trụ sở đăng ký:")}</span>
+                        <span className="sm:col-span-2 text-slate-800">{tr(companyProfile.address)}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Email chính thức:</span>
+                        <span className="text-slate-500 font-medium">{tr("Email chính thức:")}</span>
                         <span className="sm:col-span-2 font-semibold text-slate-800">{companyProfile.email}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Số điện thoại / Hotline:</span>
-                        <span className="sm:col-span-2 text-slate-800">{companyProfile.phone} • {companyProfile.hotline}</span>
+                        <span className="text-slate-500 font-medium">{tr("Số điện thoại / Hotline:")}</span>
+                        <span className="sm:col-span-2 text-slate-800">{companyProfile.phone} {tr(" • ")}{companyProfile.hotline}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5">
-                        <span className="text-slate-500 font-medium">Website:</span>
+                        <span className="text-slate-500 font-medium">{tr("Website:")}</span>
                         <a href={companyProfile.website} target="_blank" rel="noreferrer" className="sm:col-span-2 text-blue-600 hover:underline font-semibold flex items-center gap-1">
                           <span>{companyProfile.website}</span>
                           <ExternalLink className="w-3 h-3" />
@@ -818,46 +812,45 @@ export default function SellerWorkspace({
                           <Factory className="w-4 h-4" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-bold text-slate-900">2. Nhà máy & Năng lực sản xuất</h3>
-                          <p className="text-[11px] text-slate-500">Cơ sở vật chất, mã vùng trồng và mã đóng gói</p>
+                          <h3 className="text-sm font-bold text-slate-900">{tr("2. Nhà máy & Năng lực sản xuất")}</h3>
+                          <p className="text-[11px] text-slate-500">{tr("Cơ sở vật chất, mã vùng trồng và mã đóng gói")}</p>
                         </div>
                       </div>
                       <span className="text-[11px] font-semibold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-md">
-                        Đạt chuẩn xuất khẩu
-                      </span>
+                        {tr("Đạt chuẩn xuất khẩu")}</span>
                     </div>
 
                     <div className="space-y-3 text-xs leading-relaxed">
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Địa chỉ nhà máy chế biến:</span>
-                        <span className="sm:col-span-2 font-semibold text-slate-800">{companyProfile.factoryAddress}</span>
+                        <span className="text-slate-500 font-medium">{tr("Địa chỉ nhà máy chế biến:")}</span>
+                        <span className="sm:col-span-2 font-semibold text-slate-800">{tr(companyProfile.factoryAddress)}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Năng lực cung ứng ước tính:</span>
-                        <span className="sm:col-span-2 font-bold text-teal-800">{companyProfile.capacity}</span>
+                        <span className="text-slate-500 font-medium">{tr("Năng lực cung ứng ước tính:")}</span>
+                        <span className="sm:col-span-2 font-bold text-teal-800">{tr(companyProfile.capacity)}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Quy mô nhân sự:</span>
-                        <span className="sm:col-span-2 text-slate-800">{companyProfile.employees}</span>
+                        <span className="text-slate-500 font-medium">{tr("Quy mô nhân sự:")}</span>
+                        <span className="sm:col-span-2 text-slate-800">{tr(companyProfile.employees)}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Mã vùng trồng (PUC):</span>
+                        <span className="text-slate-500 font-medium">{tr("Mã vùng trồng (PUC):")}</span>
                         <span className="sm:col-span-2 font-bold text-emerald-800 font-mono bg-emerald-50 px-2 py-0.5 rounded inline-block">
-                          {companyProfile.puc}
+                          {tr(companyProfile.puc)}
                         </span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5 border-b border-slate-50">
-                        <span className="text-slate-500 font-medium">Mã cơ sở đóng gói (PHC):</span>
+                        <span className="text-slate-500 font-medium">{tr("Mã cơ sở đóng gói (PHC):")}</span>
                         <span className="sm:col-span-2 font-bold text-emerald-800 font-mono bg-emerald-50 px-2 py-0.5 rounded inline-block">
-                          {companyProfile.phc}
+                          {tr(companyProfile.phc)}
                         </span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-1.5">
-                        <span className="text-slate-500 font-medium">Thị trường xuất khẩu chính:</span>
+                        <span className="text-slate-500 font-medium">{tr("Thị trường xuất khẩu chính:")}</span>
                         <div className="sm:col-span-2 flex flex-wrap gap-1.5">
                           {companyProfile.mainMarkets.map((m, i) => (
                             <span key={i} className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-medium text-[11px]">
-                              {m}
+                              {tr(m)}
                             </span>
                           ))}
                         </div>
@@ -868,10 +861,9 @@ export default function SellerWorkspace({
                   {/* Block 3: Giới thiệu chung của Doanh nghiệp */}
                   <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs">
                     <h4 className="text-xs font-bold text-slate-900 mb-2 uppercase tracking-wider">
-                      Giới thiệu doanh nghiệp & Cam kết chất lượng
-                    </h4>
+                      {tr("Giới thiệu doanh nghiệp & Cam kết chất lượng")}</h4>
                     <p className="text-xs text-slate-600 leading-relaxed">
-                      {companyProfile.description}
+                      {tr(companyProfile.description)}
                     </p>
                   </div>
 
@@ -885,13 +877,13 @@ export default function SellerWorkspace({
                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                       <div className="flex items-center gap-2">
                         <Award className="w-4 h-4 text-teal-700" />
-                        <h3 className="text-sm font-bold text-slate-900">3. Chứng nhận chất lượng</h3>
+                        <h3 className="text-sm font-bold text-slate-900">{tr("3. Chứng nhận chất lượng")}</h3>
                       </div>
                       <button
                         onClick={() => setActiveTab('licenses')}
                         className="text-xs font-semibold text-teal-700 hover:text-teal-900 flex items-center gap-1 cursor-pointer"
                       >
-                        <span>Quản lý ({certificatesList.length})</span>
+                        <span>{tr("Quản lý (")}{tr(certificatesList.length)}{tr(")")}</span>
                         <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
@@ -905,17 +897,17 @@ export default function SellerWorkspace({
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
                               <h4 className="text-xs font-bold text-slate-900 truncate group-hover:text-teal-900">
-                                {cert.title}
+                                {tr(cert.title)}
                               </h4>
                               <p className="text-[11px] text-slate-500 mt-0.5">
-                                Cấp bởi: <strong className="text-slate-700">{cert.issuer}</strong>
+                                {tr("Cấp bởi: ")}<strong className="text-slate-700">{tr(cert.issuer)}</strong>
                               </p>
                               <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                                 <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-100/70 px-1.5 py-0.5 rounded">
-                                  {cert.status}
+                                  {tr(cert.status)}
                                 </span>
                                 <span className="text-[10px] text-slate-400">
-                                  {cert.validity}
+                                  {tr(cert.validity)}
                                 </span>
                               </div>
                             </div>
@@ -926,10 +918,10 @@ export default function SellerWorkspace({
                                 setActiveModal('view-doc');
                               }}
                               className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-[#083832] text-slate-700 hover:text-white border border-slate-200 text-[11px] font-semibold flex items-center gap-1 transition-colors cursor-pointer shrink-0 shadow-2xs"
-                              title="Xem bản scan chứng thư điện tử"
+                              title={tr("Xem bản scan chứng thư điện tử")}
                             >
                               <Eye className="w-3 h-3" />
-                              <span>Xem</span>
+                              <span>{tr("Xem")}</span>
                             </button>
                           </div>
                         </div>
@@ -941,14 +933,13 @@ export default function SellerWorkspace({
                       className="w-full py-2.5 rounded-xl border border-teal-200 bg-teal-50/50 hover:bg-teal-100 text-teal-900 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5 text-teal-700" />
-                      <span>Tải lên chứng nhận bổ sung / Sửa / Xóa</span>
+                      <span>{tr("Tải lên chứng nhận bổ sung / Sửa / Xóa")}</span>
                     </button>
 
                     <div className="p-3 rounded-2xl bg-teal-50/60 border border-teal-200/60 text-xs text-teal-900 flex items-start gap-2.5">
                       <FileCheck className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
                       <p className="text-[11px] leading-relaxed">
-                        Tất cả chứng nhận đã được lưu trữ trên <strong>Evidence Record</strong> bất biến, cho phép Buyer quốc tế xác thực tính toàn vẹn 24/7.
-                      </p>
+                        {tr("Tất cả chứng nhận đã được lưu trữ trên ")}<strong>{tr("Evidence Record")}</strong> {tr(" bất biến, cho phép Buyer quốc tế xác thực tính toàn vẹn 24/7.")}</p>
                     </div>
                   </div>
 
@@ -957,14 +948,13 @@ export default function SellerWorkspace({
                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                       <div className="flex items-center gap-2">
                         <Package className="w-4 h-4 text-teal-700" />
-                        <h3 className="text-sm font-bold text-slate-900">4. Sản phẩm xuất khẩu</h3>
+                        <h3 className="text-sm font-bold text-slate-900">{tr("4. Sản phẩm xuất khẩu")}</h3>
                       </div>
                       <button
                         onClick={() => setActiveTab('products')}
                         className="text-xs font-semibold text-teal-700 hover:text-teal-900"
                       >
-                        Quản lý ({productsList.length}) →
-                      </button>
+                        {tr("Quản lý (")}{tr(productsList.length)}{tr(") →")}</button>
                     </div>
 
                     <div className="space-y-3">
@@ -972,26 +962,25 @@ export default function SellerWorkspace({
                         <div key={product.id} className="p-3 rounded-2xl bg-white border border-slate-200 shadow-2xs flex gap-3 items-center">
                           <img 
                             src={product.image} 
-                            alt={product.name} 
+                            alt={tr(product.name)} 
                             className="w-16 h-16 rounded-xl object-cover shrink-0 border border-slate-200" 
                           />
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <h4 className="text-xs font-bold text-slate-900 truncate">
-                                {product.name}
+                                {tr(product.name)}
                               </h4>
                               {product.isMain && (
                                 <span className="text-[9px] font-bold text-teal-800 bg-teal-50 px-1.5 py-0.5 rounded border border-teal-200">
-                                  Chính
-                                </span>
+                                  {tr("Chính")}</span>
                               )}
                             </div>
                             <p className="text-[11px] text-slate-500 mt-0.5">
-                              Năng lực: {product.capacity} • MOQ: {product.moq}
+                              {tr("Năng lực: ")}{tr(product.capacity)} {tr(" • MOQ: ")}{tr(product.moq)}
                             </p>
                             <div className="flex items-center gap-1 mt-1 text-[10px] text-slate-400">
-                              <span>Thị trường:</span>
-                              <span className="font-medium text-slate-600 truncate">{product.markets.join(', ')}</span>
+                              <span>{tr("Thị trường:")}</span>
+                              <span className="font-medium text-slate-600 truncate">{product.markets.map(tr).join(', ')}</span>
                             </div>
                           </div>
                         </div>
@@ -1006,18 +995,17 @@ export default function SellerWorkspace({
                         <ShieldCheck className="w-4 h-4" />
                       </div>
                       <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-teal-300">Tiến trình Xác minh</h4>
-                        <p className="text-sm font-bold text-white">Bạn đang ở cấp độ L2 Enhanced</p>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-teal-300">{tr("Tiến trình Xác minh")}</h4>
+                        <p className="text-sm font-bold text-white">{tr("Bạn đang ở cấp độ L2 Enhanced")}</p>
                       </div>
                     </div>
                     <p className="text-xs text-slate-300 leading-relaxed">
-                      Muốn hiển thị ưu tiên hàng đầu và nhận bảo lãnh Escrow từ VYBE? Nâng cấp lên chương trình thẩm định <strong>L3 VYBE Certified</strong>.
-                    </p>
+                      {tr("Muốn hiển thị ưu tiên hàng đầu và nhận bảo lãnh Escrow từ VYBE? Nâng cấp lên chương trình thẩm định ")}<strong>{tr("L3 VYBE Certified")}</strong>{tr(".")}</p>
                     <button
                       onClick={() => setActiveTab('verification')}
                       className="w-full py-2.5 rounded-xl bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
                     >
-                      <span>Xem lộ trình L0 → L3</span>
+                      <span>{tr("Xem lộ trình L0 → L3")}</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -1043,16 +1031,13 @@ export default function SellerWorkspace({
                       <span className="w-1.5 h-1.5 rounded-full bg-teal-700" />
                     </span>
                     <span className="text-[11px] font-bold text-teal-800 tracking-wider uppercase">
-                      HỒ SƠ NĂNG LỰC & CHỨNG NHẬN XUẤT KHẨU
-                    </span>
+                      {tr("HỒ SƠ NĂNG LỰC & CHỨNG NHẬN XUẤT KHẨU")}</span>
                   </div>
 
                   <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                    Quản lý Giấy phép & Chứng nhận
-                  </h1>
+                    {tr("Quản lý Giấy phép & Chứng nhận")}</h1>
                   <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
-                    Tải lên các giấy phép và chứng chỉ bổ sung nếu cần thiết (GlobalG.A.P., Organic, FDA, Halal...), chỉnh sửa thông tin hoặc xóa chứng nhận đã hết hạn để tối ưu hồ sơ tín nhiệm với Buyer quốc tế.
-                  </p>
+                    {tr("Tải lên các giấy phép và chứng chỉ bổ sung nếu cần thiết (GlobalG.A.P., Organic, FDA, Halal...), chỉnh sửa thông tin hoặc xóa chứng nhận đã hết hạn để tối ưu hồ sơ tín nhiệm với Buyer quốc tế.")}</p>
                 </div>
 
                 <div className="flex flex-wrap sm:flex-nowrap gap-3 w-full lg:w-auto shrink-0">
@@ -1061,7 +1046,7 @@ export default function SellerWorkspace({
                     className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-[#083832] hover:bg-[#062924] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer active:scale-95"
                   >
                     <Plus className="w-4 h-4 text-teal-300 stroke-[2.5]" />
-                    <span>Tải lên chứng nhận bổ sung</span>
+                    <span>{tr("Tải lên chứng nhận bổ sung")}</span>
                   </button>
                 </div>
               </div>
@@ -1073,9 +1058,9 @@ export default function SellerWorkspace({
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[11px] text-slate-500 font-medium">Tổng số tài liệu</span>
-                    <p className="text-xl font-bold text-slate-900 mt-0.5">{certificatesList.length} hồ sơ</p>
-                    <span className="text-[10px] text-emerald-700 font-semibold">Tất cả còn hiệu lực</span>
+                    <span className="text-[11px] text-slate-500 font-medium">{tr("Tổng số tài liệu")}</span>
+                    <p className="text-xl font-bold text-slate-900 mt-0.5">{tr(certificatesList.length)} {tr(" hồ sơ")}</p>
+                    <span className="text-[10px] text-emerald-700 font-semibold">{tr("Tất cả còn hiệu lực")}</span>
                   </div>
                 </div>
 
@@ -1084,9 +1069,9 @@ export default function SellerWorkspace({
                     <CheckCircle2 className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[11px] text-slate-500 font-medium">Trạng thái đối soát OCR</span>
-                    <p className="text-xl font-bold text-blue-700 mt-0.5">100% Khớp</p>
-                    <span className="text-[10px] text-slate-400">Không có sai lệch</span>
+                    <span className="text-[11px] text-slate-500 font-medium">{tr("Trạng thái đối soát OCR")}</span>
+                    <p className="text-xl font-bold text-blue-700 mt-0.5">{tr("100% Khớp")}</p>
+                    <span className="text-[10px] text-slate-400">{tr("Không có sai lệch")}</span>
                   </div>
                 </div>
 
@@ -1095,9 +1080,9 @@ export default function SellerWorkspace({
                     <ShieldCheck className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[11px] text-slate-500 font-medium">Cấp độ tín nhiệm</span>
-                    <p className="text-xl font-bold text-emerald-800 mt-0.5">L2 Enhanced</p>
-                    <span className="text-[10px] text-emerald-700 font-semibold">Ưu tiên kết nối Buyer</span>
+                    <span className="text-[11px] text-slate-500 font-medium">{tr("Cấp độ tín nhiệm")}</span>
+                    <p className="text-xl font-bold text-emerald-800 mt-0.5">{tr("L2 Enhanced")}</p>
+                    <span className="text-[10px] text-emerald-700 font-semibold">{tr("Ưu tiên kết nối Buyer")}</span>
                   </div>
                 </div>
 
@@ -1106,9 +1091,9 @@ export default function SellerWorkspace({
                     <Lock className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[11px] text-slate-500 font-medium">Lưu trữ bảo mật</span>
-                    <p className="text-xl font-bold text-slate-900 mt-0.5">Temporal Table</p>
-                    <span className="text-[10px] text-slate-400">Bất biến & Minh bạch</span>
+                    <span className="text-[11px] text-slate-500 font-medium">{tr("Lưu trữ bảo mật")}</span>
+                    <p className="text-xl font-bold text-slate-900 mt-0.5">{tr("Temporal Table")}</p>
+                    <span className="text-[10px] text-slate-400">{tr("Bất biến & Minh bạch")}</span>
                   </div>
                 </div>
               </div>
@@ -1122,7 +1107,7 @@ export default function SellerWorkspace({
                     <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input 
                       type="text"
-                      placeholder="Tìm theo tên chứng chỉ, cơ quan cấp hoặc mã số..."
+                      placeholder={tr("Tìm theo tên chứng chỉ, cơ quan cấp hoặc mã số...")}
                       value={certSearchTerm}
                       onChange={(e) => setCertSearchTerm(e.target.value)}
                       className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-xs sm:text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-teal-700 bg-slate-50/50"
@@ -1143,7 +1128,7 @@ export default function SellerWorkspace({
                     className="px-4 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-900 text-xs font-bold border border-teal-200 flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0"
                   >
                     <Plus className="w-3.5 h-3.5 text-teal-700" />
-                    <span>Thêm chứng chỉ mới</span>
+                    <span>{tr("Thêm chứng chỉ mới")}</span>
                   </button>
 
                 </div>
@@ -1152,8 +1137,7 @@ export default function SellerWorkspace({
                 <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 text-xs">
                   <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider shrink-0 flex items-center gap-1">
                     <Filter className="w-3 h-3" />
-                    Bộ lọc:
-                  </span>
+                    {tr("Bộ lọc:")}</span>
                   {[
                     { id: 'all', label: 'Tất cả tài liệu', count: certificatesList.length },
                     { id: 'legal', label: 'Pháp lý ERC', count: certificatesList.filter(c => c.category === 'legal').length },
@@ -1172,11 +1156,11 @@ export default function SellerWorkspace({
                             : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900'
                         }`}
                       >
-                        <span>{tab.label}</span>
+                        <span>{tr(tab.label)}</span>
                         <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                           isSelected ? 'bg-white/20 text-white' : 'bg-white text-slate-500'
                         }`}>
-                          {tab.count}
+                          {tr(tab.count)}
                         </span>
                       </button>
                     );
@@ -1217,30 +1201,29 @@ export default function SellerWorkspace({
                         <div className="space-y-1.5 min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-teal-900 transition-colors">
-                              {cert.title}
+                              {tr(cert.title)}
                             </h3>
                             {cert.isMandatory && (
                               <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
-                                Bắt buộc
-                              </span>
+                                {tr("Bắt buộc")}</span>
                             )}
                             <span className="text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
-                              {cert.type}
+                              {tr(cert.type)}
                             </span>
                           </div>
 
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-1 gap-x-4 text-xs text-slate-600 pt-1">
                             <div>
-                              <span className="text-slate-400">Số chứng chỉ:</span>{' '}
-                              <strong className="text-slate-800 font-mono">{cert.certNumber}</strong>
+                              <span className="text-slate-400">{tr("Số chứng chỉ:")}</span>{tr(' ')}
+                              <strong className="text-slate-800 font-mono">{tr(cert.certNumber)}</strong>
                             </div>
                             <div>
-                              <span className="text-slate-400">Cơ quan cấp:</span>{' '}
-                              <strong className="text-slate-800">{cert.issuer}</strong>
+                              <span className="text-slate-400">{tr("Cơ quan cấp:")}</span>{tr(' ')}
+                              <strong className="text-slate-800">{tr(cert.issuer)}</strong>
                             </div>
                             <div>
-                              <span className="text-slate-400">Thời hạn:</span>{' '}
-                              <strong className="text-slate-800">{cert.date}</strong>
+                              <span className="text-slate-400">{tr("Thời hạn:")}</span>{tr(' ')}
+                              <strong className="text-slate-800">{tr(cert.date)}</strong>
                             </div>
                           </div>
 
@@ -1248,17 +1231,17 @@ export default function SellerWorkspace({
                           <div className="flex items-center gap-3 pt-2 text-[11px] text-slate-500 flex-wrap">
                             <span className="flex items-center gap-1 text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
                               <FileText className="w-3.5 h-3.5 text-slate-400" />
-                              <span className="font-mono text-[11px]">{cert.fileName}</span>
-                              <span className="text-slate-400">({cert.fileSize})</span>
+                              <span className="font-mono text-[11px]">{tr(cert.fileName)}</span>
+                              <span className="text-slate-400">{tr("(")}{tr(cert.fileSize)}{tr(")")}</span>
                             </span>
 
                             <span className="flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
                               <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>{cert.status}</span>
+                              <span>{tr(cert.status)}</span>
                             </span>
 
                             <span className="text-slate-400">
-                              {cert.validity}
+                              {tr(cert.validity)}
                             </span>
                           </div>
                         </div>
@@ -1273,10 +1256,10 @@ export default function SellerWorkspace({
                             setActiveModal('view-doc');
                           }}
                           className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-900 text-slate-700 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
-                          title="Xem bản scan chứng chỉ có con dấu OCR"
+                          title={tr("Xem bản scan chứng chỉ có con dấu OCR")}
                         >
                           <Eye className="w-3.5 h-3.5 text-teal-700" />
-                          <span>Xem</span>
+                          <span>{tr("Xem")}</span>
                         </button>
 
                         {/* Sửa */}
@@ -1286,10 +1269,10 @@ export default function SellerWorkspace({
                             setActiveModal('edit-cert');
                           }}
                           className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-blue-900 text-slate-700 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
-                          title="Chỉnh sửa thông tin chứng chỉ"
+                          title={tr("Chỉnh sửa thông tin chứng chỉ")}
                         >
                           <Edit3 className="w-3.5 h-3.5 text-blue-600" />
-                          <span>Sửa</span>
+                          <span>{tr("Sửa")}</span>
                         </button>
 
                         {/* Xóa */}
@@ -1299,10 +1282,10 @@ export default function SellerWorkspace({
                             setActiveModal('delete-cert');
                           }}
                           className="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-rose-200/60"
-                          title="Xóa chứng chỉ này khỏi hệ thống"
+                          title={tr("Xóa chứng chỉ này khỏi hệ thống")}
                         >
                           <Trash2 className="w-3.5 h-3.5 text-rose-600" />
-                          <span>Xóa</span>
+                          <span>{tr("Xóa")}</span>
                         </button>
                       </div>
 
@@ -1322,16 +1305,14 @@ export default function SellerWorkspace({
                     <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
                       <Search className="w-6 h-6" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">Không tìm thấy giấy phép / chứng chỉ nào</h4>
+                    <h4 className="text-sm font-bold text-slate-800">{tr("Không tìm thấy giấy phép / chứng chỉ nào")}</h4>
                     <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                      Hãy thử đổi từ khóa tìm kiếm hoặc chọn danh mục khác, hoặc bấm nút bên dưới để tải lên chứng nhận mới.
-                    </p>
+                      {tr("Hãy thử đổi từ khóa tìm kiếm hoặc chọn danh mục khác, hoặc bấm nút bên dưới để tải lên chứng nhận mới.")}</p>
                     <button
                       onClick={() => setActiveModal('add-cert')}
                       className="px-4 py-2 rounded-xl bg-[#083832] text-white text-xs font-semibold hover:bg-[#062924] transition-colors cursor-pointer"
                     >
-                      + Tải lên chứng nhận ngay
-                    </button>
+                      {tr("+ Tải lên chứng nhận ngay")}</button>
                   </div>
                 )}
               </div>
@@ -1355,18 +1336,15 @@ export default function SellerWorkspace({
                       <span className="w-2 h-0.5 rounded-full bg-[#0d9488]" />
                     </span>
                     <span className="text-[11px] sm:text-xs font-bold text-[#0d9488] tracking-widest uppercase">
-                      VERIFICATION
-                    </span>
+                      {tr("VERIFICATION")}</span>
                   </div>
 
                   <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-bold text-slate-900 tracking-tight leading-[1.2] mb-3">
-                    Xác minh để trở thành<br />
-                    một đối tác đáng tin cậy toàn cầu
-                  </h1>
+                    {tr("Xác minh để trở thành")}<br />
+                    {tr("một đối tác đáng tin cậy toàn cầu")}</h1>
 
                   <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl font-normal">
-                    Nâng cao mức độ tin cậy, mở rộng cơ hội kết nối với các buyer quốc tế và tham gia sâu hơn vào chuỗi cung ứng toàn cầu.
-                  </p>
+                    {tr("Nâng cao mức độ tin cậy, mở rộng cơ hội kết nối với các buyer quốc tế và tham gia sâu hơn vào chuỗi cung ứng toàn cầu.")}</p>
                 </div>
 
                 {/* Right: 3D Globe with Emerald Shield Vector Graphic */}
@@ -1436,22 +1414,21 @@ export default function SellerWorkspace({
                       <ChevronRight className="w-4 h-4 text-slate-300" />
                     </div>
 
-                    <h3 className="text-xl font-bold text-slate-900 leading-tight">L0</h3>
-                    <h4 className="text-sm font-semibold text-slate-700 mt-0.5">Unverified</h4>
+                    <h3 className="text-xl font-bold text-slate-900 leading-tight">{tr("L0")}</h3>
+                    <h4 className="text-sm font-semibold text-slate-700 mt-0.5">{tr("Unverified")}</h4>
 
                     <p className="text-xs text-slate-500 mt-2 mb-4 leading-relaxed">
-                      Hồ sơ cơ bản,<br />
-                      chưa xác minh
-                    </p>
+                      {tr("Hồ sơ cơ bản,")}<br />
+                      {tr("chưa xác minh")}</p>
 
                     <div className="space-y-2 text-xs text-slate-600 pt-3 border-t border-slate-100">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" />
-                        <span>Thông tin doanh nghiệp</span>
+                        <span>{tr("Thông tin doanh nghiệp")}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" />
-                        <span>Sản phẩm cơ bản</span>
+                        <span>{tr("Sản phẩm cơ bản")}</span>
                       </div>
                     </div>
                   </div>
@@ -1461,8 +1438,7 @@ export default function SellerWorkspace({
                       disabled
                       className="w-full py-2.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-semibold cursor-default text-center"
                     >
-                      Đã hoàn thành
-                    </button>
+                      {tr("Đã hoàn thành")}</button>
                   </div>
 
                   <div className="hidden lg:flex absolute -right-3 top-1/2 -translate-y-1/2 z-20 pointer-events-none">
@@ -1480,26 +1456,25 @@ export default function SellerWorkspace({
                       <ChevronRight className="w-4 h-4 text-slate-300" />
                     </div>
 
-                    <h3 className="text-xl font-bold text-slate-900 leading-tight">L1</h3>
-                    <h4 className="text-sm font-semibold text-slate-800 mt-0.5">Basic Verified</h4>
+                    <h3 className="text-xl font-bold text-slate-900 leading-tight">{tr("L1")}</h3>
+                    <h4 className="text-sm font-semibold text-slate-800 mt-0.5">{tr("Basic Verified")}</h4>
 
                     <p className="text-xs text-slate-500 mt-2 mb-4 leading-relaxed">
-                      Đã đối chiếu MST<br />
-                      và thông tin cơ bản
-                    </p>
+                      {tr("Đã đối chiếu MST")}<br />
+                      {tr("và thông tin cơ bản")}</p>
 
                     <div className="space-y-2 text-xs text-slate-600 pt-3 border-t border-slate-100">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
-                        <span>Xác minh MST</span>
+                        <span>{tr("Xác minh MST")}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
-                        <span>Đối chiếu tên công ty</span>
+                        <span>{tr("Đối chiếu tên công ty")}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
-                        <span>Hồ sơ đầy đủ hơn</span>
+                        <span>{tr("Hồ sơ đầy đủ hơn")}</span>
                       </div>
                     </div>
                   </div>
@@ -1509,8 +1484,7 @@ export default function SellerWorkspace({
                       onClick={() => setActiveModal('upgrade-l1')}
                       className="w-full py-2.5 rounded-xl border border-blue-500 text-blue-600 hover:bg-blue-50 text-xs font-semibold transition-colors cursor-pointer text-center shadow-2xs"
                     >
-                      Đã xác thực L1
-                    </button>
+                      {tr("Đã xác thực L1")}</button>
                   </div>
 
                   <div className="hidden lg:flex absolute -right-3 top-1/2 -translate-y-1/2 z-20 pointer-events-none">
@@ -1526,30 +1500,28 @@ export default function SellerWorkspace({
                         <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
                       </div>
                       <span className="text-[10px] font-bold text-teal-800 bg-teal-100/80 px-2 py-0.5 rounded-md">
-                        Cấp độ hiện tại
-                      </span>
+                        {tr("Cấp độ hiện tại")}</span>
                     </div>
 
-                    <h3 className="text-xl font-bold text-slate-900 leading-tight">L2</h3>
-                    <h4 className="text-sm font-semibold text-slate-900 mt-0.5">Enhanced Verified</h4>
+                    <h3 className="text-xl font-bold text-slate-900 leading-tight">{tr("L2")}</h3>
+                    <h4 className="text-sm font-semibold text-slate-900 mt-0.5">{tr("Enhanced Verified")}</h4>
 
                     <p className="text-xs text-slate-500 mt-2 mb-4 leading-relaxed">
-                      Đã kiểm tra chứng chỉ<br />
-                      và năng lực sản xuất
-                    </p>
+                      {tr("Đã kiểm tra chứng chỉ")}<br />
+                      {tr("và năng lực sản xuất")}</p>
 
                     <div className="space-y-2 text-xs text-slate-700 pt-3 border-t border-teal-200/50">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Giấy phép, chứng nhận</span>
+                        <span>{tr("Giấy phép, chứng nhận")}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Năng lực sản xuất</span>
+                        <span>{tr("Năng lực sản xuất")}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Kiểm tra bởi VYBE</span>
+                        <span>{tr("Kiểm tra bởi VYBE")}</span>
                       </div>
                     </div>
                   </div>
@@ -1559,8 +1531,7 @@ export default function SellerWorkspace({
                       onClick={() => setActiveModal('upgrade-l2')}
                       className="w-full py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-semibold transition-colors cursor-pointer text-center shadow-xs"
                     >
-                      Đã kích hoạt L2 ✓
-                    </button>
+                      {tr("Đã kích hoạt L2 ✓")}</button>
                   </div>
 
                   <div className="hidden lg:flex absolute -right-3 top-1/2 -translate-y-1/2 z-20 pointer-events-none">
@@ -1578,26 +1549,25 @@ export default function SellerWorkspace({
                       <ChevronRight className="w-4 h-4 text-amber-400" />
                     </div>
 
-                    <h3 className="text-xl font-bold text-slate-900 leading-tight">L3</h3>
-                    <h4 className="text-sm font-semibold text-amber-950 mt-0.5">VYBE Certified</h4>
+                    <h3 className="text-xl font-bold text-slate-900 leading-tight">{tr("L3")}</h3>
+                    <h4 className="text-sm font-semibold text-amber-950 mt-0.5">{tr("VYBE Certified")}</h4>
 
                     <p className="text-xs text-slate-500 mt-2 mb-4 leading-relaxed">
-                      Đối tác ưu tiên<br />
-                      được VYBE chứng nhận
-                    </p>
+                      {tr("Đối tác ưu tiên")}<br />
+                      {tr("được VYBE chứng nhận")}</p>
 
                     <div className="space-y-2 text-xs text-slate-700 pt-3 border-t border-amber-200/60">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />
-                        <span>Tham chiếu giao dịch thật</span>
+                        <span>{tr("Tham chiếu giao dịch thật")}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />
-                        <span>Đánh giá chuyên sâu</span>
+                        <span>{tr("Đánh giá chuyên sâu")}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />
-                        <span>Hiển thị ưu tiên với buyer</span>
+                        <span>{tr("Hiển thị ưu tiên với buyer")}</span>
                       </div>
                     </div>
                   </div>
@@ -1607,8 +1577,7 @@ export default function SellerWorkspace({
                       onClick={() => setActiveModal('upgrade-l3')}
                       className="w-full py-2.5 rounded-xl bg-[#d97706] hover:bg-[#b45309] text-white text-xs font-semibold transition-all shadow-xs cursor-pointer text-center"
                     >
-                      Đạt VYBE Certified
-                    </button>
+                      {tr("Đạt VYBE Certified")}</button>
                   </div>
                 </div>
 
@@ -1622,11 +1591,9 @@ export default function SellerWorkspace({
                   </div>
                   <div>
                     <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
-                      Mỗi cấp độ được hỗ trợ bởi Evidence Record bất biến
-                    </h4>
+                      {tr("Mỗi cấp độ được hỗ trợ bởi Evidence Record bất biến")}</h4>
                     <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed font-normal">
-                      Tất cả dữ liệu, tài liệu và quyết định xác minh được lưu trữ an toàn bằng công nghệ Temporal Tables, đảm bảo minh bạch và có thể kiểm tra bất cứ lúc nào.
-                    </p>
+                      {tr("Tất cả dữ liệu, tài liệu và quyết định xác minh được lưu trữ an toàn bằng công nghệ Temporal Tables, đảm bảo minh bạch và có thể kiểm tra bất cứ lúc nào.")}</p>
                   </div>
                 </div>
 
@@ -1634,7 +1601,7 @@ export default function SellerWorkspace({
                   onClick={() => setActiveModal('evidence-record')}
                   className="text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-slate-950 flex items-center gap-1 shrink-0 transition-colors cursor-pointer"
                 >
-                  <span>Tìm hiểu thêm</span>
+                  <span>{tr("Tìm hiểu thêm")}</span>
                   <ArrowRight className="w-4 h-4 stroke-[2.2]" />
                 </button>
               </div>
@@ -1649,45 +1616,42 @@ export default function SellerWorkspace({
             <div className="space-y-6 text-left animate-in fade-in duration-200">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
-                  <span className="text-xs text-slate-500 font-medium">Lượt xem hồ sơ từ Buyer</span>
-                  <p className="text-2xl font-bold text-slate-900 mt-1">1,420</p>
-                  <span className="text-[11px] text-emerald-600 font-semibold">↑ +18% so với tháng trước</span>
+                  <span className="text-xs text-slate-500 font-medium">{tr("Lượt xem hồ sơ từ Buyer")}</span>
+                  <p className="text-2xl font-bold text-slate-900 mt-1">{tr("1,420")}</p>
+                  <span className="text-[11px] text-emerald-600 font-semibold">{tr("↑ +18% so với tháng trước")}</span>
                 </div>
                 <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
-                  <span className="text-xs text-slate-500 font-medium">Yêu cầu báo giá (RFQ)</span>
-                  <p className="text-2xl font-bold text-slate-900 mt-1">28</p>
-                  <span className="text-[11px] text-emerald-600 font-semibold">Từ EU, Mỹ, Nhật Bản</span>
+                  <span className="text-xs text-slate-500 font-medium">{tr("Yêu cầu báo giá (RFQ)")}</span>
+                  <p className="text-2xl font-bold text-slate-900 mt-1">{tr("28")}</p>
+                  <span className="text-[11px] text-emerald-600 font-semibold">{tr("Từ EU, Mỹ, Nhật Bản")}</span>
                 </div>
                 <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
-                  <span className="text-xs text-slate-500 font-medium">Cấp độ tín nhiệm</span>
-                  <p className="text-2xl font-bold text-emerald-700 mt-1">L2 Enhanced</p>
-                  <span className="text-[11px] text-slate-500">Đã xác minh toàn diện</span>
+                  <span className="text-xs text-slate-500 font-medium">{tr("Cấp độ tín nhiệm")}</span>
+                  <p className="text-2xl font-bold text-emerald-700 mt-1">{tr("L2 Enhanced")}</p>
+                  <span className="text-[11px] text-slate-500">{tr("Đã xác minh toàn diện")}</span>
                 </div>
                 <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
-                  <span className="text-xs text-slate-500 font-medium">Tỷ lệ phản hồi RFQ</span>
-                  <p className="text-2xl font-bold text-blue-600 mt-1">98.5%</p>
-                  <span className="text-[11px] text-slate-500">Thời gian phản hồi &lt; 2h</span>
+                  <span className="text-xs text-slate-500 font-medium">{tr("Tỷ lệ phản hồi RFQ")}</span>
+                  <p className="text-2xl font-bold text-blue-600 mt-1">{tr("98.5%")}</p>
+                  <span className="text-[11px] text-slate-500">{tr("Thời gian phản hồi < 2h")}</span>
                 </div>
               </div>
 
               <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs">
-                <h3 className="text-sm font-bold text-slate-900 mb-3">Hành trình xuất khẩu quốc tế</h3>
+                <h3 className="text-sm font-bold text-slate-900 mb-3">{tr("Hành trình xuất khẩu quốc tế")}</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Hồ sơ công ty của bạn đã vượt qua vòng kiểm tra tự động OCR và đối chiếu chứng chỉ cấp độ L2. Các Buyer đã được cấp quyền truy cập để gửi yêu cầu kết nối trực tiếp.
-                </p>
+                  {tr("Hồ sơ công ty của bạn đã vượt qua vòng kiểm tra tự động OCR và đối chiếu chứng chỉ cấp độ L2. Các Buyer đã được cấp quyền truy cập để gửi yêu cầu kết nối trực tiếp.")}</p>
                 <div className="pt-4 flex gap-3">
                   <button 
                     onClick={() => setActiveTab('profile')}
                     className="px-4 py-2 rounded-xl bg-[#083832] text-white text-xs font-semibold hover:bg-[#062924] transition-colors"
                   >
-                    Xem chi tiết Profile Company
-                  </button>
+                    {tr("Xem chi tiết Profile Company")}</button>
                   <button 
                     onClick={() => setActiveTab('rfq')}
                     className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
                   >
-                    Xem danh sách RFQ
-                  </button>
+                    {tr("Xem danh sách RFQ")}</button>
                 </div>
               </div>
             </div>
@@ -1700,15 +1664,14 @@ export default function SellerWorkspace({
             <div className="space-y-4 text-left animate-in fade-in duration-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Danh mục sản phẩm xuất khẩu</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">Các mặt hàng chính đã được đối soát thông số kỹ thuật và bao bì xuất khẩu</p>
+                  <h3 className="text-lg font-bold text-slate-900">{tr("Danh mục sản phẩm xuất khẩu")}</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">{tr("Các mặt hàng chính đã được đối soát thông số kỹ thuật và bao bì xuất khẩu")}</p>
                 </div>
                 <button 
                   onClick={onNavigateOnboarding}
                   className="px-4 py-2 rounded-xl bg-[#083832] text-white text-xs font-semibold hover:bg-[#062924] transition-colors cursor-pointer"
                 >
-                  + Thêm sản phẩm mới
-                </button>
+                  {tr("+ Thêm sản phẩm mới")}</button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -1716,33 +1679,32 @@ export default function SellerWorkspace({
                   <div key={product.id} className="p-5 rounded-3xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
                     <div>
                       <div className="w-full h-44 rounded-2xl overflow-hidden bg-slate-100 mb-4 border border-slate-200">
-                        <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                        <img src={product.image} alt={tr(product.name)} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex items-center gap-2 mb-1.5">
                         {product.isMain && (
                           <span className="text-[10px] font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">
-                            Sản phẩm chủ lực
-                          </span>
+                            {tr("Sản phẩm chủ lực")}</span>
                         )}
                         <span className="text-[10px] text-slate-500 font-medium">
-                          {product.category}
+                          {tr(product.category)}
                         </span>
                       </div>
-                      <h4 className="text-sm font-bold text-slate-900 leading-snug">{product.name}</h4>
-                      <p className="text-xs text-slate-600 mt-2 line-clamp-2">{product.description}</p>
+                      <h4 className="text-sm font-bold text-slate-900 leading-snug">{tr(product.name)}</h4>
+                      <p className="text-xs text-slate-600 mt-2 line-clamp-2">{tr(product.description)}</p>
                       
                       <div className="mt-4 pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
                         <div className="flex justify-between">
-                          <span className="text-slate-400">Năng lực:</span>
-                          <span className="font-semibold text-slate-800">{product.capacity}</span>
+                          <span className="text-slate-400">{tr("Năng lực:")}</span>
+                          <span className="font-semibold text-slate-800">{tr(product.capacity)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-400">MOQ:</span>
-                          <span className="font-semibold text-slate-800">{product.moq}</span>
+                          <span className="text-slate-400">{tr("MOQ:")}</span>
+                          <span className="font-semibold text-slate-800">{tr(product.moq)}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-400">Thị trường:</span>
-                          <span className="font-medium text-slate-800 truncate max-w-[140px]">{product.markets.join(', ')}</span>
+                          <span className="text-slate-400">{tr("Thị trường:")}</span>
+                          <span className="font-medium text-slate-800 truncate max-w-[140px]">{product.markets.map(tr).join(', ')}</span>
                         </div>
                       </div>
                     </div>
@@ -1752,8 +1714,7 @@ export default function SellerWorkspace({
                         onClick={() => setActiveModal('public-preview')}
                         className="w-full py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
                       >
-                        Xem hiển thị B2B
-                      </button>
+                        {tr("Xem hiển thị B2B")}</button>
                     </div>
                   </div>
                 ))}
@@ -1767,8 +1728,8 @@ export default function SellerWorkspace({
           {activeTab === 'rfq' && (
             <div className="space-y-4 text-left animate-in fade-in duration-200">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">Cơ hội kết nối & Đơn hỏi hàng B2B (RFQ)</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Buyer đã xác thực hồ sơ và gửi yêu cầu chào giá trực tiếp cho doanh nghiệp của bạn</p>
+                <h3 className="text-lg font-bold text-slate-900">{tr("Cơ hội kết nối & Đơn hỏi hàng B2B (RFQ)")}</h3>
+                <p className="text-xs text-slate-500 mt-0.5">{tr("Buyer đã xác thực hồ sơ và gửi yêu cầu chào giá trực tiếp cho doanh nghiệp của bạn")}</p>
               </div>
 
               <div className="space-y-3">
@@ -1780,17 +1741,16 @@ export default function SellerWorkspace({
                   <div key={idx} className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold text-slate-900">{item.buyer}</h4>
-                        <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">{item.country}</span>
+                        <h4 className="text-sm font-bold text-slate-900">{tr(item.buyer)}</h4>
+                        <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">{tr(item.country)}</span>
                       </div>
                       <p className="text-xs text-slate-700 mt-1">
-                        Yêu cầu chào giá: <strong className="text-slate-900 font-semibold">{item.product}</strong> • Số lượng dự kiến: <strong>{item.volume}</strong>
+                        {tr("Yêu cầu chào giá: ")}<strong className="text-slate-900 font-semibold">{tr(item.product)}</strong> {tr(" • Số lượng dự kiến: ")}<strong>{tr(item.volume)}</strong>
                       </p>
-                      <span className="text-[11px] text-slate-400 mt-1 block">{item.date}</span>
+                      <span className="text-[11px] text-slate-400 mt-1 block">{tr(item.date)}</span>
                     </div>
                     <button className="px-5 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-semibold transition-colors cursor-pointer shrink-0 shadow-xs">
-                      Gửi phản hồi báo giá
-                    </button>
+                      {tr("Gửi phản hồi báo giá")}</button>
                   </div>
                 ))}
               </div>
@@ -1802,27 +1762,27 @@ export default function SellerWorkspace({
              ----------------------------------------------------------------------- */}
           {activeTab === 'notifications' && (
             <div className="space-y-4 text-left animate-in fade-in duration-200">
-              <h3 className="text-lg font-bold text-slate-900">Thông báo hệ thống & Tiến trình</h3>
+              <h3 className="text-lg font-bold text-slate-900">{tr("Thông báo hệ thống & Tiến trình")}</h3>
               <div className="space-y-3">
                 <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-xs font-bold text-emerald-950">Chứng chỉ ISO 22000 & HACCP đã được đối soát thành công</h4>
-                    <p className="text-xs text-emerald-800 mt-0.5">Tài liệu đã được ghi nhận vào Evidence Record bất biến và hệ thống đã kích hoạt cấp độ L2 Enhanced Verified cho hồ sơ công ty.</p>
+                    <h4 className="text-xs font-bold text-emerald-950">{tr("Chứng chỉ ISO 22000 & HACCP đã được đối soát thành công")}</h4>
+                    <p className="text-xs text-emerald-800 mt-0.5">{tr("Tài liệu đã được ghi nhận vào Evidence Record bất biến và hệ thống đã kích hoạt cấp độ L2 Enhanced Verified cho hồ sơ công ty.")}</p>
                   </div>
                 </div>
                 <div className="p-4 rounded-2xl bg-white border border-slate-200 flex items-start gap-3">
                   <Bell className="w-5 h-5 text-teal-700 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">Buyer từ Đức vừa xem danh mục Cà phê Robusta</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">Hồ sơ công ty của bạn đã xuất hiện trong top tìm kiếm nhà cung ứng nông sản Việt Nam uy tín.</p>
+                    <h4 className="text-xs font-bold text-slate-900">{tr("Buyer từ Đức vừa xem danh mục Cà phê Robusta")}</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">{tr("Hồ sơ công ty của bạn đã xuất hiện trong top tìm kiếm nhà cung ứng nông sản Việt Nam uy tín.")}</p>
                   </div>
                 </div>
                 <div className="p-4 rounded-2xl bg-white border border-slate-200 flex items-start gap-3">
                   <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">Đối chiếu mã số thuế ERC hoàn tất</h4>
-                    <p className="text-xs text-slate-500 mt-0.5">Thông tin pháp lý với Sở KH&ĐT TP.HCM đã khớp 100% không phát hiện sai lệch.</p>
+                    <h4 className="text-xs font-bold text-slate-900">{tr("Đối chiếu mã số thuế ERC hoàn tất")}</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">{tr("Thông tin pháp lý với Sở KH&ĐT TP.HCM đã khớp 100% không phát hiện sai lệch.")}</p>
                   </div>
                 </div>
               </div>
@@ -1854,8 +1814,8 @@ export default function SellerWorkspace({
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">{selectedDoc.title}</h3>
-                    <p className="text-xs text-slate-500">{selectedDoc.type} • Mã tra cứu: {selectedDoc.certNumber}</p>
+                    <h3 className="text-base font-bold text-slate-900">{tr(selectedDoc.title)}</h3>
+                    <p className="text-xs text-slate-500">{tr(selectedDoc.type)} {tr(" • Mã tra cứu: ")}{tr(selectedDoc.certNumber)}</p>
                   </div>
                 </div>
 
@@ -1863,35 +1823,33 @@ export default function SellerWorkspace({
                 <div className="p-6 rounded-2xl bg-slate-100/70 border border-slate-200/80 mb-5 font-serif text-slate-800">
                   <div className="bg-white p-6 sm:p-8 rounded-xl shadow-xs border border-slate-200/60 text-center font-sans space-y-3">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
-                      CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-                    </p>
+                      {tr("CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM")}</p>
                     <p className="text-[9px] font-semibold text-slate-500">
-                      Độc lập - Tự do - Hạnh phúc
-                    </p>
+                      {tr("Độc lập - Tự do - Hạnh phúc")}</p>
                     <div className="w-20 h-0.5 bg-slate-300 mx-auto" />
                     
                     <h4 className="text-sm sm:text-base font-bold text-slate-900 uppercase mt-4">
-                      {selectedDoc.title}
+                      {tr(selectedDoc.title)}
                     </h4>
-                    <p className="text-xs text-slate-500">Số hiệu: {selectedDoc.certNumber}</p>
+                    <p className="text-xs text-slate-500">{tr("Số hiệu: ")}{tr(selectedDoc.certNumber)}</p>
 
                     <div className="pt-4 text-left text-xs space-y-2 text-slate-700 border-t border-slate-100">
-                      <p><strong>Doanh nghiệp thụ hưởng:</strong> {companyProfile.name}</p>
-                      <p><strong>Mã số doanh nghiệp:</strong> {companyProfile.taxCode}</p>
-                      <p><strong>Cơ quan chứng nhận:</strong> {selectedDoc.issuer}</p>
-                      <p><strong>Thời hạn hiệu lực:</strong> {selectedDoc.date}</p>
-                      <p><strong>Phạm vi chứng nhận:</strong> Sản xuất, chế biến và đóng gói nông sản xuất khẩu</p>
+                      <p><strong>{tr("Doanh nghiệp thụ hưởng:")}</strong> {companyProfile.name}</p>
+                      <p><strong>{tr("Mã số doanh nghiệp:")}</strong> {companyProfile.taxCode}</p>
+                      <p><strong>{tr("Cơ quan chứng nhận:")}</strong> {tr(selectedDoc.issuer)}</p>
+                      <p><strong>{tr("Thời hạn hiệu lực:")}</strong> {tr(selectedDoc.date)}</p>
+                      <p><strong>{tr("Phạm vi chứng nhận:")}</strong> {tr(" Sản xuất, chế biến và đóng gói nông sản xuất khẩu")}</p>
                     </div>
 
                     <div className="pt-6 flex justify-between items-center text-[10px] text-slate-400">
                       <div>
-                        <span>Chứng thư điện tử đối soát bởi:</span>
-                        <div className="font-bold text-teal-800">VYBE VERIFICATION ENGINE</div>
+                        <span>{tr("Chứng thư điện tử đối soát bởi:")}</span>
+                        <div className="font-bold text-teal-800">{tr("VYBE VERIFICATION ENGINE")}</div>
                       </div>
                       <div className="w-16 h-16 rounded-full border-2 border-rose-600 text-rose-600 flex flex-col items-center justify-center -rotate-12 select-none">
-                        <span className="text-[6px] font-bold">ACCREDITED</span>
-                        <span className="text-[10px]">★</span>
-                        <span className="text-[6px] font-bold">ĐÃ ĐỐI SOÁT</span>
+                        <span className="text-[6px] font-bold">{tr("ACCREDITED")}</span>
+                        <span className="text-[10px]">{tr("★")}</span>
+                        <span className="text-[6px] font-bold">{tr("ĐÃ ĐỐI SOÁT")}</span>
                       </div>
                     </div>
                   </div>
@@ -1902,8 +1860,7 @@ export default function SellerWorkspace({
                     onClick={() => setActiveModal(null)}
                     className="px-5 py-2.5 rounded-xl bg-[#083832] text-white font-semibold text-xs transition-colors cursor-pointer"
                   >
-                    Đóng bản xem
-                  </button>
+                    {tr("Đóng bản xem")}</button>
                 </div>
               </div>
             )}
@@ -1916,48 +1873,46 @@ export default function SellerWorkspace({
                     <Eye className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">Xem trước giao diện Public B2B</h3>
-                    <p className="text-xs text-slate-500">Đây là cách hồ sơ công ty hiển thị trước mắt Buyer quốc tế (EU, US, Nhật Bản)</p>
+                    <h3 className="text-base font-bold text-slate-900">{tr("Xem trước giao diện Public B2B")}</h3>
+                    <p className="text-xs text-slate-500">{tr("Đây là cách hồ sơ công ty hiển thị trước mắt Buyer quốc tế (EU, US, Nhật Bản)")}</p>
                   </div>
                 </div>
 
                 <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-4 mb-5">
                   <div className="flex items-center gap-3">
                     <div className="w-14 h-14 rounded-2xl bg-[#083832] text-white text-xl font-bold flex items-center justify-center shadow-xs">
-                      VN
-                    </div>
+                      {tr("VN")}</div>
                     <div>
                       <h4 className="text-base font-bold text-slate-900">{companyProfile.name}</h4>
-                      <p className="text-xs text-slate-500">{companyProfile.tradeName} • Vietnam</p>
+                      <p className="text-xs text-slate-500">{companyProfile.tradeName} {tr(" • Vietnam")}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                          🛡️ L2 Enhanced Verified
-                        </span>
-                        <span className="text-[10px] text-slate-500">MST: {companyProfile.taxCode}</span>
+                          {tr("🛡️ L2 Enhanced Verified")}</span>
+                        <span className="text-[10px] text-slate-500">{tr("MST: ")}{companyProfile.taxCode}</span>
                       </div>
                     </div>
                   </div>
 
                   <p className="text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-200">
-                    {companyProfile.description}
+                    {tr(companyProfile.description)}
                   </p>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center pt-2">
                     <div className="p-2.5 rounded-xl bg-white border border-slate-200">
-                      <span className="text-[10px] text-slate-400">Năng lực</span>
-                      <p className="text-xs font-bold text-slate-800">15,000 tấn/năm</p>
+                      <span className="text-[10px] text-slate-400">{tr("Năng lực")}</span>
+                      <p className="text-xs font-bold text-slate-800">{tr("15,000 tấn/năm")}</p>
                     </div>
                     <div className="p-2.5 rounded-xl bg-white border border-slate-200">
-                      <span className="text-[10px] text-slate-400">Chứng nhận</span>
-                      <p className="text-xs font-bold text-slate-800">HACCP, ISO 22000</p>
+                      <span className="text-[10px] text-slate-400">{tr("Chứng nhận")}</span>
+                      <p className="text-xs font-bold text-slate-800">{tr("HACCP, ISO 22000")}</p>
                     </div>
                     <div className="p-2.5 rounded-xl bg-white border border-slate-200">
-                      <span className="text-[10px] text-slate-400">PUC Vùng trồng</span>
-                      <p className="text-xs font-bold text-teal-800">Đã cấp phép</p>
+                      <span className="text-[10px] text-slate-400">{tr("PUC Vùng trồng")}</span>
+                      <p className="text-xs font-bold text-teal-800">{tr("Đã cấp phép")}</p>
                     </div>
                     <div className="p-2.5 rounded-xl bg-white border border-slate-200">
-                      <span className="text-[10px] text-slate-400">Escrow bảo lãnh</span>
-                      <p className="text-xs font-bold text-emerald-700">Khả dụng</p>
+                      <span className="text-[10px] text-slate-400">{tr("Escrow bảo lãnh")}</span>
+                      <p className="text-xs font-bold text-emerald-700">{tr("Khả dụng")}</p>
                     </div>
                   </div>
                 </div>
@@ -1967,8 +1922,7 @@ export default function SellerWorkspace({
                     onClick={() => setActiveModal(null)}
                     className="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 font-semibold text-xs hover:bg-slate-50 transition-colors cursor-pointer"
                   >
-                    Đóng
-                  </button>
+                    {tr("Đóng")}</button>
                   {onNavigateBuyerDetail && (
                     <button
                       onClick={() => {
@@ -1978,7 +1932,7 @@ export default function SellerWorkspace({
                       className="px-5 py-2 rounded-xl bg-[#083832] text-white font-bold text-xs hover:bg-[#062924] transition-colors cursor-pointer flex items-center gap-1.5 shadow-md"
                     >
                       <Eye className="w-3.5 h-3.5 text-teal-300" />
-                      <span>Mở trang Buyer Showcase đầy đủ</span>
+                      <span>{tr("Mở trang Buyer Showcase đầy đủ")}</span>
                     </button>
                   )}
                 </div>
@@ -1990,12 +1944,12 @@ export default function SellerWorkspace({
               <form onSubmit={(e) => { e.preventDefault(); setActiveModal(null); }} className="space-y-4">
                 <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
                   <Edit3 className="w-5 h-5 text-teal-700" />
-                  <h3 className="text-base font-bold text-slate-900">Chỉnh sửa hồ sơ công ty</h3>
+                  <h3 className="text-base font-bold text-slate-900">{tr("Chỉnh sửa hồ sơ công ty")}</h3>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Tên doanh nghiệp đăng ký</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Tên doanh nghiệp đăng ký")}</label>
                     <input 
                       type="text"
                       value={companyProfile.name}
@@ -2005,7 +1959,7 @@ export default function SellerWorkspace({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Tên giao dịch quốc tế</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Tên giao dịch quốc tế")}</label>
                     <input 
                       type="text"
                       value={companyProfile.tradeName}
@@ -2017,7 +1971,7 @@ export default function SellerWorkspace({
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Mã số thuế</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Mã số thuế")}</label>
                     <input 
                       type="text"
                       value={companyProfile.taxCode}
@@ -2027,7 +1981,7 @@ export default function SellerWorkspace({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Người đại diện</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Người đại diện")}</label>
                     <input 
                       type="text"
                       value={companyProfile.representative}
@@ -2037,7 +1991,7 @@ export default function SellerWorkspace({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Năng lực cung ứng</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Năng lực cung ứng")}</label>
                     <input 
                       type="text"
                       value={companyProfile.capacity}
@@ -2048,7 +2002,7 @@ export default function SellerWorkspace({
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">Địa chỉ trụ sở</label>
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Địa chỉ trụ sở")}</label>
                   <input 
                     type="text"
                     value={companyProfile.address}
@@ -2058,7 +2012,7 @@ export default function SellerWorkspace({
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">Địa chỉ nhà máy & kho</label>
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Địa chỉ nhà máy & kho")}</label>
                   <input 
                     type="text"
                     value={companyProfile.factoryAddress}
@@ -2069,7 +2023,7 @@ export default function SellerWorkspace({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Mã vùng trồng (PUC)</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Mã vùng trồng (PUC)")}</label>
                     <input 
                       type="text"
                       value={companyProfile.puc}
@@ -2079,7 +2033,7 @@ export default function SellerWorkspace({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">Mã cơ sở đóng gói (PHC)</label>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Mã cơ sở đóng gói (PHC)")}</label>
                     <input 
                       type="text"
                       value={companyProfile.phc}
@@ -2090,7 +2044,7 @@ export default function SellerWorkspace({
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">Mô tả tóm tắt doanh nghiệp</label>
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Mô tả tóm tắt doanh nghiệp")}</label>
                   <textarea 
                     rows={2}
                     value={companyProfile.description}
@@ -2105,14 +2059,12 @@ export default function SellerWorkspace({
                     onClick={() => setActiveModal(null)}
                     className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
                   >
-                    Hủy
-                  </button>
+                    {tr("Hủy")}</button>
                   <button 
                     type="submit"
                     className="px-6 py-2 rounded-xl bg-[#083832] text-white text-xs font-semibold hover:bg-[#062924] cursor-pointer"
                   >
-                    Lưu cập nhật
-                  </button>
+                    {tr("Lưu cập nhật")}</button>
                 </div>
               </form>
             )}
@@ -2123,18 +2075,17 @@ export default function SellerWorkspace({
                 <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-3">
                   <ShieldCheck className="w-6 h-6 stroke-[2.2]" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">Xác minh Cấp độ L1 (Basic Verified)</h3>
+                <h3 className="text-base font-bold text-slate-900">{tr("Xác minh Cấp độ L1 (Basic Verified)")}</h3>
                 <p className="text-xs text-slate-500 mt-1 mb-4">
-                  Hệ thống tự động liên kết Cổng Thông tin Quốc gia đối soát mã số thuế {companyProfile.taxCode}.
-                </p>
+                  {tr("Hệ thống tự động liên kết Cổng Thông tin Quốc gia đối soát mã số thuế ")}{companyProfile.taxCode}{tr(".")}</p>
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-2 text-xs text-slate-700 mb-5">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Pháp nhân hợp lệ và đang hoạt động</span>
+                    <span>{tr("Pháp nhân hợp lệ và đang hoạt động")}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Khớp mã ngành nghề xuất khẩu chính</span>
+                    <span>{tr("Khớp mã ngành nghề xuất khẩu chính")}</span>
                   </div>
                 </div>
                 <button
@@ -2144,8 +2095,7 @@ export default function SellerWorkspace({
                   }}
                   className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors cursor-pointer"
                 >
-                  Xác nhận kích hoạt cấp độ L1
-                </button>
+                  {tr("Xác nhận kích hoạt cấp độ L1")}</button>
               </div>
             )}
 
@@ -2155,18 +2105,17 @@ export default function SellerWorkspace({
                 <div className="w-12 h-12 rounded-2xl bg-emerald-100 border border-emerald-200 flex items-center justify-center text-emerald-700 mb-3">
                   <ShieldCheck className="w-6 h-6 stroke-[2.2]" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">Xác minh Cấp độ L2 (Enhanced Verified)</h3>
+                <h3 className="text-base font-bold text-slate-900">{tr("Xác minh Cấp độ L2 (Enhanced Verified)")}</h3>
                 <p className="text-xs text-slate-500 mt-1 mb-4">
-                  Cung cấp chứng nhận tiêu chuẩn HACCP, ISO 22000 hoặc GlobalG.A.P. còn hiệu lực.
-                </p>
+                  {tr("Cung cấp chứng nhận tiêu chuẩn HACCP, ISO 22000 hoặc GlobalG.A.P. còn hiệu lực.")}</p>
                 <div className="p-3.5 rounded-xl bg-emerald-50/50 border border-emerald-100 space-y-2 text-xs text-slate-700 mb-5">
                   <p className="flex items-center gap-2 text-emerald-800">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Đã tải: Giấy phép ĐKKD bản scan có dấu mộc</span>
+                    <span>{tr("Đã tải: Giấy phép ĐKKD bản scan có dấu mộc")}</span>
                   </p>
                   <p className="flex items-center gap-2 text-emerald-800">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Đã tải: Chứng chỉ ISO 22000 & HACCP Codex</span>
+                    <span>{tr("Đã tải: Chứng chỉ ISO 22000 & HACCP Codex")}</span>
                   </p>
                 </div>
                 <button
@@ -2176,8 +2125,7 @@ export default function SellerWorkspace({
                   }}
                   className="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs transition-colors cursor-pointer"
                 >
-                  Duyệt và hoàn tất cấp độ L2
-                </button>
+                  {tr("Duyệt và hoàn tất cấp độ L2")}</button>
               </div>
             )}
 
@@ -2187,16 +2135,14 @@ export default function SellerWorkspace({
                 <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 mb-3">
                   <Award className="w-6 h-6 stroke-[2.2]" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">Chương trình VYBE Certified (L3)</h3>
+                <h3 className="text-base font-bold text-slate-900">{tr("Chương trình VYBE Certified (L3)")}</h3>
                 <p className="text-xs text-slate-500 mt-1 mb-4">
-                  Cấp độ đối tác chiến lược: Chuyên viên VYBE tiến hành khảo sát thực địa nhà máy, thẩm định báo cáo tài chính và cấp hạn mức bảo lãnh hợp đồng Escrow.
-                </p>
+                  {tr("Cấp độ đối tác chiến lược: Chuyên viên VYBE tiến hành khảo sát thực địa nhà máy, thẩm định báo cáo tài chính và cấp hạn mức bảo lãnh hợp đồng Escrow.")}</p>
                 <button
                   onClick={() => setActiveModal(null)}
                   className="w-full py-2.5 rounded-xl bg-[#d97706] hover:bg-[#b45309] text-white font-semibold text-xs transition-colors cursor-pointer"
                 >
-                  Đăng ký tư vấn thẩm định L3
-                </button>
+                  {tr("Đăng ký tư vấn thẩm định L3")}</button>
               </div>
             )}
 
@@ -2206,16 +2152,14 @@ export default function SellerWorkspace({
                 <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-3">
                   <FileCheck className="w-6 h-6 stroke-[2]" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">Evidence Record Bất biến</h3>
+                <h3 className="text-base font-bold text-slate-900">{tr("Evidence Record Bất biến")}</h3>
                 <p className="text-xs text-slate-600 leading-relaxed mt-1 mb-4">
-                  Evidence Record sử dụng kiến trúc lưu trữ nối tiếp (Append-only Ledger) ghi nhận chính xác mốc thời gian thẩm định, chữ ký số của kiểm toán viên và mã hash của chứng từ. Buyer có thể kiểm tra tính toàn vẹn của hồ sơ doanh nghiệp theo thời gian thực.
-                </p>
+                  {tr("Evidence Record sử dụng kiến trúc lưu trữ nối tiếp (Append-only Ledger) ghi nhận chính xác mốc thời gian thẩm định, chữ ký số của kiểm toán viên và mã hash của chứng từ. Buyer có thể kiểm tra tính toàn vẹn của hồ sơ doanh nghiệp theo thời gian thực.")}</p>
                 <button
                   onClick={() => setActiveModal(null)}
                   className="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs transition-colors cursor-pointer"
                 >
-                  Đã hiểu
-                </button>
+                  {tr("Đã hiểu")}</button>
               </div>
             )}
 
@@ -2227,8 +2171,8 @@ export default function SellerWorkspace({
                     <UploadCloud className="w-5 h-5 stroke-[2]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">Tải lên giấy phép & chứng nhận bổ sung</h3>
-                    <p className="text-xs text-slate-500">Bổ sung tài liệu chứng nhận chất lượng (GlobalG.A.P., Organic, FDA, Halal, BRCGS...) để nâng cao điểm tín nhiệm hồ sơ</p>
+                    <h3 className="text-base font-bold text-slate-900">{tr("Tải lên giấy phép & chứng nhận bổ sung")}</h3>
+                    <p className="text-xs text-slate-500">{tr("Bổ sung tài liệu chứng nhận chất lượng (GlobalG.A.P., Organic, FDA, Halal, BRCGS...) để nâng cao điểm tín nhiệm hồ sơ")}</p>
                   </div>
                 </div>
 
@@ -2236,7 +2180,7 @@ export default function SellerWorkspace({
                 <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/70">
                   <div className="text-[11px] font-bold text-slate-600 mb-2 flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-teal-600" />
-                    <span>Gợi ý nhanh chứng chỉ xuất khẩu phổ biến (bấm để tự động điền):</span>
+                    <span>{tr("Gợi ý nhanh chứng chỉ xuất khẩu phổ biến (bấm để tự động điền):")}</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {SUGGESTED_PRESETS.map((preset, idx) => (
@@ -2254,7 +2198,7 @@ export default function SellerWorkspace({
                         }}
                         className="px-2.5 py-1 rounded-lg bg-white hover:bg-teal-50 hover:text-teal-900 hover:border-teal-300 border border-slate-200 text-[11px] font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs"
                       >
-                        + {preset.title}
+                        {tr("+ ")}{tr(preset.title)}
                       </button>
                     ))}
                   </div>
@@ -2264,12 +2208,12 @@ export default function SellerWorkspace({
                 <div className="space-y-3.5">
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                      Tên chứng chỉ / Giấy phép <span className="text-rose-500">*</span>
+                      {tr("Tên chứng chỉ / Giấy phép ")}<span className="text-rose-500">{tr("*")}</span>
                     </label>
                     <input 
                       type="text"
                       required
-                      placeholder="Ví dụ: GlobalG.A.P. IFA Version 5.4, USDA Organic NOP..."
+                      placeholder={tr("Ví dụ: GlobalG.A.P. IFA Version 5.4, USDA Organic NOP...")}
                       value={newCertForm.title}
                       onChange={(e) => setNewCertForm({ ...newCertForm, title: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-teal-700 focus:ring-1 focus:ring-teal-700"
@@ -2279,28 +2223,28 @@ export default function SellerWorkspace({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Nhóm phân loại <span className="text-rose-500">*</span>
+                        {tr("Nhóm phân loại ")}<span className="text-rose-500">{tr("*")}</span>
                       </label>
                       <select 
                         value={newCertForm.category}
                         onChange={(e) => setNewCertForm({ ...newCertForm, category: e.target.value as any })}
                         className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-teal-700 bg-white"
                       >
-                        <option value="food_safety">An toàn thực phẩm (HACCP, ISO 22000, BRCGS, FDA)</option>
-                        <option value="agriculture">Nông nghiệp & Vùng trồng (GlobalGAP, Organic, VietGAP)</option>
-                        <option value="legal">Pháp lý doanh nghiệp & Giấy phép ngành (ERC)</option>
-                        <option value="other">Tiêu chuẩn khác (Halal, Fairtrade, ISO 9001)</option>
+                        <option value="food_safety">{tr("An toàn thực phẩm (HACCP, ISO 22000, BRCGS, FDA)")}</option>
+                        <option value="agriculture">{tr("Nông nghiệp & Vùng trồng (GlobalGAP, Organic, VietGAP)")}</option>
+                        <option value="legal">{tr("Pháp lý doanh nghiệp & Giấy phép ngành (ERC)")}</option>
+                        <option value="other">{tr("Tiêu chuẩn khác (Halal, Fairtrade, ISO 9001)")}</option>
                       </select>
                     </div>
 
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Tổ chức / Cơ quan cấp chứng nhận <span className="text-rose-500">*</span>
+                        {tr("Tổ chức / Cơ quan cấp chứng nhận ")}<span className="text-rose-500">{tr("*")}</span>
                       </label>
                       <input 
                         type="text"
                         required
-                        placeholder="Ví dụ: SGS Vietnam, Control Union, TÜV Rheinland..."
+                        placeholder={tr("Ví dụ: SGS Vietnam, Control Union, TÜV Rheinland...")}
                         value={newCertForm.issuer}
                         onChange={(e) => setNewCertForm({ ...newCertForm, issuer: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-teal-700"
@@ -2311,11 +2255,10 @@ export default function SellerWorkspace({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Số hiệu chứng chỉ / Mã tra cứu OCR
-                      </label>
+                        {tr("Số hiệu chứng chỉ / Mã tra cứu OCR")}</label>
                       <input 
                         type="text"
-                        placeholder="Ví dụ: VN23/00481-HACCP hoặc GGN-40598839210"
+                        placeholder={tr("Ví dụ: VN23/00481-HACCP hoặc GGN-40598839210")}
                         value={newCertForm.certNumber}
                         onChange={(e) => setNewCertForm({ ...newCertForm, certNumber: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-teal-700 font-mono"
@@ -2324,11 +2267,10 @@ export default function SellerWorkspace({
 
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Tiêu chuẩn áp dụng / Mô tả ngắn
-                      </label>
+                        {tr("Tiêu chuẩn áp dụng / Mô tả ngắn")}</label>
                       <input 
                         type="text"
-                        placeholder="Ví dụ: Tiêu chuẩn an toàn thực phẩm xuất khẩu EU"
+                        placeholder={tr("Ví dụ: Tiêu chuẩn an toàn thực phẩm xuất khẩu EU")}
                         value={newCertForm.type}
                         onChange={(e) => setNewCertForm({ ...newCertForm, type: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-teal-700"
@@ -2339,8 +2281,7 @@ export default function SellerWorkspace({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Ngày cấp chứng nhận
-                      </label>
+                        {tr("Ngày cấp chứng nhận")}</label>
                       <input 
                         type="date"
                         value={newCertForm.issueDate}
@@ -2351,8 +2292,7 @@ export default function SellerWorkspace({
 
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Ngày hết hạn hiệu lực
-                      </label>
+                        {tr("Ngày hết hạn hiệu lực")}</label>
                       <input 
                         type="date"
                         value={newCertForm.expiryDate}
@@ -2365,20 +2305,18 @@ export default function SellerWorkspace({
                   {/* File Upload Box */}
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                      Tệp đính kèm bản scan (PDF, JPG, PNG) <span className="text-rose-500">*</span>
+                      {tr("Tệp đính kèm bản scan (PDF, JPG, PNG) ")}<span className="text-rose-500">{tr("*")}</span>
                     </label>
                     <div className="p-4 rounded-2xl border-2 border-dashed border-teal-300 bg-teal-50/30 flex flex-col items-center justify-center text-center hover:bg-teal-50/60 transition-colors">
                       <FileCheck className="w-8 h-8 text-teal-700 mb-1.5" />
                       <p className="text-xs font-bold text-slate-800">
-                        {newCertForm.fileName || 'ChungChi_DoiSoat_VietAgri.pdf'}
+                        {tr(newCertForm.fileName || 'ChungChi_DoiSoat_VietAgri.pdf')}
                       </p>
                       <span className="text-[11px] text-slate-500 mt-0.5">
-                        Dung lượng: {newCertForm.fileSize || '2.5 MB'} • Chuẩn hóa OCR tự động
-                      </span>
+                        {tr("Dung lượng: ")}{tr(newCertForm.fileSize || '2.5 MB')} {tr(" • Chuẩn hóa OCR tự động")}</span>
                       <div className="mt-2.5 flex items-center gap-2">
                         <label className="px-3 py-1.5 rounded-lg bg-white border border-teal-200 text-teal-800 text-[11px] font-semibold hover:bg-teal-50 cursor-pointer shadow-2xs">
-                          Chọn tệp khác từ máy
-                          <input 
+                          {tr("Chọn tệp khác từ máy")}<input 
                             type="file" 
                             accept=".pdf,.png,.jpg,.jpeg" 
                             className="hidden" 
@@ -2395,8 +2333,7 @@ export default function SellerWorkspace({
                           />
                         </label>
                         <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-100 px-2 py-0.5 rounded">
-                          Hỗ trợ định dạng PDF, JPG, PNG tối đa 25MB
-                        </span>
+                          {tr("Hỗ trợ định dạng PDF, JPG, PNG tối đa 25MB")}</span>
                       </div>
                     </div>
                   </div>
@@ -2409,14 +2346,13 @@ export default function SellerWorkspace({
                     onClick={() => setActiveModal(null)}
                     className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
                   >
-                    Hủy bỏ
-                  </button>
+                    {tr("Hủy bỏ")}</button>
                   <button 
                     type="submit"
                     className="px-6 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-bold transition-colors cursor-pointer shadow-md flex items-center gap-1.5"
                   >
                     <Check className="w-3.5 h-3.5 text-teal-300" />
-                    <span>Xác nhận & Tải lên đối soát OCR</span>
+                    <span>{tr("Xác nhận & Tải lên đối soát OCR")}</span>
                   </button>
                 </div>
               </form>
@@ -2430,15 +2366,15 @@ export default function SellerWorkspace({
                     <Edit3 className="w-5 h-5 stroke-[2]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">Chỉnh sửa chứng chỉ / Giấy phép</h3>
-                    <p className="text-xs text-slate-500">Cập nhật thông tin chi tiết, số hiệu hoặc thay thế bản scan chứng từ</p>
+                    <h3 className="text-base font-bold text-slate-900">{tr("Chỉnh sửa chứng chỉ / Giấy phép")}</h3>
+                    <p className="text-xs text-slate-500">{tr("Cập nhật thông tin chi tiết, số hiệu hoặc thay thế bản scan chứng từ")}</p>
                   </div>
                 </div>
 
                 <div className="space-y-3.5">
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                      Tên chứng chỉ / Giấy phép <span className="text-rose-500">*</span>
+                      {tr("Tên chứng chỉ / Giấy phép ")}<span className="text-rose-500">{tr("*")}</span>
                     </label>
                     <input 
                       type="text"
@@ -2452,23 +2388,22 @@ export default function SellerWorkspace({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Nhóm phân loại
-                      </label>
+                        {tr("Nhóm phân loại")}</label>
                       <select 
                         value={editingCert.category}
                         onChange={(e) => setEditingCert({ ...editingCert, category: e.target.value as any })}
                         className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-teal-700 bg-white"
                       >
-                        <option value="legal">Pháp lý doanh nghiệp (ERC)</option>
-                        <option value="food_safety">An toàn thực phẩm (HACCP, ISO 22000, FDA)</option>
-                        <option value="agriculture">Nông nghiệp & Vùng trồng (GlobalGAP, Organic)</option>
-                        <option value="other">Tiêu chuẩn quốc tế khác</option>
+                        <option value="legal">{tr("Pháp lý doanh nghiệp (ERC)")}</option>
+                        <option value="food_safety">{tr("An toàn thực phẩm (HACCP, ISO 22000, FDA)")}</option>
+                        <option value="agriculture">{tr("Nông nghiệp & Vùng trồng (GlobalGAP, Organic)")}</option>
+                        <option value="other">{tr("Tiêu chuẩn quốc tế khác")}</option>
                       </select>
                     </div>
 
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Tổ chức cấp chứng nhận <span className="text-rose-500">*</span>
+                        {tr("Tổ chức cấp chứng nhận ")}<span className="text-rose-500">{tr("*")}</span>
                       </label>
                       <input 
                         type="text"
@@ -2483,8 +2418,7 @@ export default function SellerWorkspace({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Số hiệu chứng chỉ / Mã tra cứu
-                      </label>
+                        {tr("Số hiệu chứng chỉ / Mã tra cứu")}</label>
                       <input 
                         type="text"
                         value={editingCert.certNumber}
@@ -2495,8 +2429,7 @@ export default function SellerWorkspace({
 
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Tiêu chuẩn áp dụng
-                      </label>
+                        {tr("Tiêu chuẩn áp dụng")}</label>
                       <input 
                         type="text"
                         value={editingCert.type}
@@ -2509,26 +2442,24 @@ export default function SellerWorkspace({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Thời hạn hiệu lực hiển thị
-                      </label>
+                        {tr("Thời hạn hiệu lực hiển thị")}</label>
                       <input 
                         type="text"
                         value={editingCert.date}
                         onChange={(e) => setEditingCert({ ...editingCert, date: e.target.value })}
-                        placeholder="Ví dụ: 15/12/2023 - 14/12/2026 hoặc Không thời hạn"
+                        placeholder={tr("Ví dụ: 15/12/2023 - 14/12/2026 hoặc Không thời hạn")}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-teal-700"
                       />
                     </div>
 
                     <div>
                       <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                        Trạng thái hiệu lực
-                      </label>
+                        {tr("Trạng thái hiệu lực")}</label>
                       <input 
                         type="text"
                         value={editingCert.validity}
                         onChange={(e) => setEditingCert({ ...editingCert, validity: e.target.value })}
-                        placeholder="Ví dụ: Còn 2 năm hiệu lực, Hiệu lực vĩnh viễn"
+                        placeholder={tr("Ví dụ: Còn 2 năm hiệu lực, Hiệu lực vĩnh viễn")}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-teal-700"
                       />
                     </div>
@@ -2539,13 +2470,12 @@ export default function SellerWorkspace({
                     <div className="flex items-center gap-2.5">
                       <FileText className="w-5 h-5 text-teal-700" />
                       <div>
-                        <p className="text-xs font-bold text-slate-800">{editingCert.fileName}</p>
-                        <p className="text-[11px] text-slate-400">Dung lượng: {editingCert.fileSize} • Đã đối soát OCR</p>
+                        <p className="text-xs font-bold text-slate-800">{tr(editingCert.fileName)}</p>
+                        <p className="text-[11px] text-slate-400">{tr("Dung lượng: ")}{tr(editingCert.fileSize)} {tr(" • Đã đối soát OCR")}</p>
                       </div>
                     </div>
                     <label className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-semibold cursor-pointer">
-                      Thay file scan
-                      <input 
+                      {tr("Thay file scan")}<input 
                         type="file" 
                         accept=".pdf,.png,.jpg,.jpeg" 
                         className="hidden" 
@@ -2573,14 +2503,12 @@ export default function SellerWorkspace({
                     }}
                     className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
                   >
-                    Hủy bỏ
-                  </button>
+                    {tr("Hủy bỏ")}</button>
                   <button 
                     type="submit"
                     className="px-6 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-bold transition-colors cursor-pointer shadow-md"
                   >
-                    Lưu thay đổi
-                  </button>
+                    {tr("Lưu thay đổi")}</button>
                 </div>
               </form>
             )}
@@ -2593,8 +2521,8 @@ export default function SellerWorkspace({
                     <Trash2 className="w-5 h-5 stroke-[2]" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">Xác nhận xóa giấy phép / chứng nhận</h3>
-                    <p className="text-xs text-slate-500">Hành động này sẽ gỡ tài liệu khỏi hồ sơ doanh nghiệp hiển thị với Buyer quốc tế</p>
+                    <h3 className="text-base font-bold text-slate-900">{tr("Xác nhận xóa giấy phép / chứng nhận")}</h3>
+                    <p className="text-xs text-slate-500">{tr("Hành động này sẽ gỡ tài liệu khỏi hồ sơ doanh nghiệp hiển thị với Buyer quốc tế")}</p>
                   </div>
                 </div>
 
@@ -2602,35 +2530,33 @@ export default function SellerWorkspace({
                   <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 space-y-2">
                     <div className="flex items-center gap-2 text-rose-800 font-bold text-xs">
                       <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-                      <span>CẢNH BÁO QUAN TRỌNG: TÀI LIỆU PHÁP LÝ BẮT BUỘC!</span>
+                      <span>{tr("CẢNH BÁO QUAN TRỌNG: TÀI LIỆU PHÁP LÝ BẮT BUỘC!")}</span>
                     </div>
                     <p className="text-xs text-rose-700 leading-relaxed">
-                      <strong>{deletingCert.title}</strong> là giấy phép đăng ký kinh doanh bắt buộc của doanh nghiệp. Việc xóa tài liệu này sẽ khiến tài khoản mất trạng thái xác minh L1/L2 và có thể bị tạm dừng nhận RFQ từ đối tác xuất khẩu.
-                    </p>
+                      <strong>{tr(deletingCert.title)}</strong> {tr(" là giấy phép đăng ký kinh doanh bắt buộc của doanh nghiệp. Việc xóa tài liệu này sẽ khiến tài khoản mất trạng thái xác minh L1/L2 và có thể bị tạm dừng nhận RFQ từ đối tác xuất khẩu.")}</p>
                   </div>
                 ) : (
                   <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
-                    Bạn có chắc chắn muốn xóa chứng chỉ chất lượng này khỏi hồ sơ công ty không?
-                  </div>
+                    {tr("Bạn có chắc chắn muốn xóa chứng chỉ chất lượng này khỏi hồ sơ công ty không?")}</div>
                 )}
 
                 {/* Details of item to delete */}
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Tên chứng chỉ:</span>
-                    <strong className="text-slate-900 font-bold">{deletingCert.title}</strong>
+                    <span className="text-slate-500">{tr("Tên chứng chỉ:")}</span>
+                    <strong className="text-slate-900 font-bold">{tr(deletingCert.title)}</strong>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Số hiệu:</span>
-                    <span className="font-mono text-slate-800">{deletingCert.certNumber}</span>
+                    <span className="text-slate-500">{tr("Số hiệu:")}</span>
+                    <span className="font-mono text-slate-800">{tr(deletingCert.certNumber)}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Cơ quan cấp:</span>
-                    <span className="text-slate-800">{deletingCert.issuer}</span>
+                    <span className="text-slate-500">{tr("Cơ quan cấp:")}</span>
+                    <span className="text-slate-800">{tr(deletingCert.issuer)}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Thời hạn:</span>
-                    <span className="text-slate-800">{deletingCert.date}</span>
+                    <span className="text-slate-500">{tr("Thời hạn:")}</span>
+                    <span className="text-slate-800">{tr(deletingCert.date)}</span>
                   </div>
                 </div>
 
@@ -2643,15 +2569,14 @@ export default function SellerWorkspace({
                     }}
                     className="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
                   >
-                    Hủy bỏ, giữ lại
-                  </button>
+                    {tr("Hủy bỏ, giữ lại")}</button>
                   <button 
                     type="button"
                     onClick={handleDeleteCertConfirm}
                     className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-md flex items-center gap-1.5"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    <span>Xác nhận xóa tài liệu</span>
+                    <span>{tr("Xác nhận xóa tài liệu")}</span>
                   </button>
                 </div>
               </div>
@@ -2669,7 +2594,7 @@ export default function SellerWorkspace({
           {toastMessage.type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />}
           {toastMessage.type === 'info' && <AlertCircle className="w-4 h-4 text-blue-400 shrink-0" />}
           {toastMessage.type === 'error' && <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />}
-          <span className="font-medium">{toastMessage.text}</span>
+          <span className="font-medium">{tr(toastMessage.text)}</span>
           <button 
             onClick={() => setToastMessage(null)}
             className="p-1 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors cursor-pointer ml-1"

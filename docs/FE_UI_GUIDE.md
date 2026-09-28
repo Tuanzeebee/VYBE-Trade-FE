@@ -133,17 +133,17 @@ Header dùng `directoryNav` để phân biệt mục “Doanh nghiệp” và �
 - Bốn doanh nghiệp nổi bật từ array `SUPPLIERS` riêng: VietFarm, Mekong Seafood, GreenFields Export, An Phu Food.
 - Click doanh nghiệp nổi bật mở modal tóm tắt. Nút RFQ trong modal này hiện chỉ đóng modal. “Xem tất cả” mở modal thông báo chung.
 
-**Giới hạn:** các dropdown ngành hàng/thị trường/trust ở trang chủ chỉ cập nhật nhãn/state, chưa tham gia lọc hoặc được truyền sang directory.
+Các dropdown ngành hàng/thị trường/trust lọc autocomplete và được truyền sang directory. Kết quả sản phẩm mở hồ sơ supplier qua ID dùng chung; CTA RFQ từ directory/thẻ nổi bật mở đúng hồ sơ và form RFQ.
 
 ### 5.2. Directory — `BuyerDirectory.tsx`
 
-- Dữ liệu `DIRECTORY_SUPPLIERS` có 3 hồ sơ mẫu: hồ sơ mặc định Nông Sản Việt, Công ty CP Xuất khẩu Mekong và Công ty TNHH Lúa Gạo An Phú.
+- Dữ liệu `DIRECTORY_SUPPLIERS` tại `src/lib/suppliers.ts` có 8 hồ sơ mẫu, gồm nông sản, thủy sản và thực phẩm chế biến.
 - Layout có sidebar bộ lọc và vùng kết quả, ô tìm kiếm, từ khóa nhanh, số lượng kết quả, chế độ list/grid.
-- Tìm kiếm thực sự lọc theo tên, tên giao dịch, vị trí, mô tả, tag, tên/danh mục sản phẩm; hỗ trợ tiếng Việt không dấu qua `matchSearch`.
+- Tìm kiếm lọc theo tên, tên giao dịch, vị trí, mô tả, tag, tên/danh mục sản phẩm; hỗ trợ không dấu và nội dung dịch Anh/Pháp/Nhật qua helper `src/lib/supplierSearch.ts`.
 - Radio cấp độ xác minh thực sự lọc theo `badgeLevel`.
 - Card hiển thị trust badge, địa điểm, sản phẩm/chứng nhận, công suất và CTA xem hồ sơ/gửi RFQ.
 - Dropdown sort có state `sortBy` nhưng chưa có `.sort()` áp dụng cho kết quả.
-- Nhiều checkbox sidebar, ô tìm danh mục và nút “Thêm bộ lọc” chưa nối vào logic lọc. Một số số lượng ngành hàng/cấp độ là hardcode.
+- Nhiều checkbox sidebar và ô tìm danh mục chưa nối vào logic lọc. Nút “Thêm bộ lọc” hiện xóa các bộ lọc đang áp dụng. Một số số lượng ngành hàng/cấp độ vẫn hardcode.
 - Nút “Gửi RFQ” gọi `onOpenRfqModal(supplier.name)`, nhưng callback trong `App` bỏ qua tên, chọn `DEFAULT_SELLER_DETAIL` rồi mở trang detail; **chưa tự mở modal RFQ và có thể chuyển sai supplier**.
 
 ### 5.3. Hồ sơ nhà cung cấp — `BuyerSellerDetail.tsx`
@@ -232,7 +232,7 @@ Chứng nhận chia nhóm `legal`, `food_safety`, `agriculture`, `other`. Chọn
 ### 5.8. Bảng giá — `PricingPlans.tsx`
 
 - Gói Free, Member, Premium; giá mẫu đang ghi Member 990.000 VNĐ/tháng, Premium 2.990.000 VNĐ/tháng.
-- Toggle `monthly`/`annual` hiện đổi lựa chọn hiển thị, chưa dùng để tính lại giá.
+- Toggle `monthly`/`annual` đổi giá, đơn vị kỳ thanh toán và tổng tiền trong modal. Helper `src/lib/pricing.ts` giữ giá năm bằng 10 tháng: Member 9.900.000, Premium 29.900.000 VNĐ/năm (~17% tiết kiệm); định dạng số theo ngôn ngữ chọn.
 - Có bảng so sánh, FAQ accordion, modal đăng ký gói và màn thành công.
 - Form gồm công ty, MST, người liên hệ, điện thoại, email, phương thức thanh toán, ghi chú.
 - Submit chỉ đổi `registrationSuccess`; chưa tạo tài khoản, hóa đơn hay thanh toán. Có CTA tiếp tục onboarding/workspace.
@@ -259,9 +259,9 @@ Hero, sứ mệnh/tầm nhìn/giá trị, đối tượng phục vụ, nội dun
 | Nguồn | Dùng ở đâu | Lưu ý |
 | --- | --- | --- |
 | `SupplierData` / `DEFAULT_SELLER_DETAIL` | Detail, directory, App, autocomplete | Type hồ sơ công khai; `badgeLevel` hiện chỉ L1/L2/L3 |
-| `DIRECTORY_SUPPLIERS` | Directory, autocomplete, chọn supplier theo sản phẩm | 3 hồ sơ mẫu |
-| `SEARCH_PRODUCTS` / `SearchProductItem` | Autocomplete | 8 sản phẩm mẫu riêng; không phải danh sách tự sinh từ supplier |
-| `SUPPLIERS` trong `App` | Thẻ nổi bật ở trang chủ | Cấu trúc rút gọn và ID riêng, không đồng nhất directory |
+| `DIRECTORY_SUPPLIERS` | Directory, autocomplete, chọn supplier theo sản phẩm | 8 hồ sơ mẫu tại `src/lib/suppliers.ts` |
+| `SEARCH_PRODUCTS` / `SearchProductItem` | Autocomplete | Sinh trực tiếp từ các sản phẩm của supplier; ID ghép supplier/product |
+| `SUPPLIERS` trong `App` | Thẻ nổi bật ở trang chủ | Cấu trúc rút gọn; ID cùng nguồn directory để mở đúng hồ sơ/RFQ |
 | `ExportProductItem` | Onboarding | `exportMarkets`, `supplyCapacity`, `description`; khác schema sản phẩm công khai |
 | `WorkspaceCertificateItem` | Workspace | Có category, ngày cấp/hết hạn, status, file metadata |
 | `companyProfile` / `productsList` / `certificatesList` | Workspace | State độc lập, chưa có liên kết danh tính với supplier đang xem |
@@ -272,17 +272,19 @@ Các giá trị MOQ/công suất/giá/ngày trong mock thường là **chuỗi �
 
 `LiveSearchDropdown` nhận `query`, `isOpen`, `onClose`, `onSelectSupplier`, `onSelectProduct`, `onSelectKeyword`, `onViewAllResults`. Tái sử dụng component này và helper `matchSearch`/`removeVietnameseTones` cho tìm kiếm cùng kiểu. Dropdown giới hạn tối đa 4 supplier, 4 sản phẩm, 5 keyword; tổng hiển thị là tổng sau giới hạn. “Tìm kiếm gần đây” là state mẫu, không lưu lâu dài.
 
-`BuyerDirectory` và `LiveSearchDropdown` hiện import lẫn nhau vì dùng chung dữ liệu directory. Nếu cần tách dữ liệu, tránh làm vòng import này phức tạp hơn; chỉ tách khi phạm vi thay đổi thực sự cần.
+`BuyerDirectory` và `LiveSearchDropdown` cùng import dữ liệu tại `src/lib/suppliers.ts`; không còn import lẫn nhau. Helper tìm kiếm/bộ lọc nằm ở `src/lib/supplierSearch.ts`.
 
 ## 7. Ngôn ngữ
 
-- `LanguageProvider` bọc toàn bộ ứng dụng; `useLanguage()` trả `language`, `setLanguage`, `currentLanguageOption`, `t`.
+- `LanguageProvider` bọc toàn bộ ứng dụng; `useLanguage()` trả `language`, `setLanguage`, `currentLanguageOption`, `t`, `tr`.
 - Hỗ trợ thực tế: `vi`, `en`, `fr`, `ja`; mặc định tiếng Việt, lưu lựa chọn ở `localStorage['vybe_language']`.
 - Dictionary gồm nhóm `nav`, `header`, `hero`, `directory`, `features`, `featured`, `modal`, `common`.
-- App và một phần directory dùng dictionary; phần lớn nội dung các màn khác vẫn hardcode tiếng Việt. Không coi UI đã được dịch đầy đủ.
+- Các trang công khai, login/register, buyer/seller onboarding, workspace và admin dùng `tr(text)` tại điểm hiển thị. Catalog `src/i18n/catalog.json` chứa hơn 1.500 chuỗi Anh/Pháp/Nhật, tiếng Việt giữ làm nguồn. Bản dịch máy được tạo trước build; ứng dụng không gọi dịch vụ dịch khi chạy. Chỉnh nội dung/cách diễn đạt trực tiếp trong catalog.
+- Chuỗi động dùng placeholder `{0}`, `{1}`; phải giữ đủ placeholder ở ba bản dịch. Thêm chuỗi UI mới cần bổ sung catalog và gọi `tr()`; thiếu entry sẽ hiển thị nguyên bản.
+- Giá trị form, enum, role/ID và tên tài khoản/doanh nghiệp không đổi khi dịch. Native `option` phải có `value` canonical riêng; dịch nhãn hiển thị để tránh làm sai filter/onboarding. `LanguageSelect` dùng ở các header riêng.
 - Nội dung Solutions có nhắc hồ sơ Anh–Việt–Trung–Nhật, nhưng code hiện **không có tiếng Trung**.
 - `CountryFlag` dùng SVG. `LanguageSelectorModal` dùng chung Context; cần giữ các mã ngôn ngữ đồng bộ.
-- `index.html` hiện `lang="en"`, chưa tự cập nhật theo ngôn ngữ chọn.
+- `index.html` mặc định `lang="vi"`; Context tự cập nhật `html.lang` và tiêu đề theo lựa chọn.
 
 ## 8. Quy ước thiết kế cần giữ khi code UI
 

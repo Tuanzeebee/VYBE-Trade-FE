@@ -41,6 +41,7 @@ import {
   Briefcase,
   PlayCircle
 } from 'lucide-react';
+import { useLanguage } from "../context/LanguageContext";
 
 interface SolutionsPageProps {
   onNavigateHome: () => void;
@@ -80,6 +81,7 @@ export default function SolutionsPage({
   onNavigateOnboarding,
   onNavigateWorkspace
 }: SolutionsPageProps) {
+  const { tr } = useLanguage();
   const [selectedRole, setSelectedRole] = useState<'all' | 'seller' | 'buyer' | 'partner'>('all');
   const [activeModalSolution, setActiveModalSolution] = useState<SolutionId | null>(null);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
@@ -260,19 +262,16 @@ export default function SolutionsPage({
           <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-blue-50/80 border border-blue-200/60 mb-5 select-none shadow-xs">
             <span className="w-1.5 h-3.5 rounded-full bg-blue-600"></span>
             <span className="text-xs font-bold text-blue-900 tracking-wide uppercase">
-              HỆ SINH THÁI GIẢI PHÁP TOÀN DIỆN
-            </span>
+              {tr("HỆ SINH THÁI GIẢI PHÁP TOÀN DIỆN")}</span>
           </div>
 
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-slate-900 tracking-tight leading-[1.2] mb-5">
-            Bộ giải pháp toàn diện cho xuất khẩu nông sản & thực phẩm
-          </h1>
+            {tr("Bộ giải pháp toàn diện cho xuất khẩu nông sản & thực phẩm")}</h1>
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto mb-8 font-normal">
-            Từ xác thực tính pháp lý, thẩm định năng lực nhà máy bằng AI đến kết nối trực tiếp với các Buyer quốc tế. VYBE Trade giải quyết triệt để vấn đề niềm tin và tối ưu chi phí tiếp cận thị trường toàn cầu.
-          </p>
+            {tr("Từ xác thực tính pháp lý, thẩm định năng lực nhà máy bằng AI đến kết nối trực tiếp với các Buyer quốc tế. VYBE Trade giải quyết triệt để vấn đề niềm tin và tối ưu chi phí tiếp cận thị trường toàn cầu.")}</p>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
@@ -280,7 +279,7 @@ export default function SolutionsPage({
               onClick={() => setIsDemoModalOpen(true)}
               className="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer active:scale-98"
             >
-              <span>Đặt lịch tư vấn giải pháp</span>
+              <span>{tr("Đặt lịch tư vấn giải pháp")}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
@@ -288,7 +287,7 @@ export default function SolutionsPage({
               onClick={onNavigatePricing}
               className="px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200/80 font-semibold text-sm transition-all shadow-xs hover:border-slate-300 flex items-center gap-2 cursor-pointer active:scale-98"
             >
-              <span>Xem bảng giá & Gói dịch vụ</span>
+              <span>{tr("Xem bảng giá & Gói dịch vụ")}</span>
             </button>
 
             <button
@@ -296,7 +295,7 @@ export default function SolutionsPage({
               className="px-5 py-3.5 rounded-xl text-slate-600 hover:text-slate-900 font-semibold text-sm transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <Search className="w-4 h-4 text-slate-400" />
-              <span>Xem nhà cung cấp thực tế</span>
+              <span>{tr("Xem nhà cung cấp thực tế")}</span>
             </button>
           </div>
 
@@ -323,7 +322,7 @@ export default function SolutionsPage({
                   : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
               }`}
             >
-              {tab.label}
+              {tr(tab.label)}
             </button>
           ))}
         </div>
@@ -349,18 +348,18 @@ export default function SolutionsPage({
                       <Icon className="w-6 h-6" />
                     </div>
                     <span className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-[11px] font-semibold tracking-wide">
-                      {item.tag}
+                      {tr(item.tag)}
                     </span>
                   </div>
 
                   {/* Title */}
                   <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
-                    {item.title}
+                    {tr(item.title)}
                   </h3>
 
                   {/* Description */}
                   <p className="text-sm text-slate-600 leading-relaxed mb-6 font-normal">
-                    {item.description}
+                    {tr(item.description)}
                   </p>
 
                   {/* Key Features Bullet List */}
@@ -368,7 +367,7 @@ export default function SolutionsPage({
                     {item.features.map((feat, idx) => (
                       <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-700">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span className="leading-snug">{feat}</span>
+                        <span className="leading-snug">{tr(feat)}</span>
                       </div>
                     ))}
                   </div>
@@ -378,7 +377,7 @@ export default function SolutionsPage({
                 {/* Bottom Action Row */}
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
                   <span className="text-[11px] font-semibold text-slate-400">
-                    {item.metrics}
+                    {tr(item.metrics)}
                   </span>
                   <button
                     onClick={() => {
@@ -388,7 +387,7 @@ export default function SolutionsPage({
                     }}
                     className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-900 group-hover:text-blue-600 transition-colors cursor-pointer"
                   >
-                    <span>{item.actionText}</span>
+                    <span>{tr(item.actionText)}</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                   </button>
                 </div>
@@ -407,14 +406,11 @@ export default function SolutionsPage({
           
           <div className="text-center max-w-2xl mx-auto mb-10">
             <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-2">
-              LỘ TRÌNH TRIỂN KHAI
-            </span>
+              {tr("LỘ TRÌNH TRIỂN KHAI")}</span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">
-              Quy trình 4 bước nâng tầm năng lực xuất khẩu tin cậy
-            </h2>
+              {tr("Quy trình 4 bước nâng tầm năng lực xuất khẩu tin cậy")}</h2>
             <p className="text-sm text-slate-600">
-              Chuyển đổi số hồ sơ năng lực và kết nối thông suốt với người mua toàn cầu chỉ qua 4 giai đoạn chuẩn mực
-            </p>
+              {tr("Chuyển đổi số hồ sơ năng lực và kết nối thông suốt với người mua toàn cầu chỉ qua 4 giai đoạn chuẩn mực")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
@@ -454,17 +450,17 @@ export default function SolutionsPage({
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-2xl font-black text-slate-300 font-mono">
-                        {st.step}
+                        {tr(st.step)}
                       </span>
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${st.color}`}>
                         <StIcon className="w-5 h-5" />
                       </div>
                     </div>
                     <h4 className="text-base font-bold text-slate-900 mb-2">
-                      {st.title}
+                      {tr(st.title)}
                     </h4>
                     <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                      {st.desc}
+                      {tr(st.desc)}
                     </p>
                   </div>
                 </div>
@@ -483,14 +479,11 @@ export default function SolutionsPage({
           
           <div className="max-w-3xl mb-10">
             <span className="text-xs font-bold text-blue-400 uppercase tracking-widest block mb-2">
-              SỰ KHÁC BIỆT ĐỘT PHÁ
-            </span>
+              {tr("SỰ KHÁC BIỆT ĐỘT PHÁ")}</span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">
-              Tại sao các doanh nghiệp chọn Giải pháp của VYBE Trade?
-            </h2>
+              {tr("Tại sao các doanh nghiệp chọn Giải pháp của VYBE Trade?")}</h2>
             <p className="text-sm text-slate-300">
-              So sánh hiệu quả giữa phương thức xúc tiến thương mại truyền thống và nền tảng số hóa xác thực công nghệ cao
-            </p>
+              {tr("So sánh hiệu quả giữa phương thức xúc tiến thương mại truyền thống và nền tảng số hóa xác thực công nghệ cao")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -499,24 +492,24 @@ export default function SolutionsPage({
             <div className="p-6 rounded-2xl bg-slate-800/60 border border-slate-700/60">
               <div className="flex items-center gap-2 mb-4 text-rose-400">
                 <X className="w-5 h-5" />
-                <h4 className="font-bold text-base text-white">Phương thức xúc tiến truyền thống</h4>
+                <h4 className="font-bold text-base text-white">{tr("Phương thức xúc tiến truyền thống")}</h4>
               </div>
               <ul className="space-y-3.5 text-xs text-slate-300">
                 <li className="flex items-start gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0"></span>
-                  <span>Tốn từ $5,000 - $15,000 cho mỗi chuyến hội chợ quốc tế với hiệu quả không đo lường được</span>
+                  <span>{tr("Tốn từ $5,000 - $15,000 cho mỗi chuyến hội chợ quốc tế với hiệu quả không đo lường được")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0"></span>
-                  <span>Buyer ngần ngại đặt cọc vì rủi ro giấy chứng nhận giả và thiếu thông tin nhà máy</span>
+                  <span>{tr("Buyer ngần ngại đặt cọc vì rủi ro giấy chứng nhận giả và thiếu thông tin nhà máy")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0"></span>
-                  <span>Phụ thuộc hoàn toàn vào môi giới trung gian, bị ép giá và mất quyền kiểm soát thương hiệu</span>
+                  <span>{tr("Phụ thuộc hoàn toàn vào môi giới trung gian, bị ép giá và mất quyền kiểm soát thương hiệu")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0"></span>
-                  <span>Thời gian thẩm định hồ sơ kéo dài từ 2 - 3 tháng qua nhiều tầng email thủ công</span>
+                  <span>{tr("Thời gian thẩm định hồ sơ kéo dài từ 2 - 3 tháng qua nhiều tầng email thủ công")}</span>
                 </li>
               </ul>
             </div>
@@ -526,24 +519,24 @@ export default function SolutionsPage({
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
               <div className="flex items-center gap-2 mb-4 text-emerald-400">
                 <CheckCircle2 className="w-5 h-5" />
-                <h4 className="font-bold text-base text-white">Hệ sinh thái giải pháp VYBE Trade</h4>
+                <h4 className="font-bold text-base text-white">{tr("Hệ sinh thái giải pháp VYBE Trade")}</h4>
               </div>
               <ul className="space-y-3.5 text-xs text-slate-200">
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                  <span>Tiết kiệm 70% chi phí xúc tiến, hiện diện 24/7 trước hơn 5,000+ nhà nhập khẩu toàn cầu</span>
+                  <span>{tr("Tiết kiệm 70% chi phí xúc tiến, hiện diện 24/7 trước hơn 5,000+ nhà nhập khẩu toàn cầu")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                  <span>Hồ sơ tín nhiệm L1 - L3 được bảo chứng với báo cáo OCR & đối soát thời gian thực</span>
+                  <span>{tr("Hồ sơ tín nhiệm L1 - L3 được bảo chứng với báo cáo OCR & đối soát thời gian thực")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                  <span>Kết nối trực tiếp chủ hàng với nhà mua hàng quốc tế, bảo vệ biên lợi nhuận cao nhất</span>
+                  <span>{tr("Kết nối trực tiếp chủ hàng với nhà mua hàng quốc tế, bảo vệ biên lợi nhuận cao nhất")}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Check className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                  <span>Tạo Báo cáo Thẩm định AI chỉ trong 30 giây, rút ngắn 60% chu kỳ đàm phán hợp đồng</span>
+                  <span>{tr("Tạo Báo cáo Thẩm định AI chỉ trong 30 giây, rút ngắn 60% chu kỳ đàm phán hợp đồng")}</span>
                 </li>
               </ul>
             </div>
@@ -561,26 +554,22 @@ export default function SolutionsPage({
           
           <div className="max-w-2xl mx-auto relative z-10">
             <h2 className="text-2xl sm:text-3xl font-extrabold mb-4 tracking-tight">
-              Sẵn sàng đưa sản phẩm Việt Nam vươn ra thị trường quốc tế?
-            </h2>
+              {tr("Sẵn sàng đưa sản phẩm Việt Nam vươn ra thị trường quốc tế?")}</h2>
             <p className="text-sm sm:text-base text-blue-100/90 mb-8 leading-relaxed">
-              Trở thành nhà cung cấp được xác minh bởi VYBE Trade ngay hôm nay để nhận quyền truy cập trọn bộ công cụ xúc tiến và thẩm định tín nhiệm AI.
-            </p>
+              {tr("Trở thành nhà cung cấp được xác minh bởi VYBE Trade ngay hôm nay để nhận quyền truy cập trọn bộ công cụ xúc tiến và thẩm định tín nhiệm AI.")}</p>
 
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
               <button
                 onClick={onNavigateOnboarding}
                 className="px-6 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-sm transition-all shadow-md cursor-pointer active:scale-98"
               >
-                Đăng ký xác minh doanh nghiệp
-              </button>
+                {tr("Đăng ký xác minh doanh nghiệp")}</button>
 
               <button
                 onClick={() => setIsDemoModalOpen(true)}
                 className="px-6 py-3.5 rounded-xl bg-blue-600/80 hover:bg-blue-600 text-white font-semibold text-sm transition-all border border-blue-400/30 cursor-pointer active:scale-98"
               >
-                Đặt lịch tư vấn chuyên gia
-              </button>
+                {tr("Đặt lịch tư vấn chuyên gia")}</button>
             </div>
           </div>
 
@@ -609,29 +598,28 @@ export default function SolutionsPage({
               </div>
               <div>
                 <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wide">
-                  {activeSolutionData.tag}
+                  {tr(activeSolutionData.tag)}
                 </span>
                 <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
-                  {activeSolutionData.title}
+                  {tr(activeSolutionData.title)}
                 </h3>
               </div>
             </div>
 
             {/* Description */}
             <p className="text-sm text-slate-600 leading-relaxed mb-6">
-              {activeSolutionData.description}
+              {tr(activeSolutionData.description)}
             </p>
 
             {/* Key Capabilities */}
             <div className="mb-6">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">
-                Tính năng & Khả năng cốt lõi:
-              </h4>
+                {tr("Tính năng & Khả năng cốt lõi:")}</h4>
               <div className="space-y-2.5 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                 {activeSolutionData.features.map((feat, idx) => (
                   <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-700">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span>{feat}</span>
+                    <span>{tr(feat)}</span>
                   </div>
                 ))}
               </div>
@@ -643,17 +631,14 @@ export default function SolutionsPage({
                 <div className="flex items-center gap-2">
                   <Zap className="w-4 h-4 text-blue-600" />
                   <span className="text-xs font-bold text-blue-950 uppercase tracking-wide">
-                    Trình mô phỏng tính năng thực tế
-                  </span>
+                    {tr("Trình mô phỏng tính năng thực tế")}</span>
                 </div>
                 <span className="text-[11px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-semibold">
-                  Demo tương tác
-                </span>
+                  {tr("Demo tương tác")}</span>
               </div>
 
               <p className="text-xs text-slate-600 mb-4">
-                Bấm nút bên dưới để xem hệ thống thực hiện xử lý dữ liệu tự động cho giải pháp này:
-              </p>
+                {tr("Bấm nút bên dưới để xem hệ thống thực hiện xử lý dữ liệu tự động cho giải pháp này:")}</p>
 
               <button
                 onClick={() => runSimulation(activeSolutionData.id)}
@@ -663,12 +648,12 @@ export default function SolutionsPage({
                 {simRunning ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Đang xử lý dữ liệu và đối soát chéo...</span>
+                    <span>{tr("Đang xử lý dữ liệu và đối soát chéo...")}</span>
                   </>
                 ) : (
                   <>
                     <PlayCircle className="w-4 h-4" />
-                    <span>Chạy thử nghiệm mô phỏng</span>
+                    <span>{tr("Chạy thử nghiệm mô phỏng")}</span>
                   </>
                 )}
               </button>
@@ -676,8 +661,8 @@ export default function SolutionsPage({
               {simRunning && (
                 <div className="mt-4 space-y-2">
                   <div className="flex justify-between text-[11px] font-semibold text-slate-600">
-                    <span>{simStep === 1 ? 'Bước 1: Trích xuất OCR' : simStep === 2 ? 'Bước 2: Đối soát dữ liệu Cổng quốc gia' : 'Bước 3: Tổng hợp báo cáo'}</span>
-                    <span>{simStep * 33}%</span>
+                    <span>{tr(simStep === 1 ? 'Bước 1: Trích xuất OCR' : simStep === 2 ? 'Bước 2: Đối soát dữ liệu Cổng quốc gia' : 'Bước 3: Tổng hợp báo cáo')}</span>
+                    <span>{tr(simStep * 33)}{tr("%")}</span>
                   </div>
                   <div className="w-full h-1.5 bg-blue-200/60 rounded-full overflow-hidden">
                     <div 
@@ -692,8 +677,8 @@ export default function SolutionsPage({
                 <div className="mt-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 leading-relaxed flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold block mb-1">Kết quả mô phỏng:</span>
-                    <span>{simResult}</span>
+                    <span className="font-bold block mb-1">{tr("Kết quả mô phỏng:")}</span>
+                    <span>{tr(simResult)}</span>
                   </div>
                 </div>
               )}
@@ -705,8 +690,7 @@ export default function SolutionsPage({
                 onClick={() => setActiveModalSolution(null)}
                 className="px-5 py-2.5 rounded-xl text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-colors cursor-pointer"
               >
-                Đóng
-              </button>
+                {tr("Đóng")}</button>
               <button
                 onClick={() => {
                   setActiveModalSolution(null);
@@ -714,8 +698,7 @@ export default function SolutionsPage({
                 }}
                 className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors cursor-pointer"
               >
-                Nhận tư vấn giải pháp này
-              </button>
+                {tr("Nhận tư vấn giải pháp này")}</button>
             </div>
 
           </div>
@@ -745,11 +728,9 @@ export default function SolutionsPage({
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">
-                  Đăng ký tư vấn thành công!
-                </h3>
+                  {tr("Đăng ký tư vấn thành công!")}</h3>
                 <p className="text-xs text-slate-600 leading-relaxed mb-6 max-w-sm mx-auto">
-                  Chuyên viên giải pháp của VYBE Trade sẽ liên hệ với doanh nghiệp của bạn trong vòng 2 giờ làm việc để demo chi tiết.
-                </p>
+                  {tr("Chuyên viên giải pháp của VYBE Trade sẽ liên hệ với doanh nghiệp của bạn trong vòng 2 giờ làm việc để demo chi tiết.")}</p>
                 <button
                   onClick={() => {
                     setIsDemoModalOpen(false);
@@ -757,26 +738,22 @@ export default function SolutionsPage({
                   }}
                   className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors cursor-pointer"
                 >
-                  Hoàn tất
-                </button>
+                  {tr("Hoàn tất")}</button>
               </div>
             ) : (
               <div>
                 <div className="mb-5">
                   <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wide">
-                    ĐẶT LỊCH DEMO TRỰC TIẾP
-                  </span>
+                    {tr("ĐẶT LỊCH DEMO TRỰC TIẾP")}</span>
                   <h3 className="text-xl font-bold text-slate-900">
-                    Tư vấn giải pháp cho doanh nghiệp
-                  </h3>
+                    {tr("Tư vấn giải pháp cho doanh nghiệp")}</h3>
                   <p className="text-xs text-slate-500 mt-1">
-                    Đội ngũ chuyên gia của chúng tôi sẽ hướng dẫn chi tiết cách thức triển khai phù hợp nhất
-                  </p>
+                    {tr("Đội ngũ chuyên gia của chúng tôi sẽ hướng dẫn chi tiết cách thức triển khai phù hợp nhất")}</p>
                 </div>
 
                 <form onSubmit={handleDemoSubmit} className="space-y-3.5 text-xs">
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Họ tên đại diện</label>
+                    <label className="block font-semibold text-slate-700 mb-1">{tr("Họ tên đại diện")}</label>
                     <input
                       type="text"
                       required
@@ -787,7 +764,7 @@ export default function SolutionsPage({
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Tên công ty / Đơn vị</label>
+                    <label className="block font-semibold text-slate-700 mb-1">{tr("Tên công ty / Đơn vị")}</label>
                     <input
                       type="text"
                       required
@@ -799,7 +776,7 @@ export default function SolutionsPage({
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">Số điện thoại</label>
+                      <label className="block font-semibold text-slate-700 mb-1">{tr("Số điện thoại")}</label>
                       <input
                         type="text"
                         required
@@ -809,7 +786,7 @@ export default function SolutionsPage({
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold text-slate-700 mb-1">Email công vụ</label>
+                      <label className="block font-semibold text-slate-700 mb-1">{tr("Email công vụ")}</label>
                       <input
                         type="email"
                         required
@@ -821,23 +798,23 @@ export default function SolutionsPage({
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Giải pháp quan tâm nhất</label>
+                    <label className="block font-semibold text-slate-700 mb-1">{tr("Giải pháp quan tâm nhất")}</label>
                     <select
                       value={demoForm.solutionInterest}
                       onChange={(e) => setDemoForm({ ...demoForm, solutionInterest: e.target.value })}
                       className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500 text-slate-900 bg-white"
                     >
-                      <option value="verification-engine">Verification Engine (Xác thực pháp lý đa tầng L1-L3)</option>
-                      <option value="ai-trust">AI Trust Co-pilot (Thẩm định tín nhiệm & rủi ro AI)</option>
-                      <option value="matching">Supplier & Buyer Matching (Kết nối đối tác quốc tế)</option>
-                      <option value="trust-profile">Verified Trust Profile (Hộ chiếu số doanh nghiệp)</option>
-                      <option value="rfq-workflow">RFQ & Commercial Workflow (Giao dịch & Hợp đồng)</option>
-                      <option value="market-intel">Export Market Intelligence (Phân tích thị trường xuất khẩu)</option>
+                      <option value="verification-engine">{tr("Verification Engine (Xác thực pháp lý đa tầng L1-L3)")}</option>
+                      <option value="ai-trust">{tr("AI Trust Co-pilot (Thẩm định tín nhiệm & rủi ro AI)")}</option>
+                      <option value="matching">{tr("Supplier & Buyer Matching (Kết nối đối tác quốc tế)")}</option>
+                      <option value="trust-profile">{tr("Verified Trust Profile (Hộ chiếu số doanh nghiệp)")}</option>
+                      <option value="rfq-workflow">{tr("RFQ & Commercial Workflow (Giao dịch & Hợp đồng)")}</option>
+                      <option value="market-intel">{tr("Export Market Intelligence (Phân tích thị trường xuất khẩu)")}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Nhu cầu cụ thể</label>
+                    <label className="block font-semibold text-slate-700 mb-1">{tr("Nhu cầu cụ thể")}</label>
                     <textarea
                       rows={2}
                       value={demoForm.message}
@@ -850,8 +827,7 @@ export default function SolutionsPage({
                     type="submit"
                     className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors cursor-pointer mt-2"
                   >
-                    Gửi yêu cầu tư vấn
-                  </button>
+                    {tr("Gửi yêu cầu tư vấn")}</button>
                 </form>
               </div>
             )}

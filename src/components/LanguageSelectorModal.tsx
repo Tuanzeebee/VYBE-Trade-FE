@@ -14,7 +14,7 @@ interface LanguageSelectorModalProps {
 }
 
 export default function LanguageSelectorModal({ isOpen, onClose }: LanguageSelectorModalProps) {
-  const { language, setLanguage, t } = useLanguage();
+  const { tr, language, setLanguage, t } = useLanguage();
 
   if (!isOpen) return null;
 
@@ -42,11 +42,10 @@ export default function LanguageSelectorModal({ isOpen, onClose }: LanguageSelec
           </div>
           <div>
             <h3 className="text-lg font-bold text-slate-900 leading-tight">
-              {t.header.languageSelect}
+              {tr(t.header.languageSelect)}
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
-              Choose your preferred language / Choisissez votre langue / 言語を選択
-            </p>
+              {tr("Choose your preferred language / Choisissez votre langue / 言語を選択")}</p>
           </div>
         </div>
 
@@ -76,11 +75,10 @@ export default function LanguageSelectorModal({ isOpen, onClose }: LanguageSelec
                         {lang.nativeName}
                       </span>
                       <span className="text-xs text-slate-400 font-normal">
-                        ({lang.name})
-                      </span>
+                        {tr("(")}{tr(lang.name)}{tr(")")}</span>
                     </div>
                     <span className="text-[11px] text-slate-500 block mt-0.5">
-                      {lang.country}
+                      {tr(lang.country)}
                     </span>
                   </div>
                 </div>
@@ -91,7 +89,7 @@ export default function LanguageSelectorModal({ isOpen, onClose }: LanguageSelec
                   </div>
                 ) : (
                   <span className="text-xs text-slate-400 group-hover:text-blue-600 font-medium">
-                    {language === 'vi' ? 'Chọn' : language === 'fr' ? 'Choisir' : language === 'ja' ? '選択' : 'Select'}
+                    {tr(language === 'vi' ? 'Chọn' : language === 'fr' ? 'Choisir' : language === 'ja' ? '選択' : 'Select')}
                   </span>
                 )}
               </button>
@@ -103,13 +101,13 @@ export default function LanguageSelectorModal({ isOpen, onClose }: LanguageSelec
         <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-[11px] text-slate-600 flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
           <span>
-            {language === 'vi'
+            {tr(language === 'vi'
               ? 'Hệ thống tự động lưu tùy chọn ngôn ngữ cho các phiên làm việc tiếp theo.'
               : language === 'fr'
               ? 'La plateforme enregistre automatiquement votre langue pour vos prochaines visites.'
               : language === 'ja'
               ? '選択した言語はブラウザに自動保存され、次回訪問時にも適用されます。'
-              : 'The platform automatically remembers your language preference across sessions.'}
+              : 'The platform automatically remembers your language preference across sessions.')}
           </span>
         </div>
 

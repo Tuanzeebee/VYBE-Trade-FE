@@ -5,10 +5,9 @@
 
 import React, { useState } from 'react';
 import type { DemoUser } from '../lib/demoAuth';
+import LanguageSelect from './LanguageSelect';
 import { 
   ArrowRight, 
-  Globe, 
-  Bell, 
   ChevronDown, 
   Calendar, 
   User, 
@@ -34,6 +33,7 @@ import {
   Camera,
   Image as ImageIcon
 } from 'lucide-react';
+import { useLanguage } from "../context/LanguageContext";
 
 interface SellerOnboardingProps {
   account?: DemoUser;
@@ -69,6 +69,7 @@ export interface ExportProductItem {
 }
 
 export default function SellerOnboarding({ account, initialStep = 2, onComplete, onLogout, onNavigateHome, onNavigateWorkspace }: SellerOnboardingProps) {
+  const { tr } = useLanguage();
   const [currentStep, setCurrentStep] = useState<number>(initialStep);
   const [submitError, setSubmitError] = useState('');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -133,7 +134,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
 
   const handleRemoveProduct = (id: string) => {
     if (products.length <= 1) {
-      alert('Doanh nghiệp cần ít nhất 1 sản phẩm xuất khẩu.');
+      alert(tr('Doanh nghiệp cần ít nhất 1 sản phẩm xuất khẩu.'));
       return;
     }
     setProducts(prev => prev.filter(p => p.id !== id));
@@ -378,13 +379,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
           1. HEADER (SELLER LOGGED IN STATE)
          ========================================================================= */}
       <header className="w-full bg-white border-b border-slate-200/80 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 h-16 sm:h-[68px] flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 min-h-16 py-3 flex flex-wrap gap-3 items-center justify-between">
           
           {/* Left: Brand Logo */}
           <div 
             onClick={onNavigateHome}
             className="flex items-center gap-2.5 cursor-pointer group select-none"
-            title="Quay lại trang chủ"
+            title={tr("Quay lại trang chủ")}
           >
             <div className="w-8 h-8 flex items-center justify-center text-[#0b5e52]">
               <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -393,40 +394,23 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
               </svg>
             </div>
             <span className="text-[#0f172a] font-bold text-lg sm:text-[19px] tracking-wide uppercase">
-              VYBE TRADE
-            </span>
+              {tr("VYBE TRADE")}</span>
           </div>
 
           {/* Right: Language Globe + Bell Notification + Seller Profile */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex flex-wrap items-center gap-3">
             
             {/* Direct Workspace link button */}
             <button 
               onClick={() => onNavigateWorkspace ? onNavigateWorkspace('profile') : onNavigateHome()}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-teal-50 hover:bg-teal-100 text-[#083832] text-xs font-semibold border border-teal-200/80 transition-all cursor-pointer shadow-2xs"
-              title="Vào Workspace xem Profile Company"
+              title={tr("Vào Workspace xem Profile Company")}
             >
               <Building2 className="w-3.5 h-3.5 text-teal-700" />
-              <span>Vào Workspace Seller</span>
+              <span>{tr("Vào Workspace Seller")}</span>
             </button>
 
-            {/* Globe Icon */}
-            <button 
-              className="p-1.5 text-slate-600 hover:text-slate-900 transition-colors rounded-full hover:bg-slate-100 cursor-pointer"
-              title="Đổi ngôn ngữ / Language"
-            >
-              <Globe className="w-5 h-5 stroke-[1.6]" />
-            </button>
-
-            {/* Notification Bell */}
-            <button 
-              className="p-1.5 text-slate-600 hover:text-slate-900 transition-colors rounded-full hover:bg-slate-100 cursor-pointer relative"
-              title="Thông báo"
-            >
-              <Bell className="w-5 h-5 stroke-[1.6]" />
-              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500" />
-            </button>
-
+            <LanguageSelect />
             {/* Seller Account Pill with Dropdown */}
             <div className="relative">
               <button 
@@ -435,8 +419,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
               >
                 {/* Dark Teal Circle Avatar with "VN" */}
                 <div className="w-8 h-8 rounded-full bg-[#083832] text-white text-xs font-bold flex items-center justify-center shrink-0">
-                  VN
-                </div>
+                  {tr("VN")}</div>
                 
                 {/* Truncated Company Name */}
                 <span className="hidden sm:inline text-xs sm:text-[13px] font-semibold text-slate-800 max-w-[170px] truncate">
@@ -451,7 +434,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50 text-xs text-left">
                   <div className="px-4 py-2 border-b border-slate-100">
                     <p className="font-bold text-slate-900">{formData.companyName}</p>
-                    <p className="text-slate-500 text-[11px]">Tài khoản Nhà cung cấp (Seller)</p>
+                    <p className="text-slate-500 text-[11px]">{tr("Tài khoản Nhà cung cấp (Seller)")}</p>
                   </div>
                   <button 
                     onClick={() => {
@@ -461,7 +444,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     className="w-full px-4 py-2 text-left hover:bg-teal-50 text-[#083832] font-semibold cursor-pointer flex items-center gap-2"
                   >
                     <Building2 className="w-3.5 h-3.5 text-teal-700" />
-                    <span>Xem Profile Company trong Workspace</span>
+                    <span>{tr("Xem Profile Company trong Workspace")}</span>
                   </button>
                   <button 
                     onClick={() => {
@@ -471,14 +454,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
                   >
                     <ShieldCheck className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Xem Xác minh L0 → L3</span>
+                    <span>{tr("Xem Xác minh L0 → L3")}</span>
                   </button>
                   <button 
                     onClick={onNavigateHome}
                     className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-700 cursor-pointer"
                   >
-                    Xem sàn thương mại B2B
-                  </button>
+                    {tr("Xem sàn thương mại B2B")}</button>
                   <button 
                     onClick={() => {
                       setProfileDropdownOpen(false);
@@ -486,8 +468,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     }}
                     className="w-full px-4 py-2 text-left hover:bg-rose-50 text-rose-600 font-medium border-t border-slate-100 cursor-pointer"
                   >
-                    Đăng xuất tài khoản
-                  </button>
+                    {tr("Đăng xuất tài khoản")}</button>
                 </div>
               )}
             </div>
@@ -520,8 +501,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
             <span className={`text-xs sm:text-[13px] font-bold ${
               currentStep === 1 ? 'text-slate-900 border-b-2 border-[#083832] pb-0.5' : 'text-slate-600'
             }`}>
-              Thông tin doanh nghiệp
-            </span>
+              {tr("Thông tin doanh nghiệp")}</span>
           </div>
 
           {/* Arrow Divider */}
@@ -546,8 +526,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
             <span className={`text-xs sm:text-[13px] font-medium ${
               currentStep === 2 ? 'text-slate-900 font-bold border-b-2 border-[#083832] pb-0.5' : 'text-slate-500'
             }`}>
-              Sản phẩm & năng lực
-            </span>
+              {tr("Sản phẩm & năng lực")}</span>
           </div>
 
           {/* Arrow Divider */}
@@ -572,8 +551,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
             <span className={`text-xs sm:text-[13px] font-medium ${
               currentStep === 3 ? 'text-slate-900 font-bold border-b-2 border-[#083832] pb-0.5' : 'text-slate-500'
             }`}>
-              Giấy phép & chứng nhận
-            </span>
+              {tr("Giấy phép & chứng nhận")}</span>
           </div>
 
           {/* Arrow Divider */}
@@ -591,13 +569,11 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 ? 'bg-[#083832] text-white' 
                 : 'bg-slate-100 border border-slate-200 text-slate-500'
             }`}>
-              4
-            </div>
+              {tr("4")}</div>
             <span className={`text-xs sm:text-[13px] font-medium ${
               currentStep === 4 ? 'text-slate-900 font-bold border-b-2 border-[#083832] pb-0.5' : 'text-slate-500'
             }`}>
-              Xem lại & hoàn tất
-            </span>
+              {tr("Xem lại & hoàn tất")}</span>
           </div>
 
         </div>
@@ -627,21 +603,18 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 <span className="w-2 h-0.5 rounded-full bg-[#0d9488]" />
               </span>
               <span className="text-[11px] sm:text-xs font-bold text-[#0d9488] tracking-widest uppercase">
-                COMPANY ONBOARDING
-              </span>
+                {tr("COMPANY ONBOARDING")}</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-bold text-slate-900 tracking-tight leading-[1.2] mb-3">
-              {onComplete ? 'Company Onboarding' : 'Cập nhật hồ sơ doanh nghiệp'}<br />
-              và giới thiệu sản phẩm
-            </h1>
+              {tr(onComplete ? 'Company Onboarding' : 'Cập nhật hồ sơ doanh nghiệp')}<br />
+              {tr("và giới thiệu sản phẩm")}</h1>
 
             {/* Subheadline / Description */}
             <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed max-w-md mb-8 sm:mb-10 font-normal">
-              Hoàn thiện hồ sơ của bạn để được xác minh<br className="hidden sm:inline" />
-              {' '}và kết nối với các buyer quốc tế phù hợp.
-            </p>
+              {tr("Hoàn thiện hồ sơ của bạn để được xác minh")}<br className="hidden sm:inline" />
+              {tr(' ')}{tr("và kết nối với các buyer quốc tế phù hợp.")}</p>
 
             {/* 4 Value Proposition Benefit Rows */}
             <div className="space-y-5 select-none">
@@ -653,11 +626,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                    Hiển thị với buyer toàn cầu
-                  </h3>
+                    {tr("Hiển thị với buyer toàn cầu")}</h3>
                   <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                    Tiếp cận đúng đối tác, đúng nhu cầu
-                  </p>
+                    {tr("Tiếp cận đúng đối tác, đúng nhu cầu")}</p>
                 </div>
               </div>
 
@@ -668,11 +639,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                    Tăng mức độ tin cậy
-                  </h3>
+                    {tr("Tăng mức độ tin cậy")}</h3>
                   <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                    Được xác minh theo tiêu chuẩn quốc tế
-                  </p>
+                    {tr("Được xác minh theo tiêu chuẩn quốc tế")}</p>
                 </div>
               </div>
 
@@ -683,11 +652,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                    Quản lý sản phẩm chuyên nghiệp
-                  </h3>
+                    {tr("Quản lý sản phẩm chuyên nghiệp")}</h3>
                   <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                    Giới thiệu năng lực và chứng nhận rõ ràng
-                  </p>
+                    {tr("Giới thiệu năng lực và chứng nhận rõ ràng")}</p>
                 </div>
               </div>
 
@@ -698,11 +665,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                    Mở rộng cơ hội xuất khẩu
-                  </h3>
+                    {tr("Mở rộng cơ hội xuất khẩu")}</h3>
                   <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                    Tham gia vào các cơ hội RFQ chất lượng
-                  </p>
+                    {tr("Tham gia vào các cơ hội RFQ chất lượng")}</p>
                 </div>
               </div>
 
@@ -718,20 +683,19 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
               <div className="mb-6">
                 <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
                   <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
-                    {currentStep === 1 && "Thông tin doanh nghiệp"}
-                    {currentStep === 2 && "Sản phẩm & năng lực sản xuất"}
-                    {currentStep === 3 && "Tải lên giấy phép & chứng nhận"}
-                    {currentStep === 4 && "Xem lại & hoàn tất hồ sơ"}
+                    {tr(currentStep === 1 && "Thông tin doanh nghiệp")}
+                    {tr(currentStep === 2 && "Sản phẩm & năng lực sản xuất")}
+                    {tr(currentStep === 3 && "Tải lên giấy phép & chứng nhận")}
+                    {tr(currentStep === 4 && "Xem lại & hoàn tất hồ sơ")}
                   </h2>
                   <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/60">
-                    Bước {currentStep} / 4
-                  </span>
+                    {tr("Bước ")}{tr(currentStep)} {tr(" / 4")}</span>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-500 font-normal">
-                  {currentStep === 1 && "Cung cấp thông tin cơ bản về doanh nghiệp của bạn."}
-                  {currentStep === 2 && "Khai báo danh mục sản phẩm, năng lực cung ứng và quy mô xuất khẩu."}
-                  {currentStep === 3 && "Tải lên tài liệu pháp lý và chứng nhận tiêu chuẩn để nâng cấp xác minh lên L1, L2 hoặc L3."}
-                  {currentStep === 4 && "Kiểm tra lại toàn bộ dữ liệu trước khi gửi hồ sơ vào hàng đợi thẩm định của VYBE Trade."}
+                  {tr(currentStep === 1 && "Cung cấp thông tin cơ bản về doanh nghiệp của bạn.")}
+                  {tr(currentStep === 2 && "Khai báo danh mục sản phẩm, năng lực cung ứng và quy mô xuất khẩu.")}
+                  {tr(currentStep === 3 && "Tải lên tài liệu pháp lý và chứng nhận tiêu chuẩn để nâng cấp xác minh lên L1, L2 hoặc L3.")}
+                  {tr(currentStep === 4 && "Kiểm tra lại toàn bộ dữ liệu trước khi gửi hồ sơ vào hàng đợi thẩm định của VYBE Trade.")}
                 </p>
               </div>
 
@@ -742,14 +706,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                   {/* Field 1: Tên công ty * */}
                   <div>
                     <label className="block text-xs sm:text-[13px] font-semibold text-slate-800 mb-1.5">
-                      Tên công ty *
-                    </label>
+                      {tr("Tên công ty *")}</label>
                     <input 
                       type="text"
                       required
                       value={formData.companyName}
                       onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                      placeholder="Ví dụ: Công ty TNHH Nông sản Việt Trí"
+                      placeholder={tr("Ví dụ: Công ty TNHH Nông sản Việt Trí")}
                       className="w-full px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#083832] focus:ring-1 focus:ring-[#083832] transition-colors"
                     />
                   </div>
@@ -757,14 +720,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                   {/* Field 2: Mã số thuế (MST) * */}
                   <div>
                     <label className="block text-xs sm:text-[13px] font-semibold text-slate-800 mb-1.5">
-                      Mã số thuế (MST) *
-                    </label>
+                      {tr("Mã số thuế (MST) *")}</label>
                     <input 
                       type="text"
                       required
                       value={formData.taxCode}
                       onChange={(e) => setFormData({ ...formData, taxCode: e.target.value })}
-                      placeholder="Nhập mã số thuế"
+                      placeholder={tr("Nhập mã số thuế")}
                       className="w-full px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#083832] focus:ring-1 focus:ring-[#083832] transition-colors"
                     />
                   </div>
@@ -775,8 +737,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     {/* Loại hình doanh nghiệp * */}
                     <div>
                       <label className="block text-xs sm:text-[13px] font-semibold text-slate-800 mb-1.5">
-                        Loại hình doanh nghiệp *
-                      </label>
+                        {tr("Loại hình doanh nghiệp *")}</label>
                       <div className="relative">
                         <select 
                           required
@@ -784,12 +745,12 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                           onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
                           className="w-full px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-[#083832] focus:ring-1 focus:ring-[#083832] appearance-none cursor-pointer pr-10"
                         >
-                          <option value="">Chọn loại hình</option>
-                          <option value="TNHH">Công ty TNHH</option>
-                          <option value="CP">Công ty Cổ phần</option>
-                          <option value="DNTN">Doanh nghiệp tư nhân</option>
-                          <option value="HTX">Hợp tác xã</option>
-                          <option value="FDI">Doanh nghiệp có vốn đầu tư nước ngoài (FDI)</option>
+                          <option value="">{tr("Chọn loại hình")}</option>
+                          <option value="TNHH">{tr("Công ty TNHH")}</option>
+                          <option value="CP">{tr("Công ty Cổ phần")}</option>
+                          <option value="DNTN">{tr("Doanh nghiệp tư nhân")}</option>
+                          <option value="HTX">{tr("Hợp tác xã")}</option>
+                          <option value="FDI">{tr("Doanh nghiệp có vốn đầu tư nước ngoài (FDI)")}</option>
                         </select>
                         <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                       </div>
@@ -798,8 +759,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     {/* Năm thành lập * */}
                     <div>
                       <label className="block text-xs sm:text-[13px] font-semibold text-slate-800 mb-1.5">
-                        Năm thành lập *
-                      </label>
+                        {tr("Năm thành lập *")}</label>
                       <div className="relative">
                         <input 
                           type="number"
@@ -808,7 +768,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                           max="2026"
                           value={formData.establishedYear}
                           onChange={(e) => setFormData({ ...formData, establishedYear: e.target.value })}
-                          placeholder="Chọn năm"
+                          placeholder={tr("Chọn năm")}
                           className="w-full px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#083832] focus:ring-1 focus:ring-[#083832] pr-10"
                         />
                         <Calendar className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
@@ -820,14 +780,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                   {/* Field 5: Địa chỉ trụ sở chính * */}
                   <div>
                     <label className="block text-xs sm:text-[13px] font-semibold text-slate-800 mb-1.5">
-                      Địa chỉ trụ sở chính *
-                    </label>
+                      {tr("Địa chỉ trụ sở chính *")}</label>
                     <input 
                       type="text"
                       required
                       value={formData.headquartersAddress}
                       onChange={(e) => setFormData({ ...formData, headquartersAddress: e.target.value })}
-                      placeholder="Nhập địa chỉ đầy đủ"
+                      placeholder={tr("Nhập địa chỉ đầy đủ")}
                       className="w-full px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#083832] focus:ring-1 focus:ring-[#083832] transition-colors"
                     />
                   </div>
@@ -838,13 +797,12 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     {/* Website */}
                     <div>
                       <label className="block text-xs sm:text-[13px] font-semibold text-slate-800 mb-1.5">
-                        Website
-                      </label>
+                        {tr("Website")}</label>
                       <input 
                         type="url"
                         value={formData.website}
                         onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                        placeholder="https://example.com"
+                        placeholder={tr("https://example.com")}
                         className="w-full px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#083832] focus:ring-1 focus:ring-[#083832] transition-colors"
                       />
                     </div>
@@ -852,14 +810,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     {/* Email liên hệ * */}
                     <div>
                       <label className="block text-xs sm:text-[13px] font-semibold text-slate-800 mb-1.5">
-                        Email liên hệ *
-                      </label>
+                        {tr("Email liên hệ *")}</label>
                       <input 
                         type="email"
                         required
                         value={formData.contactEmail}
                         onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
-                        placeholder="contact@example.com"
+                        placeholder={tr("contact@example.com")}
                         className="w-full px-4 py-2.5 rounded-xl border border-slate-200/90 bg-white text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#083832] focus:ring-1 focus:ring-[#083832] transition-colors"
                       />
                     </div>
@@ -872,7 +829,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                       type="submit"
                       className="px-7 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all shadow-xs cursor-pointer active:scale-95"
                     >
-                      <span>Tiếp tục</span>
+                      <span>{tr("Tiếp tục")}</span>
                       <ArrowRight className="w-4 h-4 stroke-[2.2]" />
                     </button>
                   </div>
@@ -888,11 +845,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                   <div className="flex items-start justify-between flex-wrap gap-3 pb-1 border-b border-slate-100">
                     <div>
                       <h3 className="text-lg sm:text-xl font-bold text-slate-900">
-                        Sản phẩm xuất khẩu
-                      </h3>
+                        {tr("Sản phẩm xuất khẩu")}</h3>
                       <p className="text-xs sm:text-[13px] text-slate-500 mt-0.5 font-normal">
-                        Thêm sản phẩm chính mà doanh nghiệp cung cấp. Bạn có thể thêm nhiều sản phẩm.
-                      </p>
+                        {tr("Thêm sản phẩm chính mà doanh nghiệp cung cấp. Bạn có thể thêm nhiều sản phẩm.")}</p>
                     </div>
 
                     <button
@@ -901,7 +856,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                       className="px-4 py-2 rounded-xl bg-[#0b1e2e] hover:bg-[#081622] text-white text-xs sm:text-[13px] font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer active:scale-95"
                     >
                       <Plus className="w-4 h-4 stroke-[2.5]" />
-                      <span>Thêm sản phẩm</span>
+                      <span>{tr("Thêm sản phẩm")}</span>
                     </button>
                   </div>
 
@@ -918,13 +873,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                           <div className="relative group shrink-0 w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shadow-2xs">
                             <img 
                               src={product.image} 
-                              alt={product.name}
+                              alt={tr(product.name)}
                               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
                             />
                             {/* Hover overlay with upload button */}
                             <label className="absolute inset-0 bg-black/50 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-[10px] font-semibold gap-1 p-2 text-center backdrop-blur-2xs">
                               <Camera className="w-5 h-5 text-teal-300" />
-                              <span>Đổi hình ảnh</span>
+                              <span>{tr("Đổi hình ảnh")}</span>
                               <input 
                                 type="file" 
                                 accept="image/*" 
@@ -945,12 +900,11 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                   value={product.name}
                                   onChange={(e) => handleUpdateProduct(product.id, 'name', e.target.value)}
                                   className="text-base sm:text-lg font-bold text-slate-900 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-[#083832] focus:outline-none px-0 py-0.5"
-                                  placeholder="Tên sản phẩm"
+                                  placeholder={tr("Tên sản phẩm")}
                                 />
                                 {product.isMain && (
                                   <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#e6f4f2] text-[#0d766e] border border-[#99f6e4]/60 whitespace-nowrap">
-                                    Sản phẩm chính
-                                  </span>
+                                    {tr("Sản phẩm chính")}</span>
                                 )}
                               </div>
 
@@ -959,7 +913,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                 <button 
                                   type="button"
                                   onClick={() => handleToggleMainProduct(product.id)}
-                                  title={product.isMain ? "Bỏ đánh dấu sản phẩm chính" : "Đặt làm sản phẩm chính"}
+                                  title={tr(product.isMain ? "Bỏ đánh dấu sản phẩm chính" : "Đặt làm sản phẩm chính")}
                                   className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
                                 >
                                   <MoreVertical className="w-4 h-4" />
@@ -968,7 +922,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                 <button 
                                   type="button"
                                   onClick={() => handleRemoveProduct(product.id)}
-                                  title="Xóa sản phẩm"
+                                  title={tr("Xóa sản phẩm")}
                                   className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                                 >
                                   <X className="w-4 h-4" />
@@ -982,22 +936,21 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                               {/* Danh mục */}
                               <div>
                                 <label className="block text-[11px] font-medium text-slate-500 mb-1">
-                                  Danh mục
-                                </label>
+                                  {tr("Danh mục")}</label>
                                 <div className="relative">
                                   <select
                                     value={product.category}
                                     onChange={(e) => handleUpdateProduct(product.id, 'category', e.target.value)}
                                     className="w-full appearance-none px-3.5 py-2 pr-8 rounded-xl border border-slate-200 bg-white text-xs sm:text-[13px] text-slate-800 font-normal focus:outline-none focus:border-[#083832] transition-colors"
                                   >
-                                    <option value="Cà phê & sản phẩm từ cà phê">Cà phê & sản phẩm từ cà phê</option>
-                                    <option value="Hạt điều & sản phẩm từ điều">Hạt điều & sản phẩm từ điều</option>
-                                    <option value="Gạo & ngũ cốc xuất khẩu">Gạo & ngũ cốc xuất khẩu</option>
-                                    <option value="Hồ tiêu & gia vị xuất khẩu">Hồ tiêu & gia vị xuất khẩu</option>
-                                    <option value="Thủy hải sản (Tôm, Cá tra, Mực)">Thủy hải sản (Tôm, Cá tra, Mực)</option>
-                                    <option value="Trái cây tươi & chế biến (Thanh long, Sầu riêng)">Trái cây tươi & chế biến (Thanh long, Sầu riêng)</option>
-                                    <option value="Trà & thảo mộc xuất khẩu">Trà & thảo mộc xuất khẩu</option>
-                                    <option value="Thực phẩm chế biến đóng gói">Thực phẩm chế biến đóng gói</option>
+                                    <option value="Cà phê & sản phẩm từ cà phê">{tr("Cà phê & sản phẩm từ cà phê")}</option>
+                                    <option value="Hạt điều & sản phẩm từ điều">{tr("Hạt điều & sản phẩm từ điều")}</option>
+                                    <option value="Gạo & ngũ cốc xuất khẩu">{tr("Gạo & ngũ cốc xuất khẩu")}</option>
+                                    <option value="Hồ tiêu & gia vị xuất khẩu">{tr("Hồ tiêu & gia vị xuất khẩu")}</option>
+                                    <option value="Thủy hải sản (Tôm, Cá tra, Mực)">{tr("Thủy hải sản (Tôm, Cá tra, Mực)")}</option>
+                                    <option value="Trái cây tươi & chế biến (Thanh long, Sầu riêng)">{tr("Trái cây tươi & chế biến (Thanh long, Sầu riêng)")}</option>
+                                    <option value="Trà & thảo mộc xuất khẩu">{tr("Trà & thảo mộc xuất khẩu")}</option>
+                                    <option value="Thực phẩm chế biến đóng gói">{tr("Thực phẩm chế biến đóng gói")}</option>
                                   </select>
                                   <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                                 </div>
@@ -1006,15 +959,14 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                               {/* Thị trường xuất khẩu */}
                               <div>
                                 <label className="block text-[11px] font-medium text-slate-500 mb-1">
-                                  Thị trường xuất khẩu
-                                </label>
+                                  {tr("Thị trường xuất khẩu")}</label>
                                 <div className="flex items-center flex-wrap gap-1.5 p-1 rounded-xl border border-slate-200 bg-white min-h-[38px]">
                                   {product.exportMarkets.map((market) => (
                                     <span 
                                       key={market}
                                       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f1f5f9] text-slate-700 text-xs font-normal border border-slate-200/60"
                                     >
-                                      <span>{market}</span>
+                                      <span>{tr(market)}</span>
                                       <button
                                         type="button"
                                         onClick={() => handleRemoveMarketTag(product.id, market)}
@@ -1031,7 +983,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                       type="button"
                                       onClick={() => setMarketPickerFor(marketPickerFor === product.id ? null : product.id)}
                                       className="w-6 h-6 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer text-xs"
-                                      title="Thêm thị trường"
+                                      title={tr("Thêm thị trường")}
                                     >
                                       <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                                     </button>
@@ -1040,8 +992,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                     {marketPickerFor === product.id && (
                                       <div className="absolute left-0 mt-1 z-30 bg-white border border-slate-200 rounded-xl shadow-lg p-2 w-52 text-left space-y-1">
                                         <div className="text-[10px] font-bold text-slate-400 uppercase px-2 py-1">
-                                          Chọn thị trường
-                                        </div>
+                                          {tr("Chọn thị trường")}</div>
                                         {['EU', 'Hoa Kỳ', 'Nhật Bản', 'Trung Quốc', 'Hàn Quốc', 'Úc', 'Trung Đông', 'Canada', 'Anh (UK)'].filter(m => !product.exportMarkets.includes(m)).map(m => (
                                           <button
                                             key={m}
@@ -1052,7 +1003,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                             }}
                                             className="w-full text-left px-2.5 py-1 rounded-lg text-xs hover:bg-slate-100 text-slate-700 cursor-pointer flex items-center justify-between"
                                           >
-                                            <span>{m}</span>
+                                            <span>{tr(m)}</span>
                                             <Plus className="w-3 h-3 text-slate-400" />
                                           </button>
                                         ))}
@@ -1069,40 +1020,37 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                               
                               <div>
                                 <label className="block text-[11px] font-medium text-slate-500 mb-1">
-                                  Quy cách đóng gói
-                                </label>
+                                  {tr("Quy cách đóng gói")}</label>
                                 <input
                                   type="text"
                                   value={product.packaging}
                                   onChange={(e) => handleUpdateProduct(product.id, 'packaging', e.target.value)}
                                   className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs sm:text-[13px] text-slate-800 focus:outline-none focus:border-[#083832]"
-                                  placeholder="60kg/bao hoặc theo yêu cầu"
+                                  placeholder={tr("60kg/bao hoặc theo yêu cầu")}
                                 />
                               </div>
 
                               <div>
                                 <label className="block text-[11px] font-medium text-slate-500 mb-1">
-                                  MOQ (tấn)
-                                </label>
+                                  {tr("MOQ (tấn)")}</label>
                                 <input
                                   type="text"
                                   value={product.moq}
                                   onChange={(e) => handleUpdateProduct(product.id, 'moq', e.target.value)}
                                   className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs sm:text-[13px] text-slate-800 focus:outline-none focus:border-[#083832]"
-                                  placeholder="1"
+                                  placeholder={tr("1")}
                                 />
                               </div>
 
                               <div>
                                 <label className="block text-[11px] font-medium text-slate-500 mb-1">
-                                  Năng lực cung ứng (tấn/tháng)
-                                </label>
+                                  {tr("Năng lực cung ứng (tấn/tháng)")}</label>
                                 <input
                                   type="text"
                                   value={product.supplyCapacity}
                                   onChange={(e) => handleUpdateProduct(product.id, 'supplyCapacity', e.target.value)}
                                   className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs sm:text-[13px] text-slate-800 focus:outline-none focus:border-[#083832]"
-                                  placeholder="500"
+                                  placeholder={tr("500")}
                                 />
                               </div>
 
@@ -1112,11 +1060,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                             <div>
                               <div className="flex items-center justify-between mb-1">
                                 <label className="text-[11px] font-medium text-slate-500">
-                                  Mô tả sản phẩm
-                                </label>
+                                  {tr("Mô tả sản phẩm")}</label>
                                 <span className="text-[11px] text-slate-400 font-mono">
-                                  {product.description.length}/500
-                                </span>
+                                  {tr(product.description.length)}{tr("/500")}</span>
                               </div>
                               <textarea
                                 rows={2}
@@ -1124,7 +1070,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                 value={product.description}
                                 onChange={(e) => handleUpdateProduct(product.id, 'description', e.target.value)}
                                 className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs sm:text-[13px] text-slate-800 focus:outline-none focus:border-[#083832] resize-none leading-relaxed"
-                                placeholder="Mô tả chất lượng, tiêu chuẩn kiểm nghiệm, độ ẩm..."
+                                placeholder={tr("Mô tả chất lượng, tiêu chuẩn kiểm nghiệm, độ ẩm...")}
                               />
                             </div>
 
@@ -1141,14 +1087,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                       onClick={() => setCurrentStep(1)}
                       className="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
                     >
-                      Quay lại
-                    </button>
+                      {tr("Quay lại")}</button>
                     <button 
                       type="button"
                       onClick={() => setCurrentStep(3)}
                       className="px-7 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all shadow-xs cursor-pointer active:scale-95"
                     >
-                      <span>Tiếp tục (Tải lên giấy phép)</span>
+                      <span>{tr("Tiếp tục (Tải lên giấy phép)")}</span>
                       <ArrowRight className="w-4 h-4 stroke-[2.2]" />
                     </button>
                   </div>
@@ -1168,15 +1113,12 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <span className="text-xs sm:text-[13px] font-bold text-slate-900">
-                          Cấp độ thẩm định dự kiến:
-                        </span>
+                          {tr("Cấp độ thẩm định dự kiến:")}</span>
                         <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                          🛡️ L2 Enhanced Verified
-                        </span>
+                          {tr("🛡️ L2 Enhanced Verified")}</span>
                       </div>
                       <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                        Hồ sơ của bạn đã có <strong>Giấy ĐKKD</strong> (+ L1) và <strong>{certificates.length} chứng nhận quốc tế</strong> hợp lệ (+ L2). Đạt cấp độ L2 giúp hồ sơ hiển thị ưu tiên với hơn 10,000+ Buyer quốc tế tại EU & Bắc Mỹ.
-                      </p>
+                        {tr("Hồ sơ của bạn đã có ")}<strong>{tr("Giấy ĐKKD")}</strong> {tr(" (+ L1) và ")}<strong>{tr(certificates.length)} {tr(" chứng nhận quốc tế")}</strong> {tr(" hợp lệ (+ L2). Đạt cấp độ L2 giúp hồ sơ hiển thị ưu tiên với hơn 10,000+ Buyer quốc tế tại EU & Bắc Mỹ.")}</p>
                     </div>
                   </div>
 
@@ -1187,20 +1129,16 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">
                         <span className="w-5 h-5 rounded-full bg-[#083832] text-white text-[11px] font-bold flex items-center justify-center">
-                          1
-                        </span>
+                          {tr("1")}</span>
                         <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                          Giấy chứng nhận Đăng ký Doanh nghiệp (ĐKKD / ERC) *
-                        </h3>
+                          {tr("Giấy chứng nhận Đăng ký Doanh nghiệp (ĐKKD / ERC) *")}</h3>
                       </div>
                       <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-100">
-                        Bắt buộc cho L1
-                      </span>
+                        {tr("Bắt buộc cho L1")}</span>
                     </div>
 
                     <p className="text-[11px] sm:text-xs text-slate-500 font-normal">
-                      Tải lên bản chụp hoặc quét bản gốc có dấu mộc đỏ của Sở Kế hoạch và Đầu tư (Hỗ trợ PDF, PNG, JPG tối đa 15MB).
-                    </p>
+                      {tr("Tải lên bản chụp hoặc quét bản gốc có dấu mộc đỏ của Sở Kế hoạch và Đầu tư (Hỗ trợ PDF, PNG, JPG tối đa 15MB).")}</p>
 
                     {/* Uploaded File Card Display */}
                     {hasUploadedDkkd ? (
@@ -1211,19 +1149,18 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                           <div className="flex items-start gap-3 min-w-0">
                             <div className="w-10 h-10 rounded-xl bg-white border border-rose-200 shadow-xs flex flex-col items-center justify-center text-rose-600 shrink-0">
                               <FileText className="w-5 h-5" />
-                              <span className="text-[8px] font-bold -mt-0.5 uppercase tracking-tighter">PDF</span>
+                              <span className="text-[8px] font-bold -mt-0.5 uppercase tracking-tighter">{tr("PDF")}</span>
                             </div>
 
                             <div className="min-w-0">
                               <p className="text-xs sm:text-[13px] font-bold text-slate-900 truncate">
-                                {dkkdData.fileName}
+                                {tr(dkkdData.fileName)}
                               </p>
                               <p className="text-[11px] text-slate-500 mt-0.5">
-                                {dkkdData.fileSize} • Đã quét AI OCR hợp lệ • Tải lên: 15/03/2024
-                              </p>
+                                {tr(dkkdData.fileSize)} {tr(" • Đã quét AI OCR hợp lệ • Tải lên: 15/03/2024")}</p>
                               <div className="inline-flex items-center gap-1.5 mt-1.5 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-medium border border-emerald-200/60">
                                 <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.2]" />
-                                <span>Dữ liệu khớp 100% Cổng thông tin Quốc gia (MST: {formData.taxCode})</span>
+                                <span>{tr("Dữ liệu khớp 100% Cổng thông tin Quốc gia (MST: ")}{tr(formData.taxCode)}{tr(")")}</span>
                               </div>
                             </div>
                           </div>
@@ -1239,7 +1176,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                 issuer: dkkdData.issuePlace
                               })}
                               className="p-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-[#083832] hover:border-[#083832] transition-colors cursor-pointer"
-                              title="Xem trước tài liệu"
+                              title={tr("Xem trước tài liệu")}
                             >
                               <Eye className="w-4 h-4" />
                             </button>
@@ -1247,7 +1184,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                               type="button"
                               onClick={() => setHasUploadedDkkd(false)}
                               className="p-2 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-200 transition-colors cursor-pointer"
-                              title="Xóa tài liệu"
+                              title={tr("Xóa tài liệu")}
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -1258,16 +1195,16 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                         {/* OCR Extracted Details Grid */}
                         <div className="mt-3 pt-3 border-t border-teal-200/50 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-left">
                           <div className="bg-white/80 p-2 rounded-xl border border-teal-100">
-                            <span className="text-[10px] text-slate-400 uppercase font-semibold block">Mã số thuế / MST</span>
-                            <span className="text-xs font-bold text-slate-800">{dkkdData.docNumber}</span>
+                            <span className="text-[10px] text-slate-400 uppercase font-semibold block">{tr("Mã số thuế / MST")}</span>
+                            <span className="text-xs font-bold text-slate-800">{tr(dkkdData.docNumber)}</span>
                           </div>
                           <div className="bg-white/80 p-2 rounded-xl border border-teal-100">
-                            <span className="text-[10px] text-slate-400 uppercase font-semibold block">Ngày cấp lần đầu</span>
-                            <span className="text-xs font-bold text-slate-800">{dkkdData.issueDate}</span>
+                            <span className="text-[10px] text-slate-400 uppercase font-semibold block">{tr("Ngày cấp lần đầu")}</span>
+                            <span className="text-xs font-bold text-slate-800">{tr(dkkdData.issueDate)}</span>
                           </div>
                           <div className="bg-white/80 p-2 rounded-xl border border-teal-100 sm:col-span-2">
-                            <span className="text-[10px] text-slate-400 uppercase font-semibold block">Cơ quan cấp</span>
-                            <span className="text-xs font-bold text-slate-800 truncate block">{dkkdData.issuePlace}</span>
+                            <span className="text-[10px] text-slate-400 uppercase font-semibold block">{tr("Cơ quan cấp")}</span>
+                            <span className="text-xs font-bold text-slate-800 truncate block">{tr(dkkdData.issuePlace)}</span>
                           </div>
                         </div>
 
@@ -1280,11 +1217,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                       >
                         <UploadCloud className="w-8 h-8 text-slate-400 mx-auto mb-2" />
                         <p className="text-xs sm:text-sm font-semibold text-slate-800">
-                          Nhấp để tải lên hoặc kéo thả Giấy phép ĐKKD vào đây
-                        </p>
+                          {tr("Nhấp để tải lên hoặc kéo thả Giấy phép ĐKKD vào đây")}</p>
                         <p className="text-[11px] text-slate-400 mt-1">
-                          Hỗ trợ định dạng PDF, JPG, PNG tối đa 15MB
-                        </p>
+                          {tr("Hỗ trợ định dạng PDF, JPG, PNG tối đa 15MB")}</p>
                       </div>
                     )}
                   </div>
@@ -1296,26 +1231,21 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <div className="flex items-center gap-2">
                         <span className="w-5 h-5 rounded-full bg-[#083832] text-white text-[11px] font-bold flex items-center justify-center">
-                          2
-                        </span>
+                          {tr("2")}</span>
                         <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                          Chứng nhận tiêu chuẩn xuất khẩu & An toàn thực phẩm
-                        </h3>
+                          {tr("Chứng nhận tiêu chuẩn xuất khẩu & An toàn thực phẩm")}</h3>
                       </div>
                       <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                        Nâng hạng L2 / L3
-                      </span>
+                        {tr("Nâng hạng L2 / L3")}</span>
                     </div>
 
                     <p className="text-[11px] sm:text-xs text-slate-500 font-normal">
-                      Cung cấp các chứng nhận còn hiệu lực để tăng tỷ lệ chốt đơn RFQ với Buyer toàn cầu.
-                    </p>
+                      {tr("Cung cấp các chứng nhận còn hiệu lực để tăng tỷ lệ chốt đơn RFQ với Buyer toàn cầu.")}</p>
 
                     {/* Quick suggested certificates pills */}
                     <div>
                       <span className="text-[11px] font-semibold text-slate-600 block mb-1.5">
-                        Thêm nhanh các chứng nhận phổ biến:
-                      </span>
+                        {tr("Thêm nhanh các chứng nhận phổ biến:")}</span>
                       <div className="flex flex-wrap gap-1.5">
                         {SUGGESTED_CERTS.map(cert => (
                           <button
@@ -1325,7 +1255,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                             className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-white hover:bg-[#083832] text-slate-700 hover:text-white border border-slate-200 hover:border-[#083832] transition-colors cursor-pointer flex items-center gap-1 active:scale-95 shadow-2xs"
                           >
                             <Plus className="w-3 h-3 stroke-[2.5]" />
-                            <span>{cert}</span>
+                            <span>{tr(cert)}</span>
                           </button>
                         ))}
                       </div>
@@ -1348,22 +1278,21 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                               <div className="min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">
                                   <h4 className="text-xs sm:text-[13px] font-bold text-slate-900">
-                                    {cert.name}
+                                    {tr(cert.name)}
                                   </h4>
                                   <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">
-                                    ✓ Hợp lệ
-                                  </span>
+                                    {tr("✓ Hợp lệ")}</span>
                                 </div>
 
                                 <div className="text-[11px] text-slate-500 mt-1 flex flex-wrap gap-x-3 gap-y-1">
-                                  <span>Tổ chức cấp: <strong className="text-slate-700">{cert.issuer}</strong></span>
-                                  <span>Số hiệu: <strong className="text-slate-700">{cert.certNumber}</strong></span>
-                                  <span>Hạn đến: <strong className="text-slate-700">{cert.expiryDate}</strong></span>
+                                  <span>{tr("Tổ chức cấp: ")}<strong className="text-slate-700">{tr(cert.issuer)}</strong></span>
+                                  <span>{tr("Số hiệu: ")}<strong className="text-slate-700">{tr(cert.certNumber)}</strong></span>
+                                  <span>{tr("Hạn đến: ")}<strong className="text-slate-700">{tr(cert.expiryDate)}</strong></span>
                                 </div>
 
                                 <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5">
                                   <FileText className="w-3.5 h-3.5 text-slate-400" />
-                                  <span>{cert.fileName} ({cert.fileSize})</span>
+                                  <span>{tr(cert.fileName)} {tr(" (")}{tr(cert.fileSize)}{tr(")")}</span>
                                 </div>
                               </div>
                             </div>
@@ -1379,7 +1308,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                   issuer: cert.issuer
                                 })}
                                 className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:text-[#083832] transition-colors cursor-pointer"
-                                title="Xem trước tài liệu"
+                                title={tr("Xem trước tài liệu")}
                               >
                                 <Eye className="w-4 h-4" />
                               </button>
@@ -1387,7 +1316,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                                 type="button"
                                 onClick={() => handleRemoveCert(cert.id)}
                                 className="p-2 rounded-xl bg-slate-50 hover:bg-rose-50 border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-200 transition-colors cursor-pointer"
-                                title="Xóa chứng chỉ"
+                                title={tr("Xóa chứng chỉ")}
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
@@ -1406,12 +1335,12 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                         className="w-full py-2.5 rounded-xl border border-dashed border-slate-300 hover:border-[#083832] text-xs font-semibold text-slate-700 hover:text-[#083832] bg-slate-50/70 hover:bg-slate-100 flex items-center justify-center gap-2 transition-all cursor-pointer"
                       >
                         <Plus className="w-4 h-4" />
-                        <span>+ Thêm chứng nhận quốc tế khác</span>
+                        <span>{tr("+ Thêm chứng nhận quốc tế khác")}</span>
                       </button>
                     ) : (
                       <form onSubmit={handleAddNewCertSubmit} className="p-4 rounded-2xl border border-teal-200 bg-teal-50/20 space-y-3 text-left">
                         <div className="flex items-center justify-between">
-                          <h4 className="text-xs font-bold text-slate-900">Thêm chứng nhận mới</h4>
+                          <h4 className="text-xs font-bold text-slate-900">{tr("Thêm chứng nhận mới")}</h4>
                           <button 
                             type="button" 
                             onClick={() => setShowAddCertForm(false)}
@@ -1423,42 +1352,42 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-[11px] font-semibold text-slate-700 mb-1">Tên chứng nhận *</label>
+                            <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Tên chứng nhận *")}</label>
                             <input 
                               type="text" 
                               required
                               value={newCert.name}
                               onChange={(e) => setNewCert({ ...newCert, name: e.target.value })}
-                              placeholder="VD: GlobalG.A.P., VietGAP..."
+                              placeholder={tr("VD: GlobalG.A.P., VietGAP...")}
                               className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-white focus:outline-none focus:border-[#083832]"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-semibold text-slate-700 mb-1">Tổ chức chứng nhận *</label>
+                            <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Tổ chức chứng nhận *")}</label>
                             <input 
                               type="text" 
                               required
                               value={newCert.issuer}
                               onChange={(e) => setNewCert({ ...newCert, issuer: e.target.value })}
-                              placeholder="VD: SGS, Bureau Veritas, TUV..."
+                              placeholder={tr("VD: SGS, Bureau Veritas, TUV...")}
                               className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-white focus:outline-none focus:border-[#083832]"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-semibold text-slate-700 mb-1">Số chứng chỉ / Serial</label>
+                            <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Số chứng chỉ / Serial")}</label>
                             <input 
                               type="text" 
                               value={newCert.certNumber}
                               onChange={(e) => setNewCert({ ...newCert, certNumber: e.target.value })}
-                              placeholder="VD: VN-2024-CERT"
+                              placeholder={tr("VD: VN-2024-CERT")}
                               className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-white focus:outline-none focus:border-[#083832]"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-semibold text-slate-700 mb-1">Ngày hết hạn *</label>
+                            <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Ngày hết hạn *")}</label>
                             <input 
                               type="date" 
                               required
@@ -1470,7 +1399,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                         </div>
 
                         <div>
-                          <label className="block text-[11px] font-semibold text-slate-700 mb-1">Đính kèm tập tin (PDF/JPG) *</label>
+                          <label className="block text-[11px] font-semibold text-slate-700 mb-1">{tr("Đính kèm tập tin (PDF/JPG) *")}</label>
                           <input 
                             type="file" 
                             className="w-full text-xs text-slate-500 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#083832] file:text-white hover:file:bg-[#062924] cursor-pointer"
@@ -1483,14 +1412,12 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                             onClick={() => setShowAddCertForm(false)}
                             className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50"
                           >
-                            Hủy
-                          </button>
+                            {tr("Hủy")}</button>
                           <button
                             type="submit"
                             className="px-4 py-1.5 rounded-lg bg-[#083832] text-white text-xs font-semibold hover:bg-[#062924]"
                           >
-                            Lưu chứng nhận
-                          </button>
+                            {tr("Lưu chứng nhận")}</button>
                         </div>
                       </form>
                     )}
@@ -1504,43 +1431,37 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="w-5 h-5 rounded-full bg-[#083832] text-white text-[11px] font-bold flex items-center justify-center">
-                          3
-                        </span>
+                          {tr("3")}</span>
                         <h3 className="text-xs sm:text-sm font-bold text-slate-900">
-                          Mã số vùng trồng (PUC) & Mã cơ sở đóng gói (PHC)
-                        </h3>
+                          {tr("Mã số vùng trồng (PUC) & Mã cơ sở đóng gói (PHC)")}</h3>
                       </div>
                       <span className="text-[10px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                        Tùy chọn xuất khẩu
-                      </span>
+                        {tr("Tùy chọn xuất khẩu")}</span>
                     </div>
 
                     <p className="text-[11px] sm:text-xs text-slate-500 font-normal">
-                      Cực kỳ quan trọng với các lô hàng Nông sản & Trái cây xuất khẩu sang thị trường Châu Âu (EU), Mỹ và Trung Quốc (GACC).
-                    </p>
+                      {tr("Cực kỳ quan trọng với các lô hàng Nông sản & Trái cây xuất khẩu sang thị trường Châu Âu (EU), Mỹ và Trung Quốc (GACC).")}</p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                          Mã số vùng trồng (PUC)
-                        </label>
+                          {tr("Mã số vùng trồng (PUC)")}</label>
                         <input 
                           type="text"
                           value={pucCode}
                           onChange={(e) => setPucCode(e.target.value)}
-                          placeholder="VD: VN-DL-0489"
+                          placeholder={tr("VD: VN-DL-0489")}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-[#083832]"
                         />
                       </div>
                       <div>
                         <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-                          Mã cơ sở đóng gói (PHC)
-                        </label>
+                          {tr("Mã cơ sở đóng gói (PHC)")}</label>
                         <input 
                           type="text"
                           value={phcCode}
                           onChange={(e) => setPhcCode(e.target.value)}
-                          placeholder="VD: PHC-VN-102"
+                          placeholder={tr("VD: PHC-VN-102")}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-[#083832]"
                         />
                       </div>
@@ -1556,8 +1477,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-start gap-2.5 text-slate-600">
                       <Lock className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
                       <p className="text-[11px] leading-relaxed">
-                        <strong>Bảo mật thông tin 256-bit:</strong> Toàn bộ giấy phép và chứng nhận chỉ phục vụ quy trình thẩm định nội bộ của VYBE Trade và sẽ được che mờ các thông tin nhạy cảm trước khi hiển thị tóm tắt chứng nhận với Buyer quốc tế.
-                      </p>
+                        <strong>{tr("Bảo mật thông tin 256-bit:")}</strong> {tr(" Toàn bộ giấy phép và chứng nhận chỉ phục vụ quy trình thẩm định nội bộ của VYBE Trade và sẽ được che mờ các thông tin nhạy cảm trước khi hiển thị tóm tắt chứng nhận với Buyer quốc tế.")}</p>
                     </div>
 
                     {/* Legal Checkbox */}
@@ -1569,8 +1489,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                         className="mt-0.5 rounded text-teal-800 focus:ring-teal-700 cursor-pointer"
                       />
                       <span className="text-xs text-slate-700 leading-snug">
-                        Tôi cam kết các chứng chỉ, giấy phép tải lên là tài liệu thật, hợp pháp và doanh nghiệp hoàn toàn chịu trách nhiệm trước pháp luật về tính chính xác của các hồ sơ này.
-                      </span>
+                        {tr("Tôi cam kết các chứng chỉ, giấy phép tải lên là tài liệu thật, hợp pháp và doanh nghiệp hoàn toàn chịu trách nhiệm trước pháp luật về tính chính xác của các hồ sơ này.")}</span>
                     </label>
 
                   </div>
@@ -1584,15 +1503,14 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                       onClick={() => setCurrentStep(2)}
                       className="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
                     >
-                      Quay lại
-                    </button>
+                      {tr("Quay lại")}</button>
                     <button 
                       type="button"
                       disabled={!agreeCommitment || !hasUploadedDkkd}
                       onClick={() => setCurrentStep(4)}
                       className="px-7 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all shadow-xs cursor-pointer active:scale-95"
                     >
-                      <span>Tiếp tục (Xem lại hồ sơ)</span>
+                      <span>{tr("Tiếp tục (Xem lại hồ sơ)")}</span>
                       <ArrowRight className="w-4 h-4 stroke-[2.2]" />
                     </button>
                   </div>
@@ -1609,11 +1527,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     </div>
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-slate-900">
-                        Hồ sơ đủ điều kiện cấp chứng thư L2 Enhanced Verified
-                      </h4>
+                        {tr("Hồ sơ đủ điều kiện cấp chứng thư L2 Enhanced Verified")}</h4>
                       <p className="text-[11px] sm:text-xs text-slate-600 mt-0.5">
-                        Dữ liệu pháp lý và {certificates.length} chứng nhận quốc tế đã qua bước kiểm tra OCR tự động.
-                      </p>
+                        {tr("Dữ liệu pháp lý và ")}{tr(certificates.length)} {tr(" chứng nhận quốc tế đã qua bước kiểm tra OCR tự động.")}</p>
                     </div>
                   </div>
 
@@ -1623,14 +1539,14 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     {/* Section 1 Summary */}
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
                       <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-                        <span className="font-bold text-slate-900 text-xs sm:text-[13px]">1. Doanh nghiệp</span>
-                        <button onClick={() => setCurrentStep(1)} className="text-[11px] text-teal-700 font-semibold hover:underline">Sửa</button>
+                        <span className="font-bold text-slate-900 text-xs sm:text-[13px]">{tr("1. Doanh nghiệp")}</span>
+                        <button onClick={() => setCurrentStep(1)} className="text-[11px] text-teal-700 font-semibold hover:underline">{tr("Sửa")}</button>
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-[11px]">
-                        <div><span className="text-slate-500">Tên:</span> <strong className="text-slate-900">{formData.companyName}</strong></div>
-                        <div><span className="text-slate-500">MST:</span> <strong className="text-slate-900">{formData.taxCode}</strong></div>
-                        <div><span className="text-slate-500">Năm thành lập:</span> <strong className="text-slate-900">{formData.establishedYear}</strong></div>
-                        <div><span className="text-slate-500">Loại hình:</span> <strong className="text-slate-900">{formData.businessType}</strong></div>
+                        <div><span className="text-slate-500">{tr("Tên:")}</span> <strong className="text-slate-900">{formData.companyName}</strong></div>
+                        <div><span className="text-slate-500">{tr("MST:")}</span> <strong className="text-slate-900">{tr(formData.taxCode)}</strong></div>
+                        <div><span className="text-slate-500">{tr("Năm thành lập:")}</span> <strong className="text-slate-900">{tr(formData.establishedYear)}</strong></div>
+                        <div><span className="text-slate-500">{tr("Loại hình:")}</span> <strong className="text-slate-900">{tr(formData.businessType)}</strong></div>
                       </div>
                     </div>
 
@@ -1638,37 +1554,34 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5">
                       <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
                         <span className="font-bold text-slate-900 text-xs sm:text-[13px]">
-                          2. Sản phẩm & Năng lực ({products.length} sản phẩm)
-                        </span>
+                          {tr("2. Sản phẩm & Năng lực (")}{tr(products.length)} {tr(" sản phẩm)")}</span>
                         <button 
                           onClick={() => setCurrentStep(2)} 
                           className="text-[11px] text-teal-700 font-semibold hover:underline cursor-pointer"
                         >
-                          Sửa
-                        </button>
+                          {tr("Sửa")}</button>
                       </div>
                       <div className="space-y-2 text-[11px] text-slate-700">
                         {products.map(p => (
                           <div key={p.id} className="flex items-center justify-between flex-wrap gap-1 p-2 rounded-xl bg-white border border-slate-200/60">
                             <div className="flex items-center gap-2">
-                              <img src={p.image} alt={p.name} className="w-8 h-8 rounded-lg object-cover border border-slate-200" />
+                              <img src={p.image} alt={tr(p.name)} className="w-8 h-8 rounded-lg object-cover border border-slate-200" />
                               <div>
                                 <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                                  <span>{p.name}</span>
+                                  <span>{tr(p.name)}</span>
                                   {p.isMain && (
                                     <span className="text-[10px] text-teal-800 bg-teal-50 px-1.5 py-0.5 rounded-full font-semibold border border-teal-200">
-                                      Chính
-                                    </span>
+                                      {tr("Chính")}</span>
                                   )}
                                 </div>
                                 <div className="text-[10px] text-slate-400">
-                                  {p.category} • Thị trường: {p.exportMarkets.join(', ')}
+                                  {tr(p.category)} {tr(" • Thị trường: ")}{p.exportMarkets.map(tr).join(', ')}
                                 </div>
                               </div>
                             </div>
                             <div className="text-right">
-                              <span className="font-semibold text-slate-800">{p.supplyCapacity} tấn/tháng</span>
-                              <span className="text-[10px] text-slate-400 block">MOQ: {p.moq} tấn</span>
+                              <span className="font-semibold text-slate-800">{tr(p.supplyCapacity)} {tr(" tấn/tháng")}</span>
+                              <span className="text-[10px] text-slate-400 block">{tr("MOQ: ")}{tr(p.moq)} {tr(" tấn")}</span>
                             </div>
                           </div>
                         ))}
@@ -1678,18 +1591,18 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                     {/* Section 3 Summary */}
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
                       <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-                        <span className="font-bold text-slate-900 text-xs sm:text-[13px]">3. Giấy phép & Chứng nhận đã tải</span>
-                        <button onClick={() => setCurrentStep(3)} className="text-[11px] text-teal-700 font-semibold hover:underline">Sửa</button>
+                        <span className="font-bold text-slate-900 text-xs sm:text-[13px]">{tr("3. Giấy phép & Chứng nhận đã tải")}</span>
+                        <button onClick={() => setCurrentStep(3)} className="text-[11px] text-teal-700 font-semibold hover:underline">{tr("Sửa")}</button>
                       </div>
                       <div className="space-y-1.5 text-[11px]">
                         <div className="flex items-center gap-1.5 text-slate-800">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>Giấy phép ĐKKD: <strong>{dkkdData.fileName}</strong> (Số: {dkkdData.docNumber})</span>
+                          <span>{tr("Giấy phép ĐKKD: ")}<strong>{tr(dkkdData.fileName)}</strong> {tr(" (Số: ")}{tr(dkkdData.docNumber)}{tr(")")}</span>
                         </div>
                         {certificates.map(c => (
                           <div key={c.id} className="flex items-center gap-1.5 text-slate-800">
                             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>{c.name} (Cấp bởi: {c.issuer} - Hạn đến: {c.expiryDate})</span>
+                            <span>{tr(c.name)} {tr(" (Cấp bởi: ")}{tr(c.issuer)} {tr(" - Hạn đến: ")}{tr(c.expiryDate)}{tr(")")}</span>
                           </div>
                         ))}
                       </div>
@@ -1697,15 +1610,14 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
 
                   </div>
 
-                  {submitError && <p role="alert" className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700">{submitError}</p>}
+                  {submitError && <p role="alert" className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700">{tr(submitError)}</p>}
                   <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100">
                     <button 
                       type="button"
                       onClick={() => setCurrentStep(3)}
                       className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
                     >
-                      Quay lại Bước 3
-                    </button>
+                      {tr("Quay lại Bước 3")}</button>
                     <div className="flex items-center gap-2.5 w-full sm:w-auto">
                       <button 
                         type="button"
@@ -1713,14 +1625,14 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                         className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl border border-teal-600 text-teal-800 bg-teal-50 hover:bg-teal-100 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors shadow-2xs"
                       >
                         <Building2 className="w-3.5 h-3.5 text-teal-700" />
-                        <span>Xem trước Workspace</span>
+                        <span>{tr("Xem trước Workspace")}</span>
                       </button>
                       <button 
                         type="button"
                         onClick={finish}
                         className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-95"
                       >
-                        <span>Hoàn tất & Gửi hồ sơ</span>
+                        <span>{tr("Hoàn tất & Gửi hồ sơ")}</span>
                         <Check className="w-4 h-4 stroke-[2.5]" />
                       </button>
                     </div>
@@ -1748,11 +1660,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 leading-tight">
-                    Thêm sản phẩm xuất khẩu mới
-                  </h3>
+                    {tr("Thêm sản phẩm xuất khẩu mới")}</h3>
                   <p className="text-[11px] text-slate-500 mt-0.5">
-                    Khai báo thông số kỹ thuật, hình ảnh và năng lực cung ứng
-                  </p>
+                    {tr("Khai báo thông số kỹ thuật, hình ảnh và năng lực cung ứng")}</p>
                 </div>
               </div>
               <button 
@@ -1770,8 +1680,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
               {/* Quick Presets Bar */}
               <div className="p-3 rounded-2xl bg-teal-50/50 border border-teal-200/60">
                 <span className="text-[11px] font-bold text-teal-900 block mb-1.5">
-                  Gợi ý thêm nhanh nông sản xuất khẩu chủ lực:
-                </span>
+                  {tr("Gợi ý thêm nhanh nông sản xuất khẩu chủ lực:")}</span>
                 <div className="flex flex-wrap gap-2">
                   {PRESET_PRODUCTS.map((preset) => (
                     <button
@@ -1790,7 +1699,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                       className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white hover:bg-[#083832] text-slate-700 hover:text-white border border-slate-200 hover:border-[#083832] transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
                     >
                       <Plus className="w-3 h-3" />
-                      <span>{preset.name}</span>
+                      <span>{tr(preset.name)}</span>
                     </button>
                   ))}
                 </div>
@@ -1799,10 +1708,10 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
               {/* Product Image & Main Checkbox */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70">
                 <div className="relative group w-20 h-20 rounded-xl overflow-hidden bg-slate-200 shrink-0 border border-slate-300">
-                  <img src={newProductForm.image} alt="Preview" className="w-full h-full object-cover" />
+                  <img src={newProductForm.image} alt={tr("Preview")} className="w-full h-full object-cover" />
                   <label className="absolute inset-0 bg-black/50 text-white flex flex-col items-center justify-center text-[9px] font-semibold cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
                     <Camera className="w-4 h-4" />
-                    <span>Đổi ảnh</span>
+                    <span>{tr("Đổi ảnh")}</span>
                     <input 
                       type="file" 
                       accept="image/*" 
@@ -1818,10 +1727,9 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 </div>
 
                 <div className="flex-1 space-y-1.5">
-                  <div className="text-xs font-semibold text-slate-800">Hình ảnh sản phẩm</div>
+                  <div className="text-xs font-semibold text-slate-800">{tr("Hình ảnh sản phẩm")}</div>
                   <p className="text-[11px] text-slate-500 leading-snug">
-                    Tải lên hình ảnh sản phẩm thực tế hoặc chọn mẫu nông sản đạt chuẩn ở trên.
-                  </p>
+                    {tr("Tải lên hình ảnh sản phẩm thực tế hoặc chọn mẫu nông sản đạt chuẩn ở trên.")}</p>
                   <label className="flex items-center gap-2 pt-1 cursor-pointer">
                     <input 
                       type="checkbox"
@@ -1830,8 +1738,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                       className="rounded text-teal-800 focus:ring-teal-700 cursor-pointer"
                     />
                     <span className="text-xs font-medium text-slate-700">
-                      Đặt làm <strong>Sản phẩm chính</strong> của doanh nghiệp
-                    </span>
+                      {tr("Đặt làm ")}<strong>{tr("Sản phẩm chính")}</strong> {tr(" của doanh nghiệp")}</span>
                   </label>
                 </div>
               </div>
@@ -1839,14 +1746,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
               {/* Product Name */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Tên sản phẩm *
-                </label>
+                  {tr("Tên sản phẩm *")}</label>
                 <input 
                   type="text"
                   required
                   value={newProductForm.name}
                   onChange={(e) => setNewProductForm({ ...newProductForm, name: e.target.value })}
-                  placeholder="VD: Cà phê Robusta Đắk Lắk, Gạo ST25..."
+                  placeholder={tr("VD: Cà phê Robusta Đắk Lắk, Gạo ST25...")}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-[#083832]"
                 />
               </div>
@@ -1855,35 +1761,33 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Danh mục ngành hàng *
-                  </label>
+                    {tr("Danh mục ngành hàng *")}</label>
                   <select
                     value={newProductForm.category}
                     onChange={(e) => setNewProductForm({ ...newProductForm, category: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 focus:outline-none focus:border-[#083832]"
                   >
-                    <option value="Cà phê & sản phẩm từ cà phê">Cà phê & sản phẩm từ cà phê</option>
-                    <option value="Hạt điều & sản phẩm từ điều">Hạt điều & sản phẩm từ điều</option>
-                    <option value="Gạo & ngũ cốc xuất khẩu">Gạo & ngũ cốc xuất khẩu</option>
-                    <option value="Hồ tiêu & gia vị xuất khẩu">Hồ tiêu & gia vị xuất khẩu</option>
-                    <option value="Thủy hải sản (Tôm, Cá tra, Mực)">Thủy hải sản (Tôm, Cá tra, Mực)</option>
-                    <option value="Trái cây tươi & chế biến (Thanh long, Sầu riêng)">Trái cây tươi & chế biến (Thanh long, Sầu riêng)</option>
-                    <option value="Trà & thảo mộc xuất khẩu">Trà & thảo mộc xuất khẩu</option>
-                    <option value="Thực phẩm chế biến đóng gói">Thực phẩm chế biến đóng gói</option>
+                    <option value="Cà phê & sản phẩm từ cà phê">{tr("Cà phê & sản phẩm từ cà phê")}</option>
+                    <option value="Hạt điều & sản phẩm từ điều">{tr("Hạt điều & sản phẩm từ điều")}</option>
+                    <option value="Gạo & ngũ cốc xuất khẩu">{tr("Gạo & ngũ cốc xuất khẩu")}</option>
+                    <option value="Hồ tiêu & gia vị xuất khẩu">{tr("Hồ tiêu & gia vị xuất khẩu")}</option>
+                    <option value="Thủy hải sản (Tôm, Cá tra, Mực)">{tr("Thủy hải sản (Tôm, Cá tra, Mực)")}</option>
+                    <option value="Trái cây tươi & chế biến (Thanh long, Sầu riêng)">{tr("Trái cây tươi & chế biến (Thanh long, Sầu riêng)")}</option>
+                    <option value="Trà & thảo mộc xuất khẩu">{tr("Trà & thảo mộc xuất khẩu")}</option>
+                    <option value="Thực phẩm chế biến đóng gói">{tr("Thực phẩm chế biến đóng gói")}</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Thị trường xuất khẩu mục tiêu
-                  </label>
+                    {tr("Thị trường xuất khẩu mục tiêu")}</label>
                   <div className="flex flex-wrap gap-1.5 p-1 rounded-xl border border-slate-200 bg-white min-h-[42px] items-center">
                     {newProductForm.exportMarkets.map((market) => (
                       <span 
                         key={market}
                         className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs"
                       >
-                        <span>{market}</span>
+                        <span>{tr(market)}</span>
                         <button
                           type="button"
                           onClick={() => setNewProductForm({
@@ -1906,7 +1810,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                         })}
                         className="text-[11px] text-teal-800 hover:bg-teal-50 px-2 py-0.5 rounded-md border border-dashed border-teal-200"
                       >
-                        + {m}
+                        {tr("+ ")}{tr(m)}
                       </button>
                     ))}
                   </div>
@@ -1917,37 +1821,34 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Quy cách đóng gói
-                  </label>
+                    {tr("Quy cách đóng gói")}</label>
                   <input 
                     type="text"
                     value={newProductForm.packaging}
                     onChange={(e) => setNewProductForm({ ...newProductForm, packaging: e.target.value })}
-                    placeholder="VD: Bao 25kg, thùng 10kg..."
+                    placeholder={tr("VD: Bao 25kg, thùng 10kg...")}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-[#083832]"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    MOQ (tấn)
-                  </label>
+                    {tr("MOQ (tấn)")}</label>
                   <input 
                     type="text"
                     value={newProductForm.moq}
                     onChange={(e) => setNewProductForm({ ...newProductForm, moq: e.target.value })}
-                    placeholder="VD: 1"
+                    placeholder={tr("VD: 1")}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-[#083832]"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Năng lực cung ứng (tấn/tháng)
-                  </label>
+                    {tr("Năng lực cung ứng (tấn/tháng)")}</label>
                   <input 
                     type="text"
                     value={newProductForm.supplyCapacity}
                     onChange={(e) => setNewProductForm({ ...newProductForm, supplyCapacity: e.target.value })}
-                    placeholder="VD: 500"
+                    placeholder={tr("VD: 500")}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-[#083832]"
                   />
                 </div>
@@ -1957,18 +1858,16 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-semibold text-slate-700">
-                    Mô tả sản phẩm
-                  </label>
+                    {tr("Mô tả sản phẩm")}</label>
                   <span className="text-[11px] text-slate-400 font-mono">
-                    {newProductForm.description.length}/500
-                  </span>
+                    {tr(newProductForm.description.length)}{tr("/500")}</span>
                 </div>
                 <textarea
                   rows={2}
                   maxLength={500}
                   value={newProductForm.description}
                   onChange={(e) => setNewProductForm({ ...newProductForm, description: e.target.value })}
-                  placeholder="Mô tả chất lượng, tiêu chuẩn kiểm nghiệm, độ ẩm..."
+                  placeholder={tr("Mô tả chất lượng, tiêu chuẩn kiểm nghiệm, độ ẩm...")}
                   className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-[#083832] resize-none"
                 />
               </div>
@@ -1980,14 +1879,12 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                   onClick={() => setShowAddProductModal(false)}
                   className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
                 >
-                  Hủy
-                </button>
+                  {tr("Hủy")}</button>
                 <button
                   type="submit"
                   className="px-6 py-2 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-semibold transition-all shadow-xs cursor-pointer active:scale-95"
                 >
-                  Lưu sản phẩm
-                </button>
+                  {tr("Lưu sản phẩm")}</button>
               </div>
 
             </form>
@@ -2009,15 +1906,14 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 leading-tight">
-                    {previewDoc.title}
+                    {tr(previewDoc.title)}
                   </h3>
                   <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
-                    <span>{previewDoc.type}</span>
-                    <span>•</span>
+                    <span>{tr(previewDoc.type)}</span>
+                    <span>{tr("•")}</span>
                     <span className="text-emerald-700 font-semibold flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3 stroke-[2.2]" />
-                      Đã xác thực OCR
-                    </span>
+                      {tr("Đã xác thực OCR")}</span>
                   </div>
                 </div>
               </div>
@@ -2036,61 +1932,58 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 {/* Official Vietnam Crest / Header Mockup */}
                 <div className="text-center pb-5 border-b border-slate-200/80 mb-5">
                   <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 font-sans">
-                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-                  </p>
+                    {tr("CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM")}</p>
                   <p className="text-[9px] sm:text-[11px] font-semibold text-slate-600 font-sans mt-0.5">
-                    Độc lập - Tự do - Hạnh phúc
-                  </p>
+                    {tr("Độc lập - Tự do - Hạnh phúc")}</p>
                   <div className="w-24 h-0.5 bg-slate-400 mx-auto mt-2" />
                   
                   <h2 className="text-sm sm:text-base font-bold text-slate-900 uppercase tracking-wide mt-5 font-sans">
-                    {previewDoc.title}
+                    {tr(previewDoc.title)}
                   </h2>
                   <p className="text-[10px] text-slate-500 font-sans mt-1">
-                    {previewDoc.type} • Mã tra cứu: VN-2024-VYBE-OCR-98421
-                  </p>
+                    {tr(previewDoc.type)} {tr(" • Mã tra cứu: VN-2024-VYBE-OCR-98421")}</p>
                 </div>
 
                 {/* Content Body */}
                 <div className="space-y-3 text-xs font-sans leading-relaxed text-slate-700">
                   <div className="grid grid-cols-3 gap-2">
-                    <span className="text-slate-500">Tên doanh nghiệp:</span>
+                    <span className="text-slate-500">{tr("Tên doanh nghiệp:")}</span>
                     <span className="col-span-2 font-bold text-slate-900">{formData.companyName}</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <span className="text-slate-500">Mã số thuế / MST:</span>
-                    <span className="col-span-2 font-bold text-slate-900">{formData.taxCode}</span>
+                    <span className="text-slate-500">{tr("Mã số thuế / MST:")}</span>
+                    <span className="col-span-2 font-bold text-slate-900">{tr(formData.taxCode)}</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <span className="text-slate-500">Người đại diện:</span>
-                    <span className="col-span-2 font-semibold text-slate-800">{dkkdData.legalRep} (Giám đốc)</span>
+                    <span className="text-slate-500">{tr("Người đại diện:")}</span>
+                    <span className="col-span-2 font-semibold text-slate-800">{tr(dkkdData.legalRep)} {tr(" (Giám đốc)")}</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <span className="text-slate-500">Cơ quan / Tổ chức cấp:</span>
-                    <span className="col-span-2 font-semibold text-slate-800">{previewDoc.issuer}</span>
+                    <span className="text-slate-500">{tr("Cơ quan / Tổ chức cấp:")}</span>
+                    <span className="col-span-2 font-semibold text-slate-800">{tr(previewDoc.issuer)}</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <span className="text-slate-500">Thời hạn / Ngày cấp:</span>
-                    <span className="col-span-2 font-semibold text-slate-800">{previewDoc.date}</span>
+                    <span className="text-slate-500">{tr("Thời hạn / Ngày cấp:")}</span>
+                    <span className="col-span-2 font-semibold text-slate-800">{tr(previewDoc.date)}</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <span className="text-slate-500">Trụ sở đăng ký:</span>
-                    <span className="col-span-2 text-slate-700">{formData.headquartersAddress}</span>
+                    <span className="text-slate-500">{tr("Trụ sở đăng ký:")}</span>
+                    <span className="col-span-2 text-slate-700">{tr(formData.headquartersAddress)}</span>
                   </div>
                 </div>
 
                 {/* Seal Stamp Mockup (Red Circle) */}
                 <div className="mt-8 pt-4 border-t border-dashed border-slate-200 flex items-center justify-between font-sans">
                   <div className="text-[10px] text-slate-400">
-                    <div>Chứng thư điện tử được đối soát số bởi:</div>
-                    <div className="font-semibold text-teal-800">VYBE TRADE TRUST VERIFICATION ENGINE</div>
+                    <div>{tr("Chứng thư điện tử được đối soát số bởi:")}</div>
+                    <div className="font-semibold text-teal-800">{tr("VYBE TRADE TRUST VERIFICATION ENGINE")}</div>
                   </div>
                   
                   {/* Red circular stamp simulation */}
                   <div className="w-20 h-20 rounded-full border-2 border-rose-600 text-rose-600 flex flex-col items-center justify-center p-1 text-center -rotate-12 select-none shadow-xs">
-                    <span className="text-[7px] font-bold uppercase tracking-tighter">SỞ KH & ĐT / ACCREDITATION</span>
-                    <span className="text-xs">★</span>
-                    <span className="text-[7px] font-bold uppercase tracking-tighter">ĐÃ XÁC THỰC</span>
+                    <span className="text-[7px] font-bold uppercase tracking-tighter">{tr("SỞ KH & ĐT / ACCREDITATION")}</span>
+                    <span className="text-xs">{tr("★")}</span>
+                    <span className="text-[7px] font-bold uppercase tracking-tighter">{tr("ĐÃ XÁC THỰC")}</span>
                   </div>
                 </div>
 
@@ -2100,15 +1993,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
             {/* Modal Actions */}
             <div className="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between bg-white">
               <span className="text-[11px] text-slate-400">
-                Tài liệu bảo mật nội bộ theo tiêu chuẩn ISO/IEC 27001
-              </span>
+                {tr("Tài liệu bảo mật nội bộ theo tiêu chuẩn ISO/IEC 27001")}</span>
               <div className="flex gap-2">
                 <button
                   onClick={() => setPreviewDoc(null)}
                   className="px-4 py-2 rounded-xl bg-[#083832] text-white text-xs font-semibold hover:bg-[#062924] transition-colors cursor-pointer"
                 >
-                  Đóng bản xem
-                </button>
+                  {tr("Đóng bản xem")}</button>
               </div>
             </div>
 
@@ -2125,13 +2016,11 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
             </div>
             
             <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-200 mb-2">
-              🛡️ Cấp độ dự kiến: L2 Enhanced Verified
-            </span>
+              {tr("🛡️ Cấp độ dự kiến: L2 Enhanced Verified")}</span>
 
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Hồ sơ thẩm định đã gửi thành công!</h3>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">{tr("Hồ sơ thẩm định đã gửi thành công!")}</h3>
             <p className="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed max-w-md mx-auto">
-              Hồ sơ doanh nghiệp, sản phẩm xuất khẩu và các chứng chỉ (ĐKKD, ISO 22000, HACCP) đã được đối soát OCR và ghi nhận vào không gian làm việc của Seller.
-            </p>
+              {tr("Hồ sơ doanh nghiệp, sản phẩm xuất khẩu và các chứng chỉ (ĐKKD, ISO 22000, HACCP) đã được đối soát OCR và ghi nhận vào không gian làm việc của Seller.")}</p>
 
             <div className="space-y-2.5">
               <button 
@@ -2146,7 +2035,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 className="w-full py-3.5 px-6 rounded-2xl bg-[#083832] hover:bg-[#062924] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer active:scale-95"
               >
                 <Building2 className="w-4 h-4 text-teal-300" />
-                <span>Vào Workspace & Xem Profile Company</span>
+                <span>{tr("Vào Workspace & Xem Profile Company")}</span>
                 <ArrowRight className="w-4 h-4 stroke-[2.2]" />
               </button>
 
@@ -2162,7 +2051,7 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                 className="w-full py-2.5 px-4 rounded-xl border border-teal-600 text-teal-800 bg-teal-50/60 hover:bg-teal-100/70 text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4 text-teal-700" />
-                <span>Xem Tiến trình Xác minh Cấp độ (L0 → L3)</span>
+                <span>{tr("Xem Tiến trình Xác minh Cấp độ (L0 → L3)")}</span>
               </button>
 
               <div className="pt-2 flex justify-center gap-3">
@@ -2173,15 +2062,13 @@ export default function SellerOnboarding({ account, initialStep = 2, onComplete,
                   }}
                   className="text-xs text-slate-500 hover:text-slate-800 transition-colors font-medium"
                 >
-                  Về Sàn thương mại B2B
-                </button>
-                <span className="text-slate-300">•</span>
+                  {tr("Về Sàn thương mại B2B")}</button>
+                <span className="text-slate-300">{tr("•")}</span>
                 <button 
                   onClick={() => setSubmittedSuccess(false)}
                   className="text-xs text-slate-500 hover:text-slate-800 transition-colors font-medium"
                 >
-                  Ở lại trang hồ sơ
-                </button>
+                  {tr("Ở lại trang hồ sơ")}</button>
               </div>
             </div>
           </div>

@@ -24,182 +24,31 @@ import {
 import { SupplierData, DEFAULT_SELLER_DETAIL } from './BuyerSellerDetail.tsx';
 import LiveSearchDropdown, { matchSearch } from './LiveSearchDropdown.tsx';
 import { useLanguage } from '../context/LanguageContext.tsx';
+import { DIRECTORY_SUPPLIERS } from '../lib/suppliers';
+import { filterSuppliers } from '../lib/supplierSearch';
 
 interface BuyerDirectoryProps {
   initialSearchTerm?: string;
+  initialCategory?: string | null;
+  initialMarket?: string;
+  initialLevel?: string;
   onSelectSupplier: (supplier: SupplierData) => void;
   onNavigateHome: () => void;
-  onOpenRfqModal: (supplierName: string) => void;
+  onOpenRfqModal: (supplier: SupplierData) => void;
 }
 
-export const DIRECTORY_SUPPLIERS: SupplierData[] = [
-  DEFAULT_SELLER_DETAIL,
-  {
-    id: 'mekong-export',
-    name: 'Công ty CP Xuất khẩu Mekong',
-    tradeName: 'MEKONG AGRI EXPORT JSC',
-    taxCode: '1201589412',
-    badgeLevel: 'L2',
-    badgeTitle: 'L2 Enhanced Verified',
-    logo: 'https://images.unsplash.com/photo-1509358271058-acd22cc93898?w=150&auto=format&fit=crop&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1509358271058-acd22cc93898?w=1600&auto=format&fit=crop&q=80',
-    location: 'Tiền Giang, Việt Nam',
-    address: 'Số 45, Đường 30/4, Phường 1, TP. Mỹ Tho, Tỉnh Tiền Giang',
-    factoryAddress: 'KCN Mỹ Tho, Tỉnh Tiền Giang (Diện tích 18,000 m²)',
-    foundedYear: '2016',
-    employees: '180+ nhân sự',
-    factorySize: '18,000 m²',
-    capacity: '8,000 tấn/năm',
-    monthlyCapacity: '300+ tấn/tháng',
-    responseTime: '< 3 giờ',
-    responseRate: '98.5%',
-    rating: 4.88,
-    reviewCount: 36,
-    escrowLimit: '$300,000 USD',
-    mainMarkets: ['EU', 'Trung Quốc', 'Hàn Quốc'],
-    description: 'Chuyên cung cấp hạt điều chất lượng cao, đáp ứng tiêu chuẩn của các thị trường khó tính như EU, Bắc Mỹ và Đông Bắc Á. Dây chuyền bóc vỏ lụa tự động và tiệt trùng hơi nước.',
-    tags: ['Hạt điều', 'Hạt tiêu', 'BRC', 'HACCP'],
-    pucCode: 'VN-TG-0112',
-    phcCode: 'PHC-TG-045',
-    products: [
-      {
-        id: 'mk-1',
-        name: 'Hạt điều nhân xuất khẩu W240 & W320',
-        category: 'Hạt dinh dưỡng',
-        image: 'https://images.unsplash.com/photo-1509358271058-acd22cc93898?w=800&auto=format&fit=crop&q=80',
-        moq: '5 tấn',
-        capacity: '300 tấn/tháng',
-        packaging: 'Hút chân không túi thiếc 25 lbs x 2',
-        priceRange: '$6,900 - $7,150 / Tấn (FOB Cát Lái)',
-        specs: ['AFI Standard Class 1', 'Độ ẩm < 5%', 'Bể vỡ < 1%']
-      }
-    ],
-    certificates: [
-      {
-        id: 'c-mk-1',
-        title: 'BRCGS Food Safety Issue 9',
-        issuer: 'Lloyds Register',
-        certNumber: 'BRC-VN-2023-891',
-        date: '2023 - 2026',
-        status: 'Đã thẩm định',
-        fileName: 'BRCGS_Mekong.pdf',
-        fileSize: '3.1 MB',
-        category: 'An toàn thực phẩm'
-      },
-      {
-        id: 'c-mk-2',
-        title: 'HACCP Codex Alimentarius',
-        issuer: 'SGS Vietnam',
-        certNumber: 'HACCP-SGS-4891',
-        date: '2022 - 2025',
-        status: 'Đã thẩm định',
-        fileName: 'HACCP_Mekong.pdf',
-        fileSize: '2.4 MB',
-        category: 'An toàn thực phẩm'
-      }
-    ],
-    factoryPhotos: [
-      {
-        title: 'Phân xưởng đóng gói hút chân không hạt điều',
-        description: 'Phòng sạch tiêu chuẩn ISO Class 8 với kiểm soát nhiệt ẩm nghiêm ngặt.',
-        image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&auto=format&fit=crop&q=80'
-      }
-    ],
-    reviews: [
-      {
-        buyerName: 'Marc Delvaux',
-        buyerCountry: 'Pháp (France)',
-        buyerRole: 'Purchasing Manager - AgroParis',
-        date: '05/07/2024',
-        rating: 5,
-        comment: 'Hạt điều Mekong giao hàng rất đúng quy cách. Đóng gói thiếc chống ẩm cực tốt trong suốt chuyến hải trình 28 ngày sang cảng Le Havre.',
-        productPurchased: 'Hạt điều nhân W320',
-        volume: '20 Tấn'
-      }
-    ]
-  },
-  {
-    id: 'anphu-rice',
-    name: 'Công ty TNHH Lúa Gạo An Phú',
-    tradeName: 'AN PHU RICE IMPORT-EXPORT CO., LTD',
-    taxCode: '1602049182',
-    badgeLevel: 'L2',
-    badgeTitle: 'L2 Enhanced Verified',
-    logo: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=150&auto=format&fit=crop&q=80',
-    coverImage: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600&auto=format&fit=crop&q=80',
-    location: 'An Giang, Việt Nam',
-    address: 'Ấp Vĩnh Phú, Xã Vĩnh Thạnh Trung, Huyện Châu Phú, Tỉnh An Giang',
-    factoryAddress: 'Cụm Công nghiệp An Phú, Huyện Châu Phú, Tỉnh An Giang (Diện tích 35,000 m²)',
-    foundedYear: '2015',
-    employees: '220+ nhân sự',
-    factorySize: '35,000 m²',
-    capacity: '50,000 tấn/năm',
-    monthlyCapacity: '1,000+ tấn/tháng',
-    responseTime: '< 4 giờ',
-    responseRate: '97.8%',
-    rating: 4.85,
-    reviewCount: 42,
-    escrowLimit: '$450,000 USD',
-    mainMarkets: ['EU', 'Trung Đông', 'Châu Phi', 'Philippines'],
-    description: 'Chuyên xay xát, chế biến và xuất khẩu gạo thơm chất lượng cao như ST25, Jasmine, Japonica đạt giải thưởng quốc tế. Cánh đồng mẫu lớn liên kết tại vùng lúa đồng bằng sông Cửu Long.',
-    tags: ['Gạo ST25', 'Gạo Jasmine', 'GlobalGAP', 'ISO 22000'],
-    pucCode: 'VN-AG-0994',
-    phcCode: 'PHC-AG-028',
-    products: [
-      {
-        id: 'ap-1',
-        name: 'Gạo thơm ST25 đạt chuẩn xuất khẩu Châu Âu',
-        category: 'Lúa gạo & Ngũ cốc',
-        image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800&auto=format&fit=crop&q=80',
-        moq: '2 container 20ft (50 tấn)',
-        capacity: '1,500 tấn/tháng',
-        packaging: 'Bao 5kg, 10kg, 25kg, 50kg hoặc Jumbo 1 tấn',
-        priceRange: '$920 - $980 / Tấn (FOB TP.HCM)',
-        specs: ['Độ tấm: Max 5%', 'Độ ẩm: Max 14%', 'Tạp chất: Max 0.1%']
-      }
-    ],
-    certificates: [
-      {
-        id: 'c-ap-1',
-        title: 'GlobalG.A.P. IFA Version 5.4',
-        issuer: 'Control Union',
-        certNumber: 'GGN-84910298',
-        date: '2023 - 2026',
-        status: 'Đã thẩm định',
-        fileName: 'GlobalGAP_AnPhu.pdf',
-        fileSize: '3.5 MB',
-        category: 'Nông nghiệp'
-      }
-    ],
-    factoryPhotos: [
-      {
-        title: 'Hệ thống silo sấy lúa công nghệ tháp sấy đứng',
-        description: 'Công suất sấy 1,000 tấn/ngày, duy trì tỷ lệ hạt nguyên vẹn.',
-        image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&auto=format&fit=crop&q=80'
-      }
-    ],
-    reviews: [
-      {
-        buyerName: 'Al-Mansoor Trading',
-        buyerCountry: 'UAE (Dubai)',
-        buyerRole: 'Senior Sourcing Executive',
-        date: '18/05/2024',
-        rating: 5,
-        comment: 'Gạo thơm Jasmine ST25 của An Phú có hương thơm tự nhiên và độ dẻo tuyệt hảo. Khách hàng tại chuỗi siêu thị Dubai của chúng tôi đánh giá rất cao.',
-        productPurchased: 'Gạo ST25 5% tấm',
-        volume: '100 Tấn'
-      }
-    ]
-  }
-];
+export { DIRECTORY_SUPPLIERS } from '../lib/suppliers';
 
 export default function BuyerDirectory({
   initialSearchTerm = '',
+  initialCategory = null,
+  initialMarket = '',
+  initialLevel = 'all',
   onSelectSupplier,
   onNavigateHome,
   onOpenRfqModal
 }: BuyerDirectoryProps) {
-  const { t, language } = useLanguage();
+  const { tr, t, language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [isLiveSearchOpen, setIsLiveSearchOpen] = useState(false);
   const [activeView, setActiveView] = useState<'list' | 'grid'>('list');
@@ -214,8 +63,14 @@ export default function BuyerDirectory({
     'Thủy sản'
   ]);
   const [selectedCategoryTag, setSelectedCategoryTag] = useState<string>('Nông sản & Thực phẩm');
-  const [selectedLevelFilter, setSelectedLevelFilter] = useState<string>('all');
+  const [selectedLevelFilter, setSelectedLevelFilter] = useState<string>(initialLevel);
+  const [categoryFilter, setCategoryFilter] = useState(initialCategory);
+  const [marketFilter, setMarketFilter] = useState(initialMarket);
   const [searchCategorySidebar, setSearchCategorySidebar] = useState('');
+  const filteredSuppliers = filterSuppliers(DIRECTORY_SUPPLIERS, { query: searchTerm, category: categoryFilter, market: marketFilter, level: selectedLevelFilter })
+    .sort((a, b) => sortBy === 'rating' ? b.rating - a.rating : sortBy === 'capacity'
+      ? Number(b.capacity.replace(/[^\d]/g, '')) - Number(a.capacity.replace(/[^\d]/g, ''))
+      : Number(b.badgeLevel.slice(1)) - Number(a.badgeLevel.slice(1)));
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-['Plus_Jakarta_Sans',sans-serif] selection:bg-blue-600 selection:text-white">
@@ -225,13 +80,13 @@ export default function BuyerDirectory({
         <div className="max-w-7xl mx-auto flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <button onClick={onNavigateHome} className="hover:text-slate-900 font-medium">
-              {language === 'vi' ? 'Trang chủ' : language === 'fr' ? 'Accueil' : language === 'ja' ? 'ホーム' : 'Home'}
+              {tr(language === 'vi' ? 'Trang chủ' : language === 'fr' ? 'Accueil' : language === 'ja' ? 'ホーム' : 'Home')}
             </button>
-            <span>/</span>
-            <span className="font-bold text-slate-800">{t.directory.title}</span>
+            <span>{tr("/")}</span>
+            <span className="font-bold text-slate-800">{tr(t.directory.title)}</span>
           </div>
           <span className="text-[11px] text-teal-800 font-semibold bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200/60">
-            🛡️ {t.directory.verifiedDataNotice}
+            {tr("🛡️ ")}{tr(t.directory.verifiedDataNotice)}
           </span>
         </div>
       </div>
@@ -247,10 +102,10 @@ export default function BuyerDirectory({
             {/* Title & Subtitle in Left Sidebar */}
             <div className="space-y-2">
               <h1 className="text-2xl sm:text-[28px] font-extrabold text-slate-900 tracking-tight leading-[1.2]">
-                {t.directory.title}
+                {tr(t.directory.title)}
               </h1>
               <p className="text-xs sm:text-[13px] text-slate-500 leading-relaxed font-normal">
-                {t.directory.subtitle}
+                {tr(t.directory.subtitle)}
               </p>
             </div>
 
@@ -261,16 +116,18 @@ export default function BuyerDirectory({
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-900">
                   <SlidersHorizontal className="w-4 h-4 text-slate-700" />
-                  <span>{t.directory.filters}</span>
+                  <span>{tr(t.directory.filters)}</span>
                 </div>
                 <button 
                   onClick={() => {
                     setSearchTerm('');
                     setSelectedLevelFilter('all');
+                    setCategoryFilter(null);
+                    setMarketFilter('');
                   }}
                   className="text-xs font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
                 >
-                  {t.directory.clearFilter}
+                  {tr(t.directory.clearFilter)}
                 </button>
               </div>
 
@@ -279,7 +136,7 @@ export default function BuyerDirectory({
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input 
                   type="text"
-                  placeholder="Tìm danh mục..."
+                  placeholder={tr("Tìm danh mục...")}
                   value={searchCategorySidebar}
                   onChange={(e) => setSearchCategorySidebar(e.target.value)}
                   className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-teal-700 bg-slate-50/50"
@@ -289,8 +146,7 @@ export default function BuyerDirectory({
               {/* Danh mục sản phẩm */}
               <div className="space-y-2.5">
                 <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  Danh mục sản phẩm
-                </h4>
+                  {tr("Danh mục sản phẩm")}</h4>
 
                 <div className="space-y-2 text-xs">
                   {/* Category 1: Nông sản & Thực phẩm (checked) */}
@@ -301,26 +157,26 @@ export default function BuyerDirectory({
                         defaultChecked 
                         className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-0 cursor-pointer" 
                       />
-                      <span>Nông sản & Thực phẩm (328)</span>
+                      <span>{tr("Nông sản & Thực phẩm (328)")}</span>
                     </label>
 
                     {/* Subcategories */}
                     <div className="pl-6 pt-1.5 space-y-1.5 text-slate-600">
                       <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                         <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                        <span>Cà phê & sản phẩm từ cà phê (64)</span>
+                        <span>{tr("Cà phê & sản phẩm từ cà phê (64)")}</span>
                       </label>
                       <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                         <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                        <span>Hạt điều & sản phẩm từ điều (48)</span>
+                        <span>{tr("Hạt điều & sản phẩm từ điều (48)")}</span>
                       </label>
                       <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                         <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                        <span>Hạt tiêu & gia vị (36)</span>
+                        <span>{tr("Hạt tiêu & gia vị (36)")}</span>
                       </label>
                       <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                         <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                        <span>Rau củ quả (52)</span>
+                        <span>{tr("Rau củ quả (52)")}</span>
                       </label>
                     </div>
                   </div>
@@ -329,7 +185,7 @@ export default function BuyerDirectory({
                   <div>
                     <label className="flex items-center gap-2 cursor-pointer text-slate-700 hover:text-slate-900">
                       <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                      <span>Thủy sản (72)</span>
+                      <span>{tr("Thủy sản (72)")}</span>
                     </label>
                   </div>
 
@@ -337,7 +193,7 @@ export default function BuyerDirectory({
                   <div>
                     <label className="flex items-center gap-2 cursor-pointer text-slate-700 hover:text-slate-900">
                       <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                      <span>Thực phẩm chế biến (56)</span>
+                      <span>{tr("Thực phẩm chế biến (56)")}</span>
                     </label>
                   </div>
                 </div>
@@ -346,24 +202,23 @@ export default function BuyerDirectory({
               {/* Thị trường xuất khẩu */}
               <div className="space-y-2.5 pt-3 border-t border-slate-100">
                 <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  Thị trường xuất khẩu
-                </h4>
+                  {tr("Thị trường xuất khẩu")}</h4>
                 <div className="space-y-1.5 text-xs text-slate-600">
                   <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                     <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                    <span>EU (212)</span>
+                    <span>{tr("EU (212)")}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                     <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                    <span>Hoa Kỳ (184)</span>
+                    <span>{tr("Hoa Kỳ (184)")}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                     <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                    <span>Nhật Bản & Hàn Quốc (156)</span>
+                    <span>{tr("Nhật Bản & Hàn Quốc (156)")}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                     <input type="checkbox" className="w-3.5 h-3.5 rounded border-slate-300 text-blue-600 cursor-pointer" />
-                    <span>Trung Quốc (142)</span>
+                    <span>{tr("Trung Quốc (142)")}</span>
                   </label>
                 </div>
               </div>
@@ -371,8 +226,7 @@ export default function BuyerDirectory({
               {/* Cấp độ xác minh */}
               <div className="space-y-2.5 pt-3 border-t border-slate-100">
                 <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-                  Cấp độ xác minh
-                </h4>
+                  {tr("Cấp độ xác minh")}</h4>
                 <div className="space-y-1.5 text-xs text-slate-600">
                   <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                     <input 
@@ -382,7 +236,7 @@ export default function BuyerDirectory({
                       onChange={() => setSelectedLevelFilter('all')} 
                       className="cursor-pointer"
                     />
-                    <span>Tất cả cấp độ</span>
+                    <span>{tr("Tất cả cấp độ")}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                     <input 
@@ -392,7 +246,11 @@ export default function BuyerDirectory({
                       onChange={() => setSelectedLevelFilter('L3')} 
                       className="cursor-pointer"
                     />
-                    <span className="text-amber-700 font-semibold">L3 - VYBE Certified (45)</span>
+                    <span className="text-amber-700 font-semibold">{tr("L3 - VYBE Certified (45)")}</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
+                    <input type="radio" name="level" checked={selectedLevelFilter === 'L1'} onChange={() => setSelectedLevelFilter('L1')} className="cursor-pointer" />
+                    <span>{tr('L1 - Basic Verified')}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer hover:text-slate-900">
                     <input 
@@ -402,7 +260,7 @@ export default function BuyerDirectory({
                       onChange={() => setSelectedLevelFilter('L2')} 
                       className="cursor-pointer"
                     />
-                    <span className="text-emerald-700 font-semibold">L2 - Enhanced Verified (180)</span>
+                    <span className="text-emerald-700 font-semibold">{tr("L2 - Enhanced Verified (180)")}</span>
                   </label>
                 </div>
               </div>
@@ -427,7 +285,7 @@ export default function BuyerDirectory({
                   </div>
                   <input 
                     type="text"
-                    placeholder="Tìm nhà cung cấp, sản phẩm, chứng nhận..."
+                    placeholder={tr("Tìm nhà cung cấp, sản phẩm, chứng nhận...")}
                     value={searchTerm}
                     onFocus={() => setIsLiveSearchOpen(true)}
                     onChange={(e) => {
@@ -448,7 +306,7 @@ export default function BuyerDirectory({
                       type="button"
                       onClick={() => setSearchTerm('')}
                       className="p-1 mr-1 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
-                      title="Xóa từ khóa"
+                      title={tr("Xóa từ khóa")}
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -464,6 +322,7 @@ export default function BuyerDirectory({
                 {/* LIVE SEARCH DROPDOWN */}
                 <LiveSearchDropdown 
                   query={searchTerm}
+                  filters={{ category: categoryFilter, market: marketFilter, level: selectedLevelFilter }}
                   isOpen={isLiveSearchOpen}
                   onClose={() => setIsLiveSearchOpen(false)}
                   onSelectSupplier={(supp) => {
@@ -488,16 +347,16 @@ export default function BuyerDirectory({
 
               {/* Sắp xếp theo */}
               <div className="flex items-center gap-2 shrink-0">
-                <span className="text-xs text-slate-500 whitespace-nowrap hidden xl:inline">{t.directory.sortBy}</span>
+                <span className="text-xs text-slate-500 whitespace-nowrap hidden xl:inline">{tr(t.directory.sortBy)}</span>
                 <div className="relative">
                   <select 
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as any)}
                     className="appearance-none bg-white border border-slate-200 rounded-2xl px-3.5 py-2.5 pr-8 text-xs font-semibold text-slate-800 cursor-pointer shadow-2xs focus:outline-none"
                   >
-                    <option value="trust">{t.directory.sortTrust}</option>
-                    <option value="capacity">{t.directory.sortCapacity}</option>
-                    <option value="rating">{t.directory.sortRating}</option>
+                    <option value="trust">{tr(t.directory.sortTrust)}</option>
+                    <option value="capacity">{tr(t.directory.sortCapacity)}</option>
+                    <option value="rating">{tr(t.directory.sortRating)}</option>
                   </select>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
@@ -509,7 +368,7 @@ export default function BuyerDirectory({
                     className={`p-1.5 rounded-xl transition-colors cursor-pointer ${
                       activeView === 'grid' ? 'bg-[#083832] text-white' : 'text-slate-400 hover:text-slate-700'
                     }`}
-                    title="Dạng lưới"
+                    title={tr("Dạng lưới")}
                   >
                     <LayoutGrid className="w-4 h-4" />
                   </button>
@@ -518,7 +377,7 @@ export default function BuyerDirectory({
                     className={`p-1.5 rounded-xl transition-colors cursor-pointer ${
                       activeView === 'list' ? 'bg-[#083832] text-white' : 'text-slate-400 hover:text-slate-700'
                     }`}
-                    title="Dạng danh sách"
+                    title={tr("Dạng danh sách")}
                   >
                     <List className="w-4 h-4" />
                   </button>
@@ -535,7 +394,7 @@ export default function BuyerDirectory({
                 className="px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200 flex items-center gap-1.5 shrink-0 shadow-2xs"
               >
                 <Globe className="w-3.5 h-3.5 text-blue-600" />
-                <span>Nông sản & Thực phẩm</span>
+                <span>{tr("Nông sản & Thực phẩm")}</span>
                 <X className="w-3 h-3 hover:text-blue-900 cursor-pointer ml-0.5" />
               </button>
 
@@ -550,36 +409,26 @@ export default function BuyerDirectory({
                       : 'bg-white text-slate-700 border-slate-200/80 hover:bg-slate-50'
                   }`}
                 >
-                  {tag}
+                  {tr(tag)}
                 </button>
               ))}
 
               {/* Thêm bộ lọc */}
-              <button className="px-3 py-1.5 rounded-full bg-blue-50/70 hover:bg-blue-100 text-blue-700 font-semibold flex items-center gap-1 shrink-0 border border-blue-200/60 cursor-pointer">
+              <button onClick={() => { setSearchTerm(''); setCategoryFilter(null); setMarketFilter(''); setSelectedLevelFilter('all'); }} className="px-3 py-1.5 rounded-full bg-blue-50/70 hover:bg-blue-100 text-blue-700 font-semibold flex items-center gap-1 shrink-0 border border-blue-200/60 cursor-pointer">
                 <SlidersHorizontal className="w-3 h-3" />
-                <span>Thêm bộ lọc</span>
+                <span>{tr("Xóa bộ lọc")}</span>
               </button>
 
             </div>
 
             {/* Results counter & Clear filter */}
+            {(categoryFilter || marketFilter && marketFilter !== 'Tất cả thị trường') && <p className="text-xs text-teal-800">{tr(categoryFilter)} {tr(marketFilter !== 'Tất cả thị trường' ? marketFilter : '')}</p>}
             <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
               <div>
-                Tìm thấy <strong className="text-slate-900 font-bold">
-                  {DIRECTORY_SUPPLIERS.filter((s) => {
-                    const matchKeyword = searchTerm === '' || 
-                      matchSearch(s.name, searchTerm) ||
-                      matchSearch(s.tradeName, searchTerm) ||
-                      matchSearch(s.location, searchTerm) ||
-                      matchSearch(s.description, searchTerm) ||
-                      s.tags.some(t => matchSearch(t, searchTerm)) ||
-                      s.products.some(p => matchSearch(p.name, searchTerm) || matchSearch(p.category, searchTerm));
-                    const matchLevel = selectedLevelFilter === 'all' || s.badgeLevel === selectedLevelFilter;
-                    return matchKeyword && matchLevel;
-                  }).length}
-                </strong> nhà cung cấp
-                {searchTerm && (
-                  <span> phù hợp với từ khóa <span className="text-teal-700 font-semibold">"{searchTerm}"</span></span>
+                {tr("Tìm thấy ")}<strong className="text-slate-900 font-bold">
+                  {tr(filteredSuppliers.length)}
+                </strong> {tr(" nhà cung cấp")}{searchTerm && (
+                  <span> {tr(" phù hợp với từ khóa ")}<span className="text-teal-700 font-semibold">{tr("\"")}{tr(searchTerm)}{tr("\"")}</span></span>
                 )}
               </div>
               {searchTerm && (
@@ -587,8 +436,7 @@ export default function BuyerDirectory({
                   onClick={() => setSearchTerm('')}
                   className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer"
                 >
-                  Xóa bộ lọc
-                </button>
+                  {tr("Xóa bộ lọc")}</button>
               )}
             </div>
 
@@ -596,19 +444,8 @@ export default function BuyerDirectory({
                 SUPPLIER LIST CARDS (Matches the screenshot layout & styles)
                ========================================================================= */}
             <div className={activeView === 'list' ? 'space-y-4' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}>
-              {DIRECTORY_SUPPLIERS
-                .filter((s) => {
-                  const matchKeyword = searchTerm === '' || 
-                    matchSearch(s.name, searchTerm) ||
-                    matchSearch(s.tradeName, searchTerm) ||
-                    matchSearch(s.location, searchTerm) ||
-                    matchSearch(s.description, searchTerm) ||
-                    s.tags.some(t => matchSearch(t, searchTerm)) ||
-                    s.products.some(p => matchSearch(p.name, searchTerm) || matchSearch(p.category, searchTerm));
-                  const matchLevel = selectedLevelFilter === 'all' || s.badgeLevel === selectedLevelFilter;
-                  return matchKeyword && matchLevel;
-                })
-                .map((supplier) => (
+              {filteredSuppliers.length === 0 && <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center sm:col-span-2"><Search className="mx-auto mb-3 h-7 w-7 text-slate-400" /><p className="font-semibold text-slate-700">{tr("Không tìm thấy nhà cung cấp phù hợp")}</p><p className="mt-2 text-sm text-slate-500">{tr("Thử từ khóa khác hoặc xóa bộ lọc để xem tất cả nhà cung cấp.")}</p></div>}
+              {filteredSuppliers.map((supplier) => (
                   <div 
                     key={supplier.id}
                     className="p-5 sm:p-6 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-md transition-all flex flex-col xl:flex-row items-start xl:items-center justify-between gap-5 group text-left cursor-pointer"
@@ -622,7 +459,7 @@ export default function BuyerDirectory({
                       <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shrink-0 bg-slate-100 shadow-2xs">
                         <img 
                           src={supplier.products[0]?.image || supplier.coverImage} 
-                          alt={supplier.name} 
+                          alt={tr(supplier.name)} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
@@ -641,24 +478,23 @@ export default function BuyerDirectory({
                           </div>
 
                           <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-teal-900 transition-colors">
-                            {supplier.name}
+                            {tr(supplier.name)}
                           </h3>
 
                           {/* Green verified circle check */}
-                          <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px]" title="Đã xác thực">
-                            ✓
-                          </span>
+                          <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px]" title={tr("Đã xác thực")}>
+                            {tr("✓")}</span>
                         </div>
 
                         {/* Location */}
                         <p className="text-xs text-slate-500 flex items-center gap-1 font-medium">
                           <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>{supplier.location}</span>
+                          <span>{tr(supplier.location)}</span>
                         </p>
 
                         {/* Description */}
                         <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                          {supplier.description}
+                          {tr(supplier.description)}
                         </p>
 
                         {/* Tag Pills (Cà phê, Hạt điều, HACCP, ISO 22000...) */}
@@ -668,7 +504,7 @@ export default function BuyerDirectory({
                               key={idx} 
                               className="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium"
                             >
-                              {tag}
+                              {tr(tag)}
                             </span>
                           ))}
                           {supplier.tags.filter(t => t === 'HACCP' || t === 'ISO 22000' || t === 'BRC' || t === 'GlobalG.A.P.').map((cert, idx) => (
@@ -676,7 +512,7 @@ export default function BuyerDirectory({
                               key={idx} 
                               className="px-2.5 py-0.5 rounded-md bg-teal-50 text-teal-800 border border-teal-200/70 text-[11px] font-bold"
                             >
-                              {cert}
+                              {tr(cert)}
                             </span>
                           ))}
                         </div>
@@ -703,9 +539,9 @@ export default function BuyerDirectory({
                             <ShieldCheck className="w-4 h-4 stroke-[2.2]" />
                           </div>
                           <div className="text-left">
-                            <span className="text-xs font-black block leading-none">{supplier.badgeLevel}</span>
+                            <span className="text-xs font-black block leading-none">{tr(supplier.badgeLevel)}</span>
                             <span className="text-[10px] font-semibold text-slate-600 block mt-0.5">
-                              {supplier.badgeLevel === 'L3' ? 'VYBE Certified' : 'Enhanced Verified'}
+                              {tr(supplier.badgeLevel === 'L3' ? 'VYBE Certified' : supplier.badgeLevel === 'L2' ? 'Enhanced Verified' : 'Basic Verified')}
                             </span>
                           </div>
                         </div>
@@ -714,11 +550,11 @@ export default function BuyerDirectory({
                         <div className="text-left xl:text-right text-[11px] text-slate-500 space-y-0.5">
                           <p className="flex items-center gap-1 xl:justify-end">
                             <Package className="w-3.5 h-3.5 text-slate-400" />
-                            <strong>{supplier.monthlyCapacity}</strong>
+                            <strong>{tr(supplier.monthlyCapacity)}</strong>
                           </p>
                           <p className="flex items-center gap-1 xl:justify-end truncate max-w-[150px]">
                             <Globe className="w-3.5 h-3.5 text-slate-400" />
-                            <span>{supplier.mainMarkets.slice(0, 2).join(', ')}</span>
+                            <span>{supplier.mainMarkets.slice(0, 2).map(tr).join(', ')}</span>
                           </p>
                         </div>
 
@@ -733,18 +569,18 @@ export default function BuyerDirectory({
                           }}
                           className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold border border-slate-200 transition-colors cursor-pointer shadow-2xs text-center"
                         >
-                          {t.directory.viewProfile}
+                          {tr(t.directory.viewProfile)}
                         </button>
 
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            onOpenRfqModal(supplier.name);
+                            onOpenRfqModal(supplier);
                           }}
                           className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
                         >
                           <Mail className="w-3.5 h-3.5 text-teal-300" />
-                          <span>{t.directory.sendRfq}</span>
+                          <span>{tr(t.directory.sendRfq)}</span>
                         </button>
                       </div>
 

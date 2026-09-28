@@ -45,13 +45,14 @@ import { completeOnboarding, getSession, getUserPage, logout, ROLE_LABELS, type 
 type Page = 'home' | 'product' | 'onboarding' | 'seller-profile' | 'workspace' | 'buyer-directory' | 'buyer-seller-detail' | 'pricing' | 'solutions' | 'about' | 'login' | 'register' | 'admin';
 
 export default function App() {
-  const { language, setLanguage, currentLanguageOption, t } = useLanguage();
+  const { tr, language, setLanguage, currentLanguageOption, t } = useLanguage();
   const [user, setUser] = useState<DemoUser | null>(() => {
     try { return getSession(); } catch { return null; }
   });
   const [currentPage, setPage] = useState<Page>(() => user ? getUserPage(user) : 'home');
   const [directoryNav, setDirectoryNav] = useState<'suppliers' | 'buyer'>('suppliers');
   const [selectedSupplier, setSelectedSupplier] = useState<SupplierData>(DEFAULT_SELLER_DETAIL);
+  const [openSupplierRfq, setOpenSupplierRfq] = useState(false);
   const [headerProfileOpen, setHeaderProfileOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isLangModalOpen, setIsLangModalOpen] = useState(false);
@@ -75,6 +76,7 @@ export default function App() {
       (page === 'admin' && user.role !== 'admin'))) {
       setPage(getUserPage(user)); return;
     }
+    if (page === 'buyer-seller-detail') setOpenSupplierRfq(false);
     setPage(page);
   }
 
@@ -95,7 +97,7 @@ export default function App() {
       setSelectedSupplier(DEFAULT_SELLER_DETAIL);
       setSearchTerm('');
       setPage('login');
-    } catch { window.alert('Không thể xóa phiên demo. Vui lòng cho phép lưu trữ trên trình duyệt.'); }
+    } catch { window.alert(tr('Không thể xóa phiên demo. Vui lòng cho phép lưu trữ trên trình duyệt.')); }
   }
 
   if (currentPage === 'login' || currentPage === 'register') {
@@ -209,8 +211,9 @@ export default function App() {
   }
 
   const renderTopHeader = () => (
+    <>
     <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 h-16 sm:h-[72px] flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 min-h-16 py-3 flex flex-wrap gap-3 items-center justify-between">
         
         {/* Brand Logo: Double Sprout Wing in Dark Teal + VYBE TRADE */}
         <div 
@@ -224,12 +227,11 @@ export default function App() {
             </svg>
           </div>
           <span className="text-[#0f172a] font-bold text-lg sm:text-[19px] tracking-wide uppercase">
-            VYBE TRADE
-          </span>
+            {tr("VYBE TRADE")}</span>
         </div>
 
         {/* Center: Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-7 xl:gap-8">
+        <nav className="hidden lg:flex flex-wrap items-center gap-4 xl:gap-6">
           {[
             { label: t.nav.solutions, id: 'solutions' },
             { label: t.nav.suppliers, id: 'suppliers' },
@@ -272,7 +274,7 @@ export default function App() {
                     : 'text-slate-700 hover:text-slate-950 font-medium'
                 }`}
               >
-                {link.label}
+                {tr(link.label)}
               </button>
             );
           })}
@@ -286,13 +288,13 @@ export default function App() {
             <button 
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
               className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 text-slate-700 hover:text-slate-900 transition-all rounded-full hover:bg-slate-100 border border-slate-200/90 cursor-pointer shadow-2xs group bg-white/80"
-              title={t.header.languageSelect}
+              title={tr(t.header.languageSelect)}
             >
               <div className="w-5 h-3.5 rounded-xs overflow-hidden border border-slate-200/60 shadow-2xs shrink-0 flex items-center justify-center">
                 <CountryFlag code={language} className="w-full h-full" />
               </div>
               <span className="text-xs font-bold uppercase text-slate-800 tracking-wider">
-                {language}
+                {tr(language)}
               </span>
               <ChevronDown className={`w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -301,7 +303,7 @@ export default function App() {
             {isLangMenuOpen && (
               <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200/90 py-2 z-50 animate-in fade-in zoom-in-95 duration-150 text-left">
                 <div className="px-3.5 py-1.5 border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-                  <span>{t.header.languageSelect}</span>
+                  <span>{tr(t.header.languageSelect)}</span>
                   <Globe className="w-3.5 h-3.5 text-blue-600" />
                 </div>
                 {LANGUAGES.map((lang) => {
@@ -323,7 +325,7 @@ export default function App() {
                         </div>
                         <div className="text-left">
                           <span className="block leading-tight">{lang.nativeName}</span>
-                          <span className="text-[10px] text-slate-400 block">{lang.country}</span>
+                          <span className="text-[10px] text-slate-400 block">{tr(lang.country)}</span>
                         </div>
                       </div>
                       {isCurrent && (
@@ -342,7 +344,7 @@ export default function App() {
                     className="w-full py-1.5 px-2 rounded-xl text-[11px] text-blue-600 hover:bg-blue-50 font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                   >
                     <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-                    <span>{language === 'vi' ? 'Xem cờ & chi tiết ngôn ngữ' : language === 'fr' ? 'Détails des langues & drapeaux' : language === 'ja' ? '言語と国旗の詳細一覧' : 'View all flags & languages'}</span>
+                    <span>{tr(language === 'vi' ? 'Xem cờ & chi tiết ngôn ngữ' : language === 'fr' ? 'Détails des langues & drapeaux' : language === 'ja' ? '言語と国旗の詳細一覧' : 'View all flags & languages')}</span>
                   </button>
                 </div>
               </div>
@@ -352,28 +354,30 @@ export default function App() {
           {user ? (
             <div className="relative">
               <button onClick={() => setHeaderProfileOpen(!headerProfileOpen)} aria-expanded={headerProfileOpen} className="flex items-center gap-2 rounded-full border border-slate-200 pl-1 pr-3 py-1 hover:bg-slate-50">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-xs font-bold text-teal-900">{user.name.slice(0, 2).toUpperCase()}</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-xs font-bold text-teal-900">{tr(user.name.slice(0, 2).toUpperCase())}</span>
                 <span className="hidden max-w-32 truncate text-xs font-semibold xl:inline">{user.name}</span>
-                <span className="hidden rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600 sm:inline">{ROLE_LABELS[user.role]}</span>
+                <span className="hidden rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600 sm:inline">{tr(ROLE_LABELS[user.role])}</span>
                 <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
               </button>
               {headerProfileOpen && <div className="absolute right-0 top-full z-50 mt-2 w-72 rounded-2xl border border-slate-200 bg-white py-2 text-left text-sm shadow-xl">
-                <div className="border-b border-slate-100 px-4 py-3"><p className="truncate font-bold">{user.company}</p><p className="mt-1 truncate text-xs text-slate-500">{user.email}</p><p className="mt-1 text-xs font-semibold text-teal-700">{ROLE_LABELS[user.role]}</p></div>
-                <button onClick={() => { setCurrentPage(getUserPage(user)); setHeaderProfileOpen(false); }} className="w-full px-4 py-3 text-left font-semibold text-teal-900 hover:bg-teal-50">{user.role === 'seller' ? 'Workspace Seller' : user.role === 'admin' ? 'Quản trị hệ thống' : 'Tìm nhà cung cấp'}</button>
-                {user.role === 'seller' && <button onClick={() => { setCurrentPage('seller-profile'); setHeaderProfileOpen(false); }} className="w-full px-4 py-3 text-left text-slate-600 hover:bg-slate-50">Cập nhật hồ sơ xuất khẩu</button>}
-                <button onClick={handleLogout} className="w-full border-t border-slate-100 px-4 py-3 text-left font-semibold text-rose-600 hover:bg-rose-50">Đăng xuất</button>
+                <div className="border-b border-slate-100 px-4 py-3"><p className="truncate font-bold">{user.company}</p><p className="mt-1 truncate text-xs text-slate-500">{user.email}</p><p className="mt-1 text-xs font-semibold text-teal-700">{tr(ROLE_LABELS[user.role])}</p></div>
+                <button onClick={() => { setCurrentPage(getUserPage(user)); setHeaderProfileOpen(false); }} className="w-full px-4 py-3 text-left font-semibold text-teal-900 hover:bg-teal-50">{tr(user.role === 'seller' ? 'Workspace Seller' : user.role === 'admin' ? 'Quản trị hệ thống' : 'Tìm nhà cung cấp')}</button>
+                {user.role === 'seller' && <button onClick={() => { setCurrentPage('seller-profile'); setHeaderProfileOpen(false); }} className="w-full px-4 py-3 text-left text-slate-600 hover:bg-slate-50">{tr("Cập nhật hồ sơ xuất khẩu")}</button>}
+                <button onClick={handleLogout} className="w-full border-t border-slate-100 px-4 py-3 text-left font-semibold text-rose-600 hover:bg-rose-50">{tr("Đăng xuất")}</button>
               </div>}
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <button onClick={() => setCurrentPage('login')} className="rounded-full px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 sm:text-sm">Đăng nhập</button>
-              <button onClick={() => setCurrentPage('register')} className="hidden rounded-full bg-[#083832] px-3 py-2 text-xs font-semibold text-white hover:bg-[#062924] sm:inline-flex sm:px-4 sm:text-sm">Đăng ký</button>
+              <button onClick={() => setCurrentPage('login')} className="rounded-full px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 sm:text-sm">{tr("Đăng nhập")}</button>
+              <button onClick={() => setCurrentPage('register')} className="hidden rounded-full bg-[#083832] px-3 py-2 text-xs font-semibold text-white hover:bg-[#062924] sm:inline-flex sm:px-4 sm:text-sm">{tr("Đăng ký")}</button>
             </div>
           )}
         </div>
 
       </div>
     </header>
+    <LanguageSelectorModal isOpen={isLangModalOpen} onClose={() => setIsLangModalOpen(false)} />
+    </>
   );
 
   {/* =========================================================================
@@ -389,6 +393,8 @@ export default function App() {
         <div>
           {renderTopHeader()}
           <BuyerSellerDetail 
+            key={`${selectedSupplier.id}-${openSupplierRfq}`}
+            openRfq={openSupplierRfq}
             supplier={selectedSupplier}
             onBackToDirectory={() => setCurrentPage('buyer-directory')}
             onNavigateHome={() => setCurrentPage('home')}
@@ -412,14 +418,18 @@ export default function App() {
           {renderTopHeader()}
           <BuyerDirectory 
             initialSearchTerm={searchTerm}
+            initialCategory={selectedCategory}
+            initialMarket={selectedMarket}
+            initialLevel={selectedTrust.startsWith('L') ? selectedTrust.slice(0, 2) : 'all'}
             onSelectSupplier={(supp) => {
               setSelectedSupplier(supp);
               setCurrentPage('buyer-seller-detail');
             }}
             onNavigateHome={() => setCurrentPage('home')}
-            onOpenRfqModal={(suppName) => {
-              setSelectedSupplier(DEFAULT_SELLER_DETAIL);
-              setCurrentPage('buyer-seller-detail');
+            onOpenRfqModal={(supplier) => {
+              setSelectedSupplier(supplier);
+              setOpenSupplierRfq(true);
+              setPage('buyer-seller-detail');
             }}
           />
         </div>
@@ -531,21 +541,21 @@ export default function App() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0d9488]" />
               </span>
               <span className="text-[11px] sm:text-xs font-bold text-[#0d9488] tracking-wider uppercase">
-                {t.hero.kicker}
+                {tr(t.hero.kicker)}
               </span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-slate-900 tracking-tight leading-[1.2] mb-4">
-              {t.hero.titlePre}
-              <span className="text-[#2563eb]">{t.hero.titleHighlight}</span>
+              {tr(t.hero.titlePre)}
+              <span className="text-[#2563eb]">{tr(t.hero.titleHighlight)}</span>
               <br className="hidden sm:inline" />
-              {t.hero.titlePost}
+              {tr(t.hero.titlePost)}
             </h1>
 
             {/* Subtitle */}
             <p className="text-slate-600 text-base sm:text-[17px] leading-relaxed max-w-2xl mb-8 font-normal">
-              {t.hero.subtitle}
+              {tr(t.hero.subtitle)}
             </p>
 
             {/* Big Search Bar Pill Container */}
@@ -570,7 +580,7 @@ export default function App() {
                       setIsLiveSearchOpen(false);
                     }
                   }}
-                  placeholder={t.hero.searchPlaceholder}
+                  placeholder={tr(t.hero.searchPlaceholder)}
                   className="w-full text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none bg-transparent py-1.5 font-normal"
                 />
                 {searchTerm && (
@@ -580,7 +590,7 @@ export default function App() {
                       setSearchTerm('');
                     }}
                     className="p-1 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
-                    title="Xóa từ khóa"
+                    title={tr("Xóa từ khóa")}
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -597,7 +607,7 @@ export default function App() {
                   }}
                   className="w-full sm:w-auto px-4 py-1.5 text-xs sm:text-[13px] font-medium text-slate-700 hover:text-slate-900 flex items-center justify-between sm:justify-start gap-1.5 cursor-pointer whitespace-nowrap"
                 >
-                  <span>{selectedCategory || t.hero.category}</span>
+                  <span>{tr(selectedCategory || t.hero.category)}</span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
 
@@ -612,7 +622,7 @@ export default function App() {
                         }}
                         className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 cursor-pointer"
                       >
-                        {cat}
+                        {tr(cat)}
                       </button>
                     ))}
                   </div>
@@ -629,7 +639,7 @@ export default function App() {
                   }}
                   className="w-full sm:w-auto px-4 py-1.5 text-xs sm:text-[13px] font-medium text-slate-700 hover:text-slate-900 flex items-center justify-between sm:justify-start gap-1.5 cursor-pointer whitespace-nowrap"
                 >
-                  <span>{selectedMarket === 'Tất cả thị trường' ? t.hero.market : selectedMarket}</span>
+                  <span>{tr(selectedMarket === 'Tất cả thị trường' ? t.hero.market : selectedMarket)}</span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
 
@@ -644,7 +654,7 @@ export default function App() {
                         }}
                         className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 cursor-pointer"
                       >
-                        {m}
+                        {tr(m)}
                       </button>
                     ))}
                   </div>
@@ -661,7 +671,7 @@ export default function App() {
                   }}
                   className="w-full sm:w-auto px-4 py-1.5 text-xs sm:text-[13px] font-medium text-slate-700 hover:text-slate-900 flex items-center justify-between sm:justify-start gap-1.5 cursor-pointer whitespace-nowrap"
                 >
-                  <span>{selectedTrust === 'Tất cả cấp độ' ? t.hero.trustLevel : selectedTrust}</span>
+                  <span>{tr(selectedTrust === 'Tất cả cấp độ' ? t.hero.trustLevel : selectedTrust)}</span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
 
@@ -676,7 +686,7 @@ export default function App() {
                         }}
                         className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 cursor-pointer"
                       >
-                        {t}
+                        {tr(t)}
                       </button>
                     ))}
                   </div>
@@ -691,13 +701,14 @@ export default function App() {
                   setCurrentPage('buyer-directory');
                 }}
                 className="w-full sm:w-11 h-11 bg-[#0f172a] hover:bg-slate-800 text-white rounded-full sm:rounded-xl flex items-center justify-center shrink-0 transition-colors shadow-xs cursor-pointer"
-                title={t.hero.searchBtn}
+                title={tr(t.hero.searchBtn)}
               >
                 <Search className="w-4 h-4 stroke-[2.2]" />
               </button>
 
               {/* LIVE SEARCH RESULTS DROPDOWN */}
               <LiveSearchDropdown
+                filters={{ category: selectedCategory, market: selectedMarket, level: selectedTrust.startsWith('L') ? selectedTrust.slice(0, 2) : 'all' }}
                 query={searchTerm}
                 isOpen={isLiveSearchOpen}
                 onClose={() => setIsLiveSearchOpen(false)}
@@ -729,7 +740,7 @@ export default function App() {
             {/* Popular Search Tags Row: Tìm kiếm phổ biến: Cà phê, Gạo... */}
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <span className="text-xs font-semibold text-slate-800 mr-1 select-none">
-                {t.hero.popularSearches}
+                {tr(t.hero.popularSearches)}
               </span>
               {POPULAR_TAGS.map((tag) => (
                 <button
@@ -744,7 +755,7 @@ export default function App() {
                       : 'bg-slate-100 hover:bg-slate-200/80 text-slate-600'
                   }`}
                 >
-                  {tag}
+                  {tr(tag)}
                 </button>
               ))}
             </div>
@@ -794,8 +805,7 @@ export default function App() {
                 <g transform="translate(30, 2)">
                   <rect width="36" height="22" rx="6" fill="#dbeafe" stroke="#bfdbfe" />
                   <text x="18" y="15" textAnchor="middle" fill="#1e40af" fontSize="11" fontWeight="700" letterSpacing="0.5">
-                    EU
-                  </text>
+                    {tr("EU")}</text>
                 </g>
               </g>
 
@@ -803,8 +813,7 @@ export default function App() {
               <g transform="translate(200, 60)" filter="drop-shadow(0 4px 12px rgba(0,0,0,0.06))">
                 <rect width="160" height="34" rx="17" fill="#ffffff" stroke="#e2e8f0" />
                 <text x="80" y="21" textAnchor="middle" fill="#334155" fontSize="12" fontWeight="600">
-                  Trusted Supply Chain
-                </text>
+                  {tr("Trusted Supply Chain")}</text>
               </g>
 
               {/* Isometric Ocean Grid / Hexagon Deck */}
@@ -846,8 +855,7 @@ export default function App() {
                 <g transform="translate(25, -2)">
                   <rect width="28" height="20" rx="4" fill="#047857" />
                   <text x="14" y="14" textAnchor="middle" fill="#ffffff" fontSize="10" fontWeight="800" letterSpacing="0.5">
-                    VN
-                  </text>
+                    {tr("VN")}</text>
                 </g>
               </g>
 
@@ -887,10 +895,10 @@ export default function App() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                {t.features.verified}
+                {tr(t.features.verified)}
               </h3>
               <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                {t.features.verifiedDesc}
+                {tr(t.features.verifiedDesc)}
               </p>
             </div>
           </div>
@@ -902,10 +910,10 @@ export default function App() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                {t.features.products}
+                {tr(t.features.products)}
               </h3>
               <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                {t.features.productsDesc}
+                {tr(t.features.productsDesc)}
               </p>
             </div>
           </div>
@@ -917,10 +925,10 @@ export default function App() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                {t.features.fast}
+                {tr(t.features.fast)}
               </h3>
               <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                {t.features.fastDesc}
+                {tr(t.features.fastDesc)}
               </p>
             </div>
           </div>
@@ -932,10 +940,10 @@ export default function App() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900 leading-snug">
-                {t.features.ai}
+                {tr(t.features.ai)}
               </h3>
               <p className="text-xs text-slate-500 mt-0.5 font-normal">
-                {t.features.aiDesc}
+                {tr(t.features.aiDesc)}
               </p>
             </div>
           </div>
@@ -953,18 +961,18 @@ export default function App() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
           <div>
             <h2 className="text-2xl sm:text-[26px] font-bold text-slate-900 tracking-tight">
-              {t.featured.title}
+              {tr(t.featured.title)}
             </h2>
             <p className="text-sm text-slate-500 mt-1 font-normal">
-              {t.featured.subtitle}
+              {tr(t.featured.subtitle)}
             </p>
           </div>
 
           <button 
-            onClick={() => setActiveNavModal('Danh sách đầy đủ 500+ Doanh nghiệp')}
+            onClick={() => setCurrentPage('buyer-directory')}
             className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors cursor-pointer self-start sm:self-auto"
           >
-            <span>{t.featured.viewAll}</span>
+            <span>{tr(t.featured.viewAll)}</span>
             <ArrowRight className="w-4 h-4 stroke-[2.2]" />
           </button>
         </div>
@@ -1022,7 +1030,7 @@ export default function App() {
 
                     <div>
                       <h4 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                        {supplier.name}
+                        {tr(supplier.name)}
                       </h4>
                     </div>
                   </div>
@@ -1035,19 +1043,19 @@ export default function App() {
                   {supplier.verifiedType === 'l2' && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-[11px] font-semibold text-emerald-700">
                       <ShieldCheck className="w-3.5 h-3.5 stroke-[2.5]" />
-                      <span>{supplier.verifiedLevel}</span>
+                      <span>{tr(supplier.verifiedLevel)}</span>
                     </span>
                   )}
                   {supplier.verifiedType === 'l1' && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-[11px] font-semibold text-blue-700">
                       <ShieldCheck className="w-3.5 h-3.5 stroke-[2.5]" />
-                      <span>{supplier.verifiedLevel}</span>
+                      <span>{tr(supplier.verifiedLevel)}</span>
                     </span>
                   )}
                   {supplier.verifiedType === 'l3' && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-[11px] font-semibold text-teal-800">
                       <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.5]" />
-                      <span>{supplier.verifiedLevel}</span>
+                      <span>{tr(supplier.verifiedLevel)}</span>
                     </span>
                   )}
                 </div>
@@ -1058,11 +1066,11 @@ export default function App() {
                     {supplier.categoryType === 'agriculture' && <Sprout className="w-3.5 h-3.5 text-slate-400" />}
                     {supplier.categoryType === 'seafood' && <Fish className="w-3.5 h-3.5 text-slate-400" />}
                     {supplier.categoryType === 'food' && <UtensilsCrossed className="w-3.5 h-3.5 text-slate-400" />}
-                    <span>{supplier.category}</span>
+                    <span>{tr(supplier.category)}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{supplier.location}</span>
+                    <span>{tr(supplier.location)}</span>
                   </div>
                 </div>
               </div>
@@ -1074,7 +1082,7 @@ export default function App() {
                     key={tag}
                     className="text-[11px] font-medium text-slate-600 bg-slate-50 border border-slate-200/70 px-2.5 py-1 rounded-md"
                   >
-                    {tag}
+                    {tr(tag)}
                   </span>
                 ))}
               </div>
@@ -1105,45 +1113,52 @@ export default function App() {
                 <Sprout className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900">{activeSupplierModal.name}</h3>
+                <h3 className="text-lg font-bold text-slate-900">{tr(activeSupplierModal.name)}</h3>
                 <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  {activeSupplierModal.verifiedLevel}
+                  {tr(activeSupplierModal.verifiedLevel)}
                 </span>
               </div>
             </div>
 
             <p className="text-sm text-slate-600 leading-relaxed mb-4">
-              {activeSupplierModal.description}
+              {tr(activeSupplierModal.description)}
             </p>
 
             <div className="space-y-2.5 p-3.5 rounded-xl bg-slate-50 border border-slate-100 text-xs mb-5">
               <div className="flex justify-between">
-                <span className="text-slate-500">{t.modal.industry}</span>
-                <span className="font-semibold text-slate-800">{activeSupplierModal.category}</span>
+                <span className="text-slate-500">{tr(t.modal.industry)}</span>
+                <span className="font-semibold text-slate-800">{tr(activeSupplierModal.category)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">{t.modal.capacity}</span>
-                <span className="font-semibold text-slate-800">{activeSupplierModal.capacity}</span>
+                <span className="text-slate-500">{tr(t.modal.capacity)}</span>
+                <span className="font-semibold text-slate-800">{tr(activeSupplierModal.capacity)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">{t.modal.standards}</span>
-                <span className="font-semibold text-slate-800">{activeSupplierModal.standards}</span>
+                <span className="text-slate-500">{tr(t.modal.standards)}</span>
+                <span className="font-semibold text-slate-800">{tr(activeSupplierModal.standards)}</span>
               </div>
             </div>
 
             <div className="flex gap-3">
               <button
-                onClick={() => setActiveSupplierModal(null)}
+                onClick={() => {
+                  const supplier = DIRECTORY_SUPPLIERS.find((item) => item.id === activeSupplierModal.id);
+                  if (!supplier) return;
+                  setSelectedSupplier(supplier);
+                  setOpenSupplierRfq(true);
+                  setActiveSupplierModal(null);
+                  setPage('buyer-seller-detail');
+                }}
                 className="flex-1 py-2.5 rounded-full bg-[#0f172a] hover:bg-slate-800 text-white font-medium text-xs transition-colors cursor-pointer text-center"
               >
-                {t.modal.sendRfqBtn}
+                {tr(t.modal.sendRfqBtn)}
               </button>
               <button
                 onClick={() => setActiveSupplierModal(null)}
                 className="px-5 py-2.5 rounded-full border border-slate-200 text-slate-700 font-medium text-xs hover:bg-slate-50 transition-colors cursor-pointer"
               >
-                {t.common.close}
+                {tr(t.common.close)}
               </button>
             </div>
           </div>
@@ -1161,26 +1176,18 @@ export default function App() {
               <X className="w-4 h-4" />
             </button>
 
-            <h3 className="text-base font-bold text-slate-900 mb-2">{activeNavModal}</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-2">{tr(activeNavModal)}</h3>
             <p className="text-xs text-slate-600 leading-relaxed mb-5">
-              Tính năng đang được kích hoạt trên hệ thống VYBE TRADE. Nền tảng kết nối trực tiếp doanh nghiệp xuất nhập khẩu Việt Nam với các đối tác toàn cầu.
-            </p>
+              {tr("Tính năng đang được kích hoạt trên hệ thống VYBE TRADE. Nền tảng kết nối trực tiếp doanh nghiệp xuất nhập khẩu Việt Nam với các đối tác toàn cầu.")}</p>
 
             <button
               onClick={() => setActiveNavModal(null)}
               className="w-full py-2.5 rounded-full bg-[#0f172a] text-white text-xs font-semibold hover:bg-slate-800 transition-colors cursor-pointer"
             >
-              Đồng ý
-            </button>
+              {tr("Đồng ý")}</button>
           </div>
         </div>
       )}
-
-      {/* Complete Language Selection Modal with Flags */}
-      <LanguageSelectorModal 
-        isOpen={isLangModalOpen} 
-        onClose={() => setIsLangModalOpen(false)} 
-      />
 
     </div>
   );
