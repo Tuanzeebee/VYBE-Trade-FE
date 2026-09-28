@@ -1,0 +1,6 @@
+{
+  "name": "VYBE TRADE",
+  "description": "Nền tảng B2B với lớp xác minh tin cậy, giúp buyer quốc tế tìm kiếm và hợp tác với các nhà cung cấp Việt Nam uy tín.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
