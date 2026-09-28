@@ -2,6 +2,7 @@
 
 > Phân tích ngày 29/09/2026 từ `src/`, `package.json`, cấu hình Vite/TypeScript và `index.html`.
 > Tài liệu mô tả code hiện có và hướng dẫn tiếp tục phát triển UI. Chưa chạy ứng dụng hoặc kiểm chứng giao diện trên trình duyệt. Hai file `.docx` trong `docs/` không được dùng làm nguồn yêu cầu cho bản phân tích này.
+> Cập nhật auth demo: login/register; Company Onboarding 4 bước cho Buyer/Seller, một lần theo user; Admin bỏ qua onboarding. Seller tái sử dụng wizard có sẵn, Buyer dùng wizard mới cùng phong cách. Xem `docs/AUTH_DEMO.md`. Kiểm tra trình duyệt trực tiếp chưa khả dụng.
 
 ## 1. Frontend này dùng để làm gì?
 
@@ -40,6 +41,7 @@ Source hiện tại là **SPA demo tương tác bằng dữ liệu mẫu**, chư
 | Styling | Tailwind CSS 4 qua `@tailwindcss/vite`; phần lớn class viết trực tiếp trong JSX |
 | Icon | `lucide-react`; logo, cờ và nhiều minh họa dùng SVG inline |
 | State | `useState` tại từng màn hình; Context dùng cho ngôn ngữ |
+| Auth demo | `src/lib/demoAuth.ts`; tài khoản, phiên và cờ onboarding lưu localStorage; kiểm soát role ở UI |
 | Điều hướng | State `currentPage` trong `App.tsx`; không có React Router |
 | Dữ liệu | Object/array hardcode bên trong component; chưa có tầng API/store nghiệp vụ |
 | Font | Plus Jakarta Sans, Inter, tải từ Google Fonts trong `index.html` |
@@ -54,6 +56,9 @@ src/
   index.css                        # Tailwind import và style nền/font toàn cục
   context/LanguageContext.tsx       # vi/en/fr/ja, dictionary, lưu lựa chọn ngôn ngữ
   components/
+    AuthPage.tsx                   # Login/register, chọn Buyer/Seller, hiển thị 3 tài khoản mẫu
+    BuyerOnboarding.tsx            # Wizard company Buyer 4 bước cho người mua quốc tế
+    AdminDashboard.tsx             # Tổng quan tài khoản demo cục bộ
     BuyerDirectory.tsx             # Danh sách nhà cung cấp, DIRECTORY_SUPPLIERS
     BuyerSellerDetail.tsx          # Hồ sơ công khai, SupplierData, DEFAULT_SELLER_DETAIL
     LiveSearchDropdown.tsx         # Autocomplete, SEARCH_PRODUCTS, helper tìm kiếm
@@ -72,14 +77,17 @@ Không có bộ component UI chung như Button, Input, Dialog hoặc hệ thốn
 
 ## 4. Bản đồ màn hình và điều hướng
 
-Các giá trị dưới đây là **state**, không phải URL route. Reload quay về `home`; nút Back/Forward của trình duyệt chưa quản lý lịch sử chuyển màn hình.
+Các giá trị dưới đây là **state**, không phải URL route. Reload khôi phục phiên demo và vào onboarding hoặc trang theo role; guest về `home`. Nút Back/Forward của trình duyệt chưa quản lý lịch sử chuyển màn hình.
 
 | `currentPage` | Component | Mục đích |
 | --- | --- | --- |
 | `home` | JSX trong `App.tsx` | Landing, tìm nguồn cung, doanh nghiệp nổi bật |
 | `buyer-directory` | `BuyerDirectory` | Tìm kiếm và so sánh nhà cung cấp |
 | `buyer-seller-detail` | `BuyerSellerDetail` | Xem hồ sơ công khai của `selectedSupplier` |
-| `onboarding` | `SellerOnboarding` | Khai báo hồ sơ seller |
+| `login` / `register` | `AuthPage` | Đăng nhập demo / tạo tài khoản Buyer hoặc Seller |
+| `onboarding` | `BuyerOnboarding` / `SellerOnboarding` | Company Onboarding 4 bước theo role; Admin không tham gia |
+| `seller-profile` | `SellerOnboarding` | Wizard cập nhật hồ sơ xuất khẩu, có thể mở lại |
+| `admin` | `AdminDashboard` | Tổng quan tài khoản demo cục bộ dành cho admin |
 | `workspace` | `SellerWorkspace` | Quản lý hồ sơ, chứng nhận, tiến trình và cơ hội B2B |
 | `product` | `ProductAiTrust` / `ProductVerification` | Giới thiệu hai dịch vụ; `productService` chọn nội dung |
 | `pricing` | `PricingPlans` | Bảng gói dịch vụ và form đăng ký |
@@ -96,16 +104,21 @@ flowchart TD
   Home --> Solutions[Giải pháp]
   Home --> Pricing[Bảng giá]
   Home --> About[Về chúng tôi]
-  Pricing --> Onboarding[Onboarding seller]
-  Solutions --> Onboarding
-  Onboarding --> Workspace[Workspace seller]
-  Workspace --> Onboarding
+  Home --> Auth[Login / Register]
+  Pricing --> Auth
+  Solutions --> Auth
+  Auth --> Onboarding[Thiết lập hồ sơ lần đầu]
+  Onboarding --> Destination[Buyer Directory / Seller Workspace / Admin]
+  Destination --> Workspace[Workspace seller]
+  Workspace --> EditProfile[Cập nhật hồ sơ xuất khẩu]
   Workspace --> Detail
 ```
 
 `renderTopHeader()` trong `App.tsx` phục vụ các màn hình công khai. Onboarding và workspace có header riêng. Menu “Nhà cung cấp” và “Buyer” cùng mở directory. Menu “Sản phẩm” mở **trang dịch vụ** AI Trust/Verification, không phải catalog sản phẩm độc lập.
 
 `App` giữ `selectedSupplier` và `workspaceTab`. Component con nhận callback `onNavigate...` để yêu cầu chuyển trang; nên nối UI mới qua flow này nếu chưa có yêu cầu thay kiến trúc điều hướng.
+
+Header dùng `directoryNav` để phân biệt mục “Doanh nghiệp” và “Buyer”: cả hai vẫn mở directory nhưng chỉ mục vừa chọn có `aria-current="page"` và gạch chân. Mặc định là “Doanh nghiệp”; chuyển sang detail rồi quay lại directory giữ lựa chọn này.
 
 ## 5. Chức năng từng màn hình
 
@@ -144,9 +157,11 @@ flowchart TD
 - RFQ: sản phẩm, số lượng/đơn vị, Incoterms, cảng đến, ngày dự kiến nhận, ghi chú. Submit chỉ mở modal `success`.
 - Chat: thêm message vào state, phản hồi seller bằng nội dung cố định sau timer khoảng 1,2 giây; không phải realtime/AI.
 
-### 5.4. Onboarding seller — `SellerOnboarding.tsx`
+### 5.4. Cập nhật hồ sơ seller — `SellerOnboarding.tsx`
 
-Wizard 4 bước, **mặc định mở bước 2** theo code:
+Wizard được tái sử dụng ở page `onboarding` cho Seller đăng nhập lần đầu (bắt đầu bước 1, có callback `onComplete` để lưu hồ sơ). Nó cũng phục vụ page `seller-profile` để cập nhật hồ sơ, mở từ workspace sau khi hoàn tất onboarding.
+
+Wizard 4 bước: lần onboarding đầu mở **bước 1**; mode cập nhật hồ sơ mặc định mở bước 2.
 
 1. Thông tin công ty: tên, MST, loại hình, năm thành lập, địa chỉ, website, email.
 2. Sản phẩm và năng lực: danh sách sản phẩm, ảnh, ngành hàng, thị trường xuất khẩu, bao bì, MOQ, công suất, mô tả, đánh dấu chủ lực.
@@ -162,7 +177,16 @@ Tương tác thật trong bộ nhớ:
 - Có thể click trực tiếp step để chuyển bước; chưa phải wizard kiểm tra chặt điều kiện từng bước.
 - Modal thành công cho chuyển workspace tab `profile` hoặc `verification`.
 
-**Giới hạn:** upload/đối soát giấy phép phần lớn là dữ liệu và trạng thái mô phỏng. Dữ liệu sản phẩm/hồ sơ vừa nhập **không được truyền sang workspace**.
+**Giới hạn:** upload/đối soát giấy phép phần lớn là mô phỏng. Hoàn tất onboarding lần đầu lưu snapshot vào hồ sơ user; thông tin công ty được dùng tại workspace, nhưng sản phẩm/chứng nhận hiển thị workspace vẫn dùng nguồn mock riêng. Chỉnh sửa wizard ở mode `seller-profile` chưa đồng bộ lâu dài.
+
+### 5.4a. Company Onboarding Buyer — `BuyerOnboarding.tsx`
+
+1. Thông tin công ty: tên, quốc gia, khu vực, quy mô nhân sự, loại hình, website, người liên hệ/email/điện thoại.
+2. Nhu cầu tìm nguồn hàng: ngành hàng, thông số sản phẩm, khối lượng/đơn vị, tần suất, thị trường/cảng đến, Incoterms, ngân sách.
+3. Tiêu chí xác minh: cấp độ tối thiểu L1/L2/L3, nhiều chứng nhận, yêu cầu nhà máy/truy xuất, ghi chú.
+4. Xem lại đủ thông tin, quay về sửa từng bước, xác nhận và hoàn tất.
+
+Các bước chưa đi qua bị khóa để tránh bỏ qua form bắt buộc. Native form validation áp dụng khi tiếp tục; `completeOnboarding()` kiểm tra hồ sơ cuối cùng trước khi lưu. Buyer sau hoàn tất vào directory. Admin đăng nhập thẳng quản trị, không có wizard này.
 
 ### 5.5. Workspace seller — `SellerWorkspace.tsx`
 
@@ -289,10 +313,10 @@ Các class `animate-in`, `fade-in`, `zoom-in-95` xuất hiện trong source như
 
 ## 9. Các khoảng trống AI cần biết trước khi sửa
 
-1. **Không có auth thật.** Menu tài khoản luôn hiển thị doanh nghiệp mẫu; logout chỉ chuyển về home. Không có phân quyền buyer/seller/admin.
+1. **Có auth demo, chưa có auth backend.** Header hiển thị user đăng nhập; logout xóa phiên và về login. UI giới hạn workspace seller và trang admin theo role; không phải bảo mật phía server.
 2. **Không có URL route.** Không hứa deep link, share URL profile hoặc lịch sử Back/Forward trước khi bổ sung routing.
 3. **Dữ liệu không đồng bộ.** Onboarding, workspace, directory và featured cards dùng nguồn mẫu riêng; rời component có thể mất state chỉnh sửa.
-4. **Ngôn ngữ là persistence duy nhất tìm thấy trong source.** Không coi hồ sơ, saved supplier, RFQ, chat, gói dịch vụ hoặc chứng nhận đã được lưu lâu dài.
+4. **Persistence cục bộ gồm ngôn ngữ và auth demo.** Tài khoản, phiên, snapshot Company Onboarding/cờ hoàn tất/version được lưu theo trình duyệt. Hồ sơ form ngắn cũ được nâng lên wizard mới một lần. RFQ/chat và các chỉnh sửa wizard seller tại page `seller-profile` vẫn là state mẫu độc lập.
 5. **Một số filter/sort chỉ có UI.** Ghi rõ khi nối logic, và kiểm tra cả số lượng kết quả lẫn danh sách.
 6. **Nút RFQ directory đang sai flow.** Cần giữ supplier được chọn và truyền ý định mở RFQ nếu task yêu cầu sửa tính năng này.
 7. **Ảnh/file preview chưa là upload.** Không suy ra có storage hay link PDF thật từ tên file/metadata.
@@ -310,6 +334,7 @@ Các điểm trên là kết quả đọc source; tài liệu này không tự s
 | Cần sửa | Bắt đầu đọc |
 | --- | --- |
 | Trang chủ, header, menu công khai, chuyển trang | `src/App.tsx` |
+| Login/register, phiên, role, onboarding một lần | `src/lib/demoAuth.ts`, `src/components/AuthPage.tsx`, `src/components/BuyerOnboarding.tsx`, `src/components/SellerOnboarding.tsx` |
 | Search/autocomplete và match không dấu | `src/components/LiveSearchDropdown.tsx`, caller tại App/Directory |
 | Danh sách/filter/sort nhà cung cấp | `src/components/BuyerDirectory.tsx` |
 | Hồ sơ công khai, sản phẩm, RFQ, chat | `src/components/BuyerSellerDetail.tsx`, callback directory tại App |
@@ -353,7 +378,7 @@ npm run build    # vite build
 npm run preview  # xem build
 ```
 
-Repo có `bun.lock`, không thấy test runner/script test. Chọn package manager nhất quán khi cài dependency. Script `clean` dùng `rm -rf`, không phù hợp chạy trực tiếp trong PowerShell mặc định.
+Repo có `bun.lock` và `package-lock.json`. `npm test` chạy kiểm tra auth bằng Node assert + tsx, không thêm test framework. Chọn package manager nhất quán khi cài dependency. Script `clean` dùng `rm -rf`, không phù hợp chạy trực tiếp trong PowerShell mặc định.
 
 Checklist sau khi sửa UI ở phạm vi liên quan:
 
@@ -369,3 +394,31 @@ Checklist sau khi sửa UI ở phạm vi liên quan:
 - [ ] `npm run lint` và `npm run build` đạt nếu có thay đổi code.
 
 **Kiểm chứng của bản tài liệu này:** phân tích tĩnh source và cấu hình; không cài dependency, không chạy build/typecheck, không kiểm tra browser. Không có thay đổi logic hoặc giao diện ứng dụng.
+
+### Kiểm tra hồi quy header
+
+Chạy `npm run dev`, mở trang ở kích thước desktop với ngôn ngữ tiếng Việt, rồi dán đoạn sau vào DevTools Console. Kiểm tra chuyển qua lại hai mục và rời directory; đoạn này thao tác trên dữ liệu demo, kết thúc tại trang chủ.
+
+```js
+const headerNav = () => document.querySelector('header nav');
+const clickHeader = async (label) => {
+  const button = [...headerNav().querySelectorAll('button')]
+    .find((item) => item.textContent.trim() === label);
+  if (!button) throw new Error(`Không tìm thấy menu: ${label}`);
+  button.click();
+  await new Promise((resolve) => setTimeout(resolve, 100));
+};
+for (const label of ['Doanh nghiệp', 'Buyer', 'Doanh nghiệp', 'Buyer', 'Giá']) {
+  await clickHeader(label);
+  const active = [...headerNav().querySelectorAll('[aria-current="page"]')];
+  if (active.length !== 1 || active[0].textContent.trim() !== label) {
+    throw new Error(`Header active sai sau khi bấm ${label}`);
+  }
+}
+document.querySelector('header .group.select-none').click();
+await new Promise((resolve) => setTimeout(resolve, 100));
+if (headerNav().querySelector('[aria-current="page"]')) {
+  throw new Error('Header còn active khi về trang chủ');
+}
+console.log('Header navigation: PASS');
+```

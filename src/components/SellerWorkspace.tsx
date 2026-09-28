@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import type { DemoUser } from '../lib/demoAuth';
 import { 
   Home, 
   Building2, 
@@ -67,6 +68,7 @@ export interface WorkspaceCertificateItem {
 }
 
 interface SellerWorkspaceProps {
+  account?: DemoUser;
   onLogout: () => void;
   onNavigateHome: () => void;
   onNavigateOnboarding: () => void;
@@ -75,6 +77,7 @@ interface SellerWorkspaceProps {
 }
 
 export default function SellerWorkspace({ 
+  account,
   onLogout, 
   onNavigateHome, 
   onNavigateOnboarding,
@@ -113,26 +116,26 @@ export default function SellerWorkspace({
 
   // Company Profile Data
   const [companyProfile, setCompanyProfile] = useState({
-    name: 'Công ty TNHH Nông sản Việt Trí',
+    name: account?.company || 'Công ty TNHH Nông sản Việt Trí',
     tradeName: 'VIET AGRI EXPORT CO., LTD',
-    taxCode: '0314892345',
+    taxCode: account?.profile?.taxCode || '0314892345',
     businessType: 'Công ty TNHH Hai Thành Viên Trở Lên',
-    establishedYear: '2018',
-    representative: 'Nguyễn Văn Trí',
+    establishedYear: account?.profile?.establishedYear || '2018',
+    representative: account?.name || 'Nguyễn Văn Trí',
     representativeRole: 'Tổng Giám đốc / Đại diện pháp luật',
-    address: 'Tòa nhà Landmark 81, 720A Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh',
+    address: account?.profile?.headquartersAddress || 'Tòa nhà Landmark 81, 720A Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh',
     factoryAddress: 'Lô B2-4, KCN Phước Đông, Huyện Gò Dầu, Tỉnh Tây Ninh (Diện tích 25,000 m²)',
-    website: 'https://vietagri-export.vn',
-    email: 'contact@vietagri-export.vn',
-    phone: '(+84) 28 3829 9842',
+    website: account?.profile?.website || 'https://vietagri-export.vn',
+    email: account?.profile?.contactEmail || account?.email || 'contact@vietagri-export.vn',
+    phone: account?.profile?.phone || '(+84) 28 3829 9842',
     hotline: '(+84) 91 888 2345',
     capacity: '15,000 tấn/năm (~1,250 tấn/tháng)',
     employees: '250+ nhân sự vận hành & kỹ sư nông học',
     standards: 'HACCP Codex Alimentarius, ISO 22000:2018, GlobalG.A.P. IFA',
     puc: 'VN-DL-0489 (Mã vùng trồng sầu riêng & thanh long cấp bởi Cục BVTV)',
     phc: 'PHC-VN-102 (Mã cơ sở đóng gói đạt chuẩn EU & US)',
-    mainMarkets: ['EU (Đức, Hà Lan, Ý)', 'Hoa Kỳ', 'Nhật Bản', 'Hàn Quốc', 'Trung Quốc'],
-    description: 'Chuyên gia công, sơ chế và xuất khẩu nông sản nhiệt đới đạt chuẩn quốc tế hàng đầu Việt Nam. Sở hữu chuỗi cung ứng khép kín từ vùng trồng liên kết đến nhà máy sơ chế và kho bảo quản lạnh sâu tiêu chuẩn Châu Âu.'
+    mainMarkets: account?.profile?.market ? [account.profile.market] : ['EU (Đức, Hà Lan, Ý)', 'Hoa Kỳ', 'Nhật Bản', 'Hàn Quốc', 'Trung Quốc'],
+    description: account?.profile?.description || 'Chuyên gia công, sơ chế và xuất khẩu nông sản nhiệt đới đạt chuẩn quốc tế hàng đầu Việt Nam. Sở hữu chuỗi cung ứng khép kín từ vùng trồng liên kết đến nhà máy sơ chế và kho bảo quản lạnh sâu tiêu chuẩn Châu Âu.'
   });
 
   // Certificate Items
@@ -468,10 +471,10 @@ export default function SellerWorkspace({
               <button
                 onClick={onNavigateOnboarding}
                 className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
-                title="Quay lại quy trình Onboarding"
+                title="Cập nhật hồ sơ xuất khẩu"
               >
                 <Edit3 className="w-3.5 h-3.5 text-slate-500" />
-                <span>Onboarding Form</span>
+                <span>Cập nhật hồ sơ</span>
               </button>
 
               {/* View Public Showcase */}
@@ -572,7 +575,7 @@ export default function SellerWorkspace({
                       className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
                     >
                       <Edit3 className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Cập nhật qua Onboarding</span>
+                      <span>Cập nhật hồ sơ xuất khẩu</span>
                     </button>
                     <button 
                       onClick={() => {
@@ -2679,4 +2682,3 @@ export default function SellerWorkspace({
     </div>
   );
 }
-

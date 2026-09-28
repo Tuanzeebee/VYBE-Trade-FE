@@ -37,10 +37,20 @@ import LiveSearchDropdown from './components/LiveSearchDropdown.tsx';
 import { useLanguage, LANGUAGES, LanguageCode } from './context/LanguageContext.tsx';
 import CountryFlag from './components/CountryFlag.tsx';
 import LanguageSelectorModal from './components/LanguageSelectorModal.tsx';
+import AuthPage from './components/AuthPage';
+import BuyerOnboarding from './components/BuyerOnboarding';
+import AdminDashboard from './components/AdminDashboard';
+import { completeOnboarding, getSession, getUserPage, logout, ROLE_LABELS, type DemoUser } from './lib/demoAuth';
+
+type Page = 'home' | 'product' | 'onboarding' | 'seller-profile' | 'workspace' | 'buyer-directory' | 'buyer-seller-detail' | 'pricing' | 'solutions' | 'about' | 'login' | 'register' | 'admin';
 
 export default function App() {
   const { language, setLanguage, currentLanguageOption, t } = useLanguage();
-  const [currentPage, setCurrentPage] = useState<'home' | 'product' | 'onboarding' | 'workspace' | 'buyer-directory' | 'buyer-seller-detail' | 'pricing' | 'solutions' | 'about'>('home');
+  const [user, setUser] = useState<DemoUser | null>(() => {
+    try { return getSession(); } catch { return null; }
+  });
+  const [currentPage, setPage] = useState<Page>(() => user ? getUserPage(user) : 'home');
+  const [directoryNav, setDirectoryNav] = useState<'suppliers' | 'buyer'>('suppliers');
   const [selectedSupplier, setSelectedSupplier] = useState<SupplierData>(DEFAULT_SELLER_DETAIL);
   const [headerProfileOpen, setHeaderProfileOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
@@ -55,6 +65,50 @@ export default function App() {
   const [selectedTrust, setSelectedTrust] = useState('Tất cả cấp độ');
   const [activeSupplierModal, setActiveSupplierModal] = useState<any | null>(null);
   const [activeNavModal, setActiveNavModal] = useState<string | null>(null);
+
+  function setCurrentPage(page: Page) {
+    const protectedPage = ['workspace', 'onboarding', 'seller-profile', 'admin'].includes(page);
+    if (protectedPage && !user) { setPage('login'); return; }
+    if (user && getUserPage(user) === 'onboarding') { setPage('onboarding'); return; }
+    if (user && (page === 'onboarding' ||
+      (['workspace', 'seller-profile'].includes(page) && user.role !== 'seller') ||
+      (page === 'admin' && user.role !== 'admin'))) {
+      setPage(getUserPage(user)); return;
+    }
+    setPage(page);
+  }
+
+  function authenticated(nextUser: DemoUser) {
+    setUser(nextUser);
+    setHeaderProfileOpen(false);
+    setWorkspaceTab('profile');
+    setSearchTerm('');
+    setDirectoryNav(nextUser.role === 'buyer' ? 'buyer' : 'suppliers');
+    setPage(getUserPage(nextUser));
+  }
+
+  function handleLogout() {
+    try {
+      logout();
+      setUser(null);
+      setHeaderProfileOpen(false);
+      setSelectedSupplier(DEFAULT_SELLER_DETAIL);
+      setSearchTerm('');
+      setPage('login');
+    } catch { window.alert('Không thể xóa phiên demo. Vui lòng cho phép lưu trữ trên trình duyệt.'); }
+  }
+
+  if (currentPage === 'login' || currentPage === 'register') {
+    return <AuthPage key={currentPage} mode={currentPage} onModeChange={setCurrentPage} onAuthenticated={authenticated} onNavigateHome={() => setCurrentPage('home')} />;
+  }
+
+  if (currentPage === 'onboarding' && user) {
+    const onComplete = (profile: Record<string, string>) => authenticated(completeOnboarding(user.id, profile));
+    if (user.role === 'buyer') return <BuyerOnboarding key={user.id} user={user} onComplete={onComplete} onLogout={handleLogout} />;
+    if (user.role === 'seller') return <SellerOnboarding key={user.id} account={user} initialStep={1} onComplete={onComplete}
+      onLogout={handleLogout} onNavigateHome={() => setCurrentPage('home')}
+      onNavigateWorkspace={() => setCurrentPage('workspace')} />;
+  }
 
   const POPULAR_TAGS = [
     'Cà phê',
@@ -128,19 +182,23 @@ export default function App() {
   if (currentPage === 'workspace') {
     return (
       <SellerWorkspace 
-        onLogout={() => setCurrentPage('home')}
+        key={user?.id}
+        account={user || undefined}
+        onLogout={handleLogout}
         onNavigateHome={() => setCurrentPage('home')}
-        onNavigateOnboarding={() => setCurrentPage('onboarding')}
+        onNavigateOnboarding={() => setCurrentPage('seller-profile')}
         onNavigateBuyerDetail={() => setCurrentPage('buyer-seller-detail')}
         initialTab={workspaceTab}
       />
     );
   }
 
-  if (currentPage === 'onboarding') {
+  if (currentPage === 'seller-profile') {
     return (
       <SellerOnboarding 
-        onLogout={() => setCurrentPage('home')}
+        key={user?.id}
+        account={user || undefined}
+        onLogout={handleLogout}
         onNavigateHome={() => setCurrentPage('home')}
         onNavigateWorkspace={(tab) => {
           setWorkspaceTab(tab || 'profile');
@@ -180,7 +238,7 @@ export default function App() {
             { label: t.nav.pricing, id: 'pricing' },
             { label: t.nav.about, id: 'about' }
           ].map((link) => {
-            const isBuyerActive = (link.id === 'buyer' || link.id === 'suppliers') && (currentPage === 'buyer-directory' || currentPage === 'buyer-seller-detail');
+            const isBuyerActive = link.id === directoryNav && (currentPage === 'buyer-directory' || currentPage === 'buyer-seller-detail');
             const isProductActive = link.id === 'products' && currentPage === 'product';
             const isPricingActive = link.id === 'pricing' && currentPage === 'pricing';
             const isSolutionsActive = link.id === 'solutions' && currentPage === 'solutions';
@@ -190,6 +248,7 @@ export default function App() {
             return (
               <button
                 key={link.id}
+                aria-current={isActive ? 'page' : undefined}
                 onClick={() => {
                   if (link.id === 'solutions') {
                     setCurrentPage('solutions');
@@ -200,6 +259,7 @@ export default function App() {
                   } else if (link.id === 'pricing') {
                     setCurrentPage('pricing');
                   } else if (link.id === 'buyer' || link.id === 'suppliers') {
+                    setDirectoryNav(link.id);
                     setCurrentPage('buyer-directory');
                   } else {
                     setCurrentPage('home');
@@ -289,122 +349,27 @@ export default function App() {
             )}
           </div>
 
-          {/* User Profile Pill matching screenshot: [TN] Công ty TNHH Nông Sản Việt ˇ */}
-          <div className="relative">
-            <button
-              onClick={() => setHeaderProfileOpen(!headerProfileOpen)}
-              className="flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full hover:bg-slate-100 border border-slate-200/90 transition-all cursor-pointer shadow-2xs"
-            >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0">
-                TN
-              </div>
-              <span className="text-xs sm:text-[13px] font-semibold text-slate-800 max-w-[140px] sm:max-w-[190px] truncate hidden sm:inline">
-                {selectedSupplier.name}
-              </span>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
-            </button>
-
-            {/* Profile Dropdown */}
-            {headerProfileOpen && (
-              <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 text-xs text-left animate-in fade-in zoom-in-95 duration-150">
-                <div className="px-4 py-2.5 border-b border-slate-100">
-                  <p className="font-bold text-slate-900 truncate">{selectedSupplier.name}</p>
-                  <p className="text-slate-500 text-[11px] mt-0.5">MST: {selectedSupplier.taxCode}</p>
-                  <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
-                    🛡️ {selectedSupplier.badgeTitle}
-                  </span>
-                </div>
-
-                <button 
-                  onClick={() => {
-                    setCurrentPage('buyer-seller-detail');
-                    setHeaderProfileOpen(false);
-                  }}
-                  className="w-full px-4 py-2.5 text-left hover:bg-teal-50 text-teal-950 font-bold cursor-pointer flex items-center gap-2"
-                >
-                  <Building2 className="w-4 h-4 text-teal-700" />
-                  <span>{t.menu.sellerDetail}</span>
-                </button>
-
-                <button 
-                  onClick={() => {
-                    setCurrentPage('buyer-directory');
-                    setHeaderProfileOpen(false);
-                  }}
-                  className="w-full px-4 py-2.5 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
-                >
-                  <Search className="w-4 h-4 text-slate-500" />
-                  <span>{t.menu.directory}</span>
-                </button>
-
-                <button 
-                  onClick={() => {
-                    setWorkspaceTab('profile');
-                    setCurrentPage('workspace');
-                    setHeaderProfileOpen(false);
-                  }}
-                  className="w-full px-4 py-2.5 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
-                >
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>{t.menu.workspace}</span>
-                </button>
-
-                <button 
-                  onClick={() => {
-                    setCurrentPage('solutions');
-                    setHeaderProfileOpen(false);
-                  }}
-                  className="w-full px-4 py-2.5 text-left hover:bg-blue-50 text-blue-950 font-bold cursor-pointer flex items-center gap-2"
-                >
-                  <Sparkles className="w-4 h-4 text-blue-600" />
-                  <span>{t.menu.solutions}</span>
-                </button>
-
-                <button 
-                  onClick={() => {
-                    setCurrentPage('pricing');
-                    setHeaderProfileOpen(false);
-                  }}
-                  className="w-full px-4 py-2.5 text-left hover:bg-slate-50 text-slate-700 cursor-pointer flex items-center gap-2"
-                >
-                  <CreditCard className="w-4 h-4 text-slate-600" />
-                  <span>{t.menu.pricing}</span>
-                </button>
-
-                <button 
-                  onClick={() => {
-                    setCurrentPage('about');
-                    setHeaderProfileOpen(false);
-                  }}
-                  className="w-full px-4 py-2.5 text-left hover:bg-emerald-50 text-emerald-950 font-bold cursor-pointer flex items-center gap-2"
-                >
-                  <Globe className="w-4 h-4 text-emerald-600" />
-                  <span>{t.menu.about}</span>
-                </button>
-
-                <button 
-                  onClick={() => {
-                    setCurrentPage('onboarding');
-                    setHeaderProfileOpen(false);
-                  }}
-                  className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-600 cursor-pointer flex items-center gap-2"
-                >
-                  <span>{t.menu.onboarding}</span>
-                </button>
-
-                <button 
-                  onClick={() => {
-                    setCurrentPage('home');
-                    setHeaderProfileOpen(false);
-                  }}
-                  className="w-full px-4 py-2 text-left hover:bg-slate-50 text-slate-600 border-t border-slate-100 cursor-pointer"
-                >
-                  {t.menu.home}
-                </button>
-              </div>
-            )}
-          </div>
-
+          {user ? (
+            <div className="relative">
+              <button onClick={() => setHeaderProfileOpen(!headerProfileOpen)} aria-expanded={headerProfileOpen} className="flex items-center gap-2 rounded-full border border-slate-200 pl-1 pr-3 py-1 hover:bg-slate-50">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-xs font-bold text-teal-900">{user.name.slice(0, 2).toUpperCase()}</span>
+                <span className="hidden max-w-32 truncate text-xs font-semibold xl:inline">{user.name}</span>
+                <span className="hidden rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600 sm:inline">{ROLE_LABELS[user.role]}</span>
+                <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
+              </button>
+              {headerProfileOpen && <div className="absolute right-0 top-full z-50 mt-2 w-72 rounded-2xl border border-slate-200 bg-white py-2 text-left text-sm shadow-xl">
+                <div className="border-b border-slate-100 px-4 py-3"><p className="truncate font-bold">{user.company}</p><p className="mt-1 truncate text-xs text-slate-500">{user.email}</p><p className="mt-1 text-xs font-semibold text-teal-700">{ROLE_LABELS[user.role]}</p></div>
+                <button onClick={() => { setCurrentPage(getUserPage(user)); setHeaderProfileOpen(false); }} className="w-full px-4 py-3 text-left font-semibold text-teal-900 hover:bg-teal-50">{user.role === 'seller' ? 'Workspace Seller' : user.role === 'admin' ? 'Quản trị hệ thống' : 'Tìm nhà cung cấp'}</button>
+                {user.role === 'seller' && <button onClick={() => { setCurrentPage('seller-profile'); setHeaderProfileOpen(false); }} className="w-full px-4 py-3 text-left text-slate-600 hover:bg-slate-50">Cập nhật hồ sơ xuất khẩu</button>}
+                <button onClick={handleLogout} className="w-full border-t border-slate-100 px-4 py-3 text-left font-semibold text-rose-600 hover:bg-rose-50">Đăng xuất</button>
+              </div>}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button onClick={() => setCurrentPage('login')} className="rounded-full px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 sm:text-sm">Đăng nhập</button>
+              <button onClick={() => setCurrentPage('register')} className="hidden rounded-full bg-[#083832] px-3 py-2 text-xs font-semibold text-white hover:bg-[#062924] sm:inline-flex sm:px-4 sm:text-sm">Đăng ký</button>
+            </div>
+          )}
         </div>
 
       </div>
@@ -414,6 +379,10 @@ export default function App() {
   {/* =========================================================================
       PAGE DISPATCH: BUYER_SELLER DETAIL VIEW
      ========================================================================= */}
+  if (currentPage === 'admin' && user?.role === 'admin') {
+    return <div className="min-h-screen bg-[#f8fafc]">{renderTopHeader()}<AdminDashboard /></div>;
+  }
+
   if (currentPage === 'buyer-seller-detail') {
     return (
       <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between">

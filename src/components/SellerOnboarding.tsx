@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import type { DemoUser } from '../lib/demoAuth';
 import { 
   ArrowRight, 
   Globe, 
@@ -35,6 +36,9 @@ import {
 } from 'lucide-react';
 
 interface SellerOnboardingProps {
+  account?: DemoUser;
+  initialStep?: number;
+  onComplete?: (profile: Record<string, string>) => void;
   onLogout: () => void;
   onNavigateHome: () => void;
   onNavigateWorkspace?: (tab?: 'profile' | 'verification') => void;
@@ -64,9 +68,9 @@ export interface ExportProductItem {
   description: string;
 }
 
-export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateWorkspace }: SellerOnboardingProps) {
-  // Default to Step 2 so the seller can immediately see and use the product management feature
-  const [currentStep, setCurrentStep] = useState<number>(2);
+export default function SellerOnboarding({ account, initialStep = 2, onComplete, onLogout, onNavigateHome, onNavigateWorkspace }: SellerOnboardingProps) {
+  const [currentStep, setCurrentStep] = useState<number>(initialStep);
+  const [submitError, setSubmitError] = useState('');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [submittedSuccess, setSubmittedSuccess] = useState(false);
   const [previewDoc, setPreviewDoc] = useState<{ title: string; type: string; date: string; issuer: string } | null>(null);
@@ -233,13 +237,13 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
 
   // Form State for Step 1: Thông tin doanh nghiệp
   const [formData, setFormData] = useState({
-    companyName: 'Công ty TNHH Nông sản Việt Trí',
+    companyName: account?.company || 'Công ty TNHH Nông sản Việt Trí',
     taxCode: '0314892345',
     businessType: 'TNHH',
     establishedYear: '2018',
     headquartersAddress: 'Tòa nhà Landmark 81, 720A Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh',
     website: 'https://vietagri-export.vn',
-    contactEmail: 'contact@vietagri-export.vn'
+    contactEmail: account?.email || 'contact@vietagri-export.vn'
   });
 
   // Step 3 State: Giấy phép & Chứng nhận
@@ -248,7 +252,7 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
     docNumber: '0314892345',
     issueDate: '15/03/2018',
     issuePlace: 'Sở Kế hoạch và Đầu tư TP. Hồ Chí Minh',
-    legalRep: 'Nguyễn Văn Trí',
+    legalRep: account?.name || 'Nguyễn Văn Trí',
     fileName: 'Giay_Phep_DKKD_VietAgri_2024.pdf',
     fileSize: '3.2 MB'
   });
@@ -347,12 +351,23 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
     setShowAddCertForm(false);
   };
 
+  const finish = () => {
+    setSubmitError('');
+    if (!onComplete) { setSubmittedSuccess(true); return; }
+    try {
+      onComplete({ ...formData, country: 'Việt Nam', interest: products.map((p) => p.category).join(', '),
+        market: [...new Set(products.flatMap((p) => p.exportMarkets))].join(', '),
+        products: JSON.stringify(products.map((p) => ({ ...p, image: p.image.startsWith('blob:') ? '' : p.image }))),
+        certificates: JSON.stringify(certificates), pucCode, phcCode, agreeCommitment: String(agreeCommitment) });
+    } catch (cause) { setSubmitError(cause instanceof Error ? cause.message : 'Không thể lưu hồ sơ. Vui lòng thử lại.'); }
+  };
+
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     } else {
-      setSubmittedSuccess(true);
+      finish();
     }
   };
 
@@ -425,7 +440,7 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
                 
                 {/* Truncated Company Name */}
                 <span className="hidden sm:inline text-xs sm:text-[13px] font-semibold text-slate-800 max-w-[170px] truncate">
-                  Công ty TNHH Nông sản Việt...
+                  {formData.companyName}
                 </span>
 
                 <ChevronDown className="w-4 h-4 text-slate-500" />
@@ -435,7 +450,7 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
               {profileDropdownOpen && (
                 <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50 text-xs text-left">
                   <div className="px-4 py-2 border-b border-slate-100">
-                    <p className="font-bold text-slate-900">Công ty TNHH Nông sản Việt</p>
+                    <p className="font-bold text-slate-900">{formData.companyName}</p>
                     <p className="text-slate-500 text-[11px]">Tài khoản Nhà cung cấp (Seller)</p>
                   </div>
                   <button 
@@ -618,7 +633,7 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-bold text-slate-900 tracking-tight leading-[1.2] mb-3">
-              Tạo hồ sơ doanh nghiệp<br />
+              {onComplete ? 'Company Onboarding' : 'Cập nhật hồ sơ doanh nghiệp'}<br />
               và giới thiệu sản phẩm
             </h1>
 
@@ -1682,6 +1697,7 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
 
                   </div>
 
+                  {submitError && <p role="alert" className="rounded-xl bg-rose-50 p-3 text-sm text-rose-700">{submitError}</p>}
                   <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100">
                     <button 
                       type="button"
@@ -1701,7 +1717,7 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
                       </button>
                       <button 
                         type="button"
-                        onClick={() => setSubmittedSuccess(true)}
+                        onClick={finish}
                         className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-[#083832] hover:bg-[#062924] text-white text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-95"
                       >
                         <span>Hoàn tất & Gửi hồ sơ</span>
@@ -2047,7 +2063,7 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     <span className="text-slate-500">Người đại diện:</span>
-                    <span className="col-span-2 font-semibold text-slate-800">Nguyễn Văn Trí (Giám đốc)</span>
+                    <span className="col-span-2 font-semibold text-slate-800">{dkkdData.legalRep} (Giám đốc)</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     <span className="text-slate-500">Cơ quan / Tổ chức cấp:</span>
@@ -2164,7 +2180,7 @@ export default function SellerOnboarding({ onLogout, onNavigateHome, onNavigateW
                   onClick={() => setSubmittedSuccess(false)}
                   className="text-xs text-slate-500 hover:text-slate-800 transition-colors font-medium"
                 >
-                  Ở lại trang Onboarding
+                  Ở lại trang hồ sơ
                 </button>
               </div>
             </div>
